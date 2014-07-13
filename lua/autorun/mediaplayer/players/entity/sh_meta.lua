@@ -34,6 +34,8 @@ function EntityMeta:InstallMediaPlayer( mp )
 	if isfunction(self.SetupMediaPlayer) then
 		self:SetupMediaPlayer(mp)
 	end
+
+	return mp
 end
 
 local DefaultConfig = {

@@ -30,10 +30,9 @@ function ENT:Initialize()
 		self:DrawShadow( false )
 
 		-- Install media player to entity
-		self:InstallMediaPlayer( self.MediaPlayerType )
+		local mp = self:InstallMediaPlayer( self.MediaPlayerType )
 
 		-- Network media player ID
-		local mp = self:GetMediaPlayer()
 		self:SetMediaPlayerID( mp:GetId() )
 	end
 
