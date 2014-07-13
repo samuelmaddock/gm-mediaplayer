@@ -1,0 +1,78 @@
+MediaPlayer = MediaPlayer or {}
+
+--[[---------------------------------------------------------
+	ConVars
+-----------------------------------------------------------]]
+
+MediaPlayer.Cvars = {}
+MediaPlayer.Cvars.Debug = CreateConVar( "mediaplayer_debug", 0, {FCVAR_ARCHIVE,FCVAR_DONTRECORD}, "Enables media player debug mode; logs a bunch of actions into the console." )
+
+MediaPlayer.DEBUG = MediaPlayer.Cvars.Debug:GetBool()
+
+cvars.AddChangeCallback( "mediaplayer_debug", function(name, old, new)
+	MediaPlayer.DEBUG = new == 1
+end)
+
+if SERVER then
+	AddCSLuaFile "cl_cvars.lua"
+else
+	include "cl_cvars.lua"
+end
+
+
+--[[---------------------------------------------------------
+	Config
+
+	Store service API keys, etc.
+-----------------------------------------------------------]]
+
+MediaPlayer.config = {}
+
+---
+-- Apply configuration values to the mediaplayer config.
+--
+-- @param config	Table with configuration values.
+--
+function MediaPlayer.SetConfig( config )
+	table.Merge( MediaPlayer.config, config )
+end
+
+---
+-- Method for easily grabbing config value without checking that each fragment
+-- exists.
+--
+-- @param key	e.g. "json.key.fragments"
+--
+function MediaPlayer.GetConfigValue( key )
+	local value = table.Lookup( MediaPlayer.config, key )
+
+	if type(value) == 'nil' then
+		ErrorNoHalt("WARNING: MediaPlayer config value not found for key `" .. tostring(key) .. "`\n")
+	end
+
+	return value
+end
+
+if SERVER then
+	include "config/server.lua"
+end
+
+
+--[[---------------------------------------------------------
+	Shared includes
+-----------------------------------------------------------]]
+
+include "sh_mediaplayer.lua"
+include "sh_services.lua"
+include "sh_history.lua"
+
+hook.Add("Initialize", "InitMediaPlayer", function()
+	hook.Run("InitMediaPlayer", MediaPlayer)
+end)
+
+-- No fun allowed
+hook.Add( "CanDrive", "DisableMediaPlayerDriving", function(ply, ent)
+	if IsValid(ent) and ent.IsMediaPlayerEntity then
+		return IsValid(ply) and ply:IsAdmin()
+	end
+end)

@@ -1,0 +1,6 @@
+# general
+*.todo
+*.sublime-workspace
+
+# old mediaplayer service code
+lua/autorun/mediaplayer/services/_deprecated
