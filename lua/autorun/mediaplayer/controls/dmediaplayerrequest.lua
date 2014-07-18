@@ -48,7 +48,8 @@ function PANEL:Init()
 		self:Close()
 	end )
 
-	self.Browser:OpenURL( "http://gmtower.org/apps/mediaplayer/" )
+	local requestUrl = MediaPlayer.GetConfigValue( 'request.url' )
+	self.Browser:OpenURL( requestUrl )
 
 	self.Controls = vgui.Create( "MPHTMLControls", self.BrowserContainer )
 	self.Controls:SetHTML( self.Browser )
