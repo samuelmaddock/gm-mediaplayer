@@ -132,8 +132,6 @@ function SERVICE:OnBrowserReady( browser )
 
 		-- This doesn't always get called in time, but it's a nice fallback
 		browser:AddFunction( "window", "onYouTubePlayerReady", function( playerId )
-			print "YOUTUBE.ONPLAYERREADY"
-
 			if not playerId then return end
 			self.playerId = string.JavascriptSafe( playerId )
 
