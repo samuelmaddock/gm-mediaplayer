@@ -60,6 +60,10 @@ function MEDIAPLAYER:UpdateListeners()
 	self:SetListeners(listeners)
 end
 
+function MEDIAPLAYER:GetListeners()
+	return self._Listeners
+end
+
 function MEDIAPLAYER:SetListeners( listeners )
 
 	local ValidListeners = {}
