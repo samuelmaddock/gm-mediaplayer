@@ -14,37 +14,33 @@ local LastPress = nil
 local LastKey = nil
 local KeyControls = {}
 
-local function dispatch(name, func, down, held)
-	-- Use same behavior as the hook system
-	if type(name) == 'table' then
-		if IsValid(name) then
-			func( name, down, held )
-		else
-			handles[ name ] = nil
-		end
-	else
-		func( down, held )
-	end
-end
-
 local function InputThink()
 
 	if IsGameUIVisible() or IsConsoleVisible() then return end
 
+	local dispatch, down, held
+
 	for key, handles in pairs( KeyControls ) do
 		for name, tbl in pairs( handles ) do
+
+			dispatch = false
 
 			if tbl.Enabled then
 
 				-- Key hold (repeat press)
 				if tbl.LastPress and tbl.LastPress + HoldTime < RealTime() then
-					dispatch(name, tbl.Toggle, true, true)
+					dispatch = true
+					down = true
+					held = true
+
 					tbl.LastPress = RealTime()
 				end
 
 				-- Key release
 				if not IsKeyDown( key ) then
-					dispatch(name, tbl.Toggle, false)
+					dispatch = true
+					down = false
+
 					tbl.Enabled = false
 				end
 
@@ -52,11 +48,26 @@ local function InputThink()
 
 				-- Key press
 				if IsKeyDown( key ) then
-					dispatch(name, tbl.Toggle, true)
+					dispatch = true
+					down = true
+
 					tbl.Enabled = true
 					tbl.LastPress = RealTime()
 				end
 
+			end
+
+			if dispatch then
+				-- Use same behavior as the hook system
+				if type(name) == 'table' then
+					if IsValid(name) then
+						tbl.Toggle( name, down, held )
+					else
+						handles[ name ] = nil
+					end
+				else
+					tbl.Toggle( down, held )
+				end
 			end
 
 		end
@@ -65,6 +76,13 @@ local function InputThink()
 end
 hook.Add( "Think", "InputManagerThink", InputThink )
 
+---
+-- Adds a callback to be dispatched when a key is pressed.
+--
+-- @param key		`KEY_` enum.
+-- @param name		Unique identifier or a valid object.
+-- @param onToggle	Callback function.
+--
 function control.Add( key, name, onToggle )
 
 	if not (key and onToggle) then return end
@@ -77,16 +95,16 @@ function control.Add( key, name, onToggle )
 		Enabled = false,
 		LastPress = 0,
 		Toggle = onToggle
-		--[[Toggle = function(...)
-			local msg, err = pcall( onToggle, ... )
-			if err then
-				print( "ERROR: " .. msg )
-			end
-		end]]
 	}
 
 end
 
+---
+-- Removes a registered key callback.
+--
+-- @param key	`KEY_` enum.
+-- @param name	Unique identifier or a valid object.
+--
 function control.Remove( key, name )
 
 	if not KeyControls[ key ] then return end
