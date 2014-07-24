@@ -50,11 +50,10 @@ local function LoadMediaPlayer()
 	if SERVER then
 		-- Reinstall media players on Lua refresh
 		for _, mp in pairs(MediaPlayer.GetAll()) do
-			if IsValid(mp.Entity) then
-				-- cache entity
-				local ent = mp.Entity
-				local queue = mp._Queue
-				local listeners = mp._Listeners
+
+			if mp:GetType() == 'entity' and IsValid(mp) then
+				local ent = mp:GetEntity()
+				local listeners = table.Copy(mp:GetListeners())
 
 				-- remove media player
 				mp:Remove()
@@ -64,12 +63,14 @@ local function LoadMediaPlayer()
 
 				-- reinitialize settings
 				mp = ent._mp
-				-- mp._Queue = queue
 
-				-- TODO: reapply listeners, for some reason the table is empty
-				-- after Lua refresh
+				-- TODO: implement memento pattern for reloading MP state.
+
+				-- reapply listeners
 				mp:SetListeners( listeners )
+				mp:BroadcastUpdate()
 			end
+
 		end
 	end
 end
