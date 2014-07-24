@@ -20,7 +20,15 @@ if (window.MediaPlayer === undefined) {
 
 			init: function () {
 				if (this.player) return;
-				this.player = document.getElementById(playerId);
+
+				var player = document.getElementById(playerId);
+
+				if (!player) {
+					player = document.querySelector('embed');
+				}
+
+				this.player = player;
+
 				if (!this.player) {
 					console.error('Unable to find YouTube player element!');
 					return false;
@@ -124,6 +132,8 @@ function SERVICE:OnBrowserReady( browser )
 
 		-- This doesn't always get called in time, but it's a nice fallback
 		browser:AddFunction( "window", "onYouTubePlayerReady", function( playerId )
+			print "YOUTUBE.ONPLAYERREADY"
+
 			if not playerId then return end
 			self.playerId = string.JavascriptSafe( playerId )
 
