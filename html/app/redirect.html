@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<style>
+	html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+	body {
+		background: #222222;
+		color: rgba(255,255,255,0.33);
+		font: 48px sans-serif;
+		font-weight: bold;
+		display: -webkit-box;
+		-webkit-box-pack: center;
+		-webkit-box-align: center;
+	}
+	</style>
+</head>
+<body>
+	<span>LOADING</span>
+	<script>
+	var hash = window.location.hash;
+	if (hash.length) {
+		window.location = decodeURIComponent(hash.substr(1, hash.length));
+	} else {
+		document.querySelector('span').innerHTML = 'No redirect URL specified';
+	}
+	</script>
+</body>
+</html>
