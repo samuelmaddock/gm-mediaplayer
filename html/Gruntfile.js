@@ -18,7 +18,8 @@ module.exports = function (grunt) {
     // Configurable paths
     var config = {
         app: 'app',
-        dist: 'dist'
+        dist: 'dist',
+        repo: 'git@github.com:pixeltailgames/gm-mediaplayer.git'
     };
 
     // Define the configuration for all the tasks
@@ -346,6 +347,22 @@ module.exports = function (grunt) {
                 'imagemin',
                 'svgmin'
             ]
+        },
+
+        // Push HTML content to gh-pages branch
+        buildcontrol: {
+            options: {
+                dir: '<%= config.dist %>',
+                commit: true,
+                push: true,
+                message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
+            },
+            pages: {
+                options: {
+                    remote: '<%= config.repo %>',
+                    branch: 'gh-pages'
+                }
+            }
         }
     });
 
@@ -396,6 +413,11 @@ module.exports = function (grunt) {
         'rev',
         'usemin',
         'htmlmin'
+    ]);
+
+    grunt.registerTask('pages', [
+        'build',
+        'buildcontrol:pages'
     ]);
 
     grunt.registerTask('default', [
