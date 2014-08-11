@@ -2,6 +2,8 @@ include "shared.lua"
 
 local urllib = url
 
+local htmlBaseUrl = MediaPlayer.GetConfigValue('html.base_url')
+
 DEFINE_BASECLASS( "mp_service_browser" )
 
 -- https://developers.google.com/youtube/player_parameters
@@ -159,7 +161,7 @@ function SERVICE:OnBrowserReady( browser )
 	-- playing some restricted content due to the block by default behavior
 	-- described here: http://stackoverflow.com/a/13463245/1490006
 	url = urllib.escape(url)
-	url = "http://www.gmtower.org/apps/mediaplayer/redirect.html#" .. url
+	url = htmlBaseUrl .. "redirect.html#" .. url
 
 	browser:OpenURL(url)
 
