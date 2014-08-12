@@ -72,7 +72,7 @@ local function OnMediaSet( len )
 	local media = mp.net.ReadMedia()
 
 	if media then
-		local startTime = net.ReadInt(32)
+		local startTime = mp.net.ReadTime()
 		media:StartTime( startTime )
 
 		local state = mp:GetPlayerState()
@@ -110,7 +110,7 @@ local function OnMediaSeek( len )
 	local mp = MediaPlayer.GetById(mpId)
 	if not ( mp and (mp:GetPlayerState() >= MP_STATE_PLAYING) ) then return end
 
-	local startTime = net.ReadInt(32)
+	local startTime = mp.net.ReadTime()
 
 	if MediaPlayer.DEBUG then
 		print( "Received MEDIAPLAYER.Seek", mpId, startTime )
