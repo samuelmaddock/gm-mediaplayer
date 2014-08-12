@@ -25,3 +25,8 @@ local StateBits = math.CeilPower2(NUM_MP_STATE) / 2
 function mpnet.WritePlayerState( state )
 	net.WriteUInt(state, StateBits)
 end
+
+-- Unix epoch is a 32-bit signed integer
+function mpnet.WriteTime( time )
+	net.WriteInt( time, 32 )
+end

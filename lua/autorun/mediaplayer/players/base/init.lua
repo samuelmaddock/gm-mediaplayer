@@ -181,7 +181,7 @@ function MEDIAPLAYER:SendMedia( media, ply )
 	net.Start( "MEDIAPLAYER.Media" )
 		net.WriteString( self:GetId() )
 		self.net.WriteMedia( media )
-		net.WriteInt( startTime, 32 )
+		self.net.WriteTime( startTime )
 	net.Send( ply or self._Listeners )
 
 end
@@ -434,17 +434,14 @@ function MEDIAPLAYER:RequestSeek( ply, seekTime )
 		return
 	end
 
-	-- NOTE: this can result in a negative number if the server was recently
-	-- started.
-	local startTime = CurTime() - seconds
-
+	local startTime = os.time() - seconds
 	media:StartTime( startTime )
 
 	self:UpdateListeners()
 
 	net.Start( "MEDIAPLAYER.Seek" )
 		net.WriteString( self:GetId() )
-		net.WriteInt( startTime, 32 )
+		self.net.WriteTime( startTime )
 	net.Send( self._Listeners )
 
 end

@@ -1,6 +1,6 @@
 local string = string
 local urllib = url
-local CurTime = CurTime
+local os = os
 
 SERVICE.Name 	= "Base Service"
 SERVICE.Id 		= "base"
@@ -137,7 +137,7 @@ end
 function SERVICE:StartTime( seconds )
 	if type(seconds) == 'number' then
 		if self._PauseTime then
-			self._PauseTime = CurTime()
+			self._PauseTime = os.time()
 		end
 
 		self._StartTime = seconds
@@ -145,7 +145,7 @@ function SERVICE:StartTime( seconds )
 
 	if self._PauseTime then
 		local diff = self._PauseTime - self._StartTime
-		return CurTime() - diff
+		return os.time() - diff
 	else
 		return self._StartTime
 	end
@@ -156,7 +156,7 @@ function SERVICE:CurrentTime()
 		if self._PauseTime then
 			return self._PauseTime - self._StartTime
 		else
-			return CurTime() - self._StartTime
+			return os.time() - self._StartTime
 		end
 	else
 		return -1
@@ -170,7 +170,7 @@ end
 function SERVICE:Play()
 	if self._PauseTime then
 		-- Update start time to match the time when paused
-		self._StartTime = CurTime() - (self._PauseTime - self._StartTime)
+		self._StartTime = os.time() - (self._PauseTime - self._StartTime)
 		self._PauseTime = nil
 	end
 
@@ -182,7 +182,7 @@ function SERVICE:Play()
 end
 
 function SERVICE:Pause()
-	self._PauseTime = CurTime()
+	self._PauseTime = os.time()
 	self._playing = false
 
 	if CLIENT then

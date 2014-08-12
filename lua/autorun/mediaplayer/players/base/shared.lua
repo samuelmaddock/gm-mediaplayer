@@ -290,7 +290,7 @@ function MEDIAPLAYER:OnMediaStarted( media )
 	if IsValid(media) then
 
 		if SERVER then
-			media:StartTime( CurTime() + 1 )
+			media:StartTime( os.time() + 1 )
 		else
 			self._LastMediaUpdate = RealTime()
 		end
