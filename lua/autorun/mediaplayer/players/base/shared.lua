@@ -174,26 +174,27 @@ function MEDIAPLAYER:Think()
 	local validMedia = IsValid(media)
 
 	-- Waiting to play new media
-	if self._State <= MP_STATE_ENDED then
+	if SERVER then
+		if self._State <= MP_STATE_ENDED then
 
-		-- Check queue for videos to play
-		-- TODO: perform state change when media is added
-		if not self:IsQueueEmpty() then
-			self:OnMediaFinished()
-		end
-
-	elseif self._State == MP_STATE_PLAYING then
-
-		-- Wait for media to finish
-		if validMedia and media:IsTimed() then
-			local time = media:CurrentTime()
-			local duration = media:Duration()
-
-			if time > duration then
+			-- Check queue for videos to play
+			if not self:IsQueueEmpty() then
 				self:OnMediaFinished()
 			end
-		end
 
+		elseif self._State == MP_STATE_PLAYING then
+
+			-- Wait for media to finish
+			if validMedia and media:IsTimed() then
+				local time = media:CurrentTime()
+				local duration = media:Duration()
+
+				if time > duration then
+					self:OnMediaFinished()
+				end
+			end
+
+		end
 	end
 
 	if CLIENT and validMedia then
