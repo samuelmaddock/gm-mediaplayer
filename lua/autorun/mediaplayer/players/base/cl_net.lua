@@ -54,12 +54,12 @@ local function correctTime( time, serverTime )
 	local curTime = os.time()
 	local diffTime = os.difftime( serverTime, curTime )
 
-	if diffTime > TIME_OFFSET_THRESHOLD then
+	if math.abs(diffTime) > TIME_OFFSET_THRESHOLD then
 		if MediaPlayer.DEBUG then
 			print("mpnet.ReadTime: Server and client epoch differs", diffTime)
 		end
 
-		return time + diffTime
+		return time - diffTime
 	else
 		return time
 	end
