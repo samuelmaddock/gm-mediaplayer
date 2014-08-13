@@ -43,6 +43,7 @@ end
 -----------------------------------------------------------]]
 
 util.AddNetworkString( "MEDIAPLAYER.RequestListen" )
+util.AddNetworkString( "MEDIAPLAYER.RequestUpdate" )
 util.AddNetworkString( "MEDIAPLAYER.RequestMedia" )
 util.AddNetworkString( "MEDIAPLAYER.RequestPause" )
 util.AddNetworkString( "MEDIAPLAYER.RequestSkip" )
@@ -77,6 +78,30 @@ local function OnListenRequest( len, ply )
 
 end
 net.Receive( "MEDIAPLAYER.RequestListen", OnListenRequest )
+
+---
+-- Event called when a player requests a media update. This will occur when
+-- a client determines it's not synced correctly.
+--
+-- @param len Net message length.
+-- @param ply Player who sent the net message.
+--
+local function OnUpdateRequest( len, ply )
+
+	if not IsValid(ply) then return end
+
+	local mpId = net.ReadString()
+	local mp = MediaPlayer.GetById(mpId)
+	if not IsValid(mp) then return end
+
+	if MediaPlayer.DEBUG then
+		print("MEDIAPLAYER.RequestUpdate:", mpId, ply)
+	end
+
+	mp:SendMedia( mp:GetMedia(), ply )
+
+end
+net.Receive( "MEDIAPLAYER.RequestUpdate", OnUpdateRequest )
 
 local function OnMediaRequest( len, ply )
 

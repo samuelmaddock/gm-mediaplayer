@@ -94,6 +94,22 @@ function MediaPlayer.RequestListen( obj )
 end
 
 ---
+-- Request mediaplayer update.
+--
+-- @param Entity|Table|String	Media player reference.
+--
+function MediaPlayer.RequestUpdate( obj )
+
+	local mpId = GetMediaPlayerId(obj)
+	if not mpId then return end
+
+	net.Start( "MEDIAPLAYER.RequestUpdate" )
+		net.WriteString( mpId )
+	net.SendToServer()
+
+end
+
+---
 -- Request a URL to be played on the given media player.
 --
 -- @param Entity|Table|String	Media player reference.
