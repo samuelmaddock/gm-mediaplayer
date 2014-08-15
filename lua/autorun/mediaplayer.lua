@@ -1,4 +1,4 @@
-local basepath = "../mediaplayer/"
+local basepath = "mediaplayer/"
 
 local function IncludeMP( filepath )
 	include( basepath .. filepath )
@@ -44,7 +44,7 @@ local function LoadMediaPlayer()
 		include "includes/extensions/cl_draw.lua"
 
 		-- initialize clientside mediaplayer
-		IncludeMP "init.lua"
+		IncludeMP "cl_init.lua"
 	end
 
 	-- Sandbox includes; these must always be included as the gamemode is still

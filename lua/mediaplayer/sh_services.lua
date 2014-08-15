@@ -78,7 +78,7 @@ end
 do
 	local path = "services/"
 
-	local fullpath = "autorun/mediaplayer/" .. path
+	local fullpath = "mediaplayer/" .. path
 
 	local services = {
 		"base", -- MUST LOAD FIRST!
