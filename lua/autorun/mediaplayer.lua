@@ -1,3 +1,9 @@
+local basepath = "../mediaplayer/"
+
+local function IncludeMP( filepath )
+	include( basepath .. filepath )
+end
+
 local function LoadMediaPlayer()
 	print( "Loading 'mediaplayer' addon..." )
 
@@ -29,7 +35,7 @@ local function LoadMediaPlayer()
 		AddCSLuaFile "includes/extensions/cl_draw.lua"
 
 		-- initialize serverside mediaplayer
-		include "mediaplayer/init.lua"
+		IncludeMP "init.lua"
 	else
 		-- clientside includes
 		include "includes/modules/browserpool.lua"
@@ -38,7 +44,7 @@ local function LoadMediaPlayer()
 		include "includes/extensions/cl_draw.lua"
 
 		-- initialize clientside mediaplayer
-		include "mediaplayer/cl_init.lua"
+		IncludeMP "init.lua"
 	end
 
 	-- Sandbox includes; these must always be included as the gamemode is still
