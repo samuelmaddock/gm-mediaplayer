@@ -9,7 +9,7 @@ local embedHtml = [[
 	<meta charset="utf-8">
 </head>
 <body>
-	<img id="mat" src="%s" width="100%%" height="100%%" />
+	<img id="mat" src="%s" width="100%%" height="100%%">
 
 	<style type="text/css">
 	html, body {
@@ -22,11 +22,13 @@ local embedHtml = [[
 	%s
 	</style>
 
-	<script type="text/javascript">
+	<script type="application/javascript">
 	var mat = document.getElementById('mat');
 	mat.onload = function() {
-		setTimeout(function() { gmod.imageLoaded(); }, 100);
-	}
+		setTimeout(function() {
+			gmod.imageLoaded();
+		}, 100);
+	};
 	</script>
 </body>
 </html>]]
@@ -138,3 +140,26 @@ end
 function AddHTMLMaterialStyle(name, params)
 	styles[name] = params
 end
+
+-- TODO
+HTMLMAT_STYLE_BLUR       = 'htmlmat.style.blur'
+HTMLMAT_STYLE_GRAYSCALE  = 'htmlmat.style.grayscale'
+HTMLMAT_STYLE_SEPIA      = 'htmlmat.style.sepia'
+HTMLMAT_STYLE_INVERT     = 'htmlmat.style.invert'
+HTMLMAT_STYLE_CIRCLE     = 'htmlmat.style.circle'
+
+AddHTMLMaterialStyle( HTMLMAT_STYLE_BLUR, {
+	css = [[img { -webkit-filter: blur(2px); }]]
+})
+AddHTMLMaterialStyle( HTMLMAT_STYLE_GRAYSCALE, {
+	css = [[img { -webkit-filter: grayscale(1); }]]
+})
+AddHTMLMaterialStyle( HTMLMAT_STYLE_SEPIA, {
+	css = [[img { -webkit-filter: sepia(1); }]]
+})
+AddHTMLMaterialStyle( HTMLMAT_STYLE_INVERT, {
+	css = [[img { -webkit-filter: invert(1); }]]
+})
+AddHTMLMaterialStyle( HTMLMAT_STYLE_CIRCLE, {
+	css = [[img { border-radius: 50%; }]]
+})
