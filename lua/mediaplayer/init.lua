@@ -21,6 +21,7 @@ AddCSLuaFile "sh_history.lua"
 
 -- menu
 AddCSLuaFile "menu/sidebar.lua"
+AddCSLuaFile "menu/sidebar_tabs.lua"
 AddCSLuaFile "menu/volume_control.lua"
 
 include "shared.lua"

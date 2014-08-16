@@ -1,3 +1,4 @@
+include "sidebar_tabs.lua"
 include "volume_control.lua"
 
 local PANEL = {}
@@ -9,9 +10,20 @@ function PANEL:Init()
 
 	self:SetSize( 385, 580 )
 
+	self.Tabs = vgui.Create( "MP.SidebarTabs", self )
+	self.Tabs:Dock( FILL )
+
+	local panel = vgui.Create( "Panel" )
+	self.Tabs:AddSheet( "CURRENTLY PLAYING", panel, nil, false, false )
+
+	local panel = vgui.Create( "Panel" )
+	self.Tabs:AddSheet( "RECENTLY VIEWED", panel, nil, false, false )
+
 	self.VolumeControls = vgui.Create( "MP.VolumeControl", self )
 	self.VolumeControls:Dock( BOTTOM )
 	self.VolumeControls:SetHeight( 48 )
+
+	self:InvalidateLayout( true )
 
 end
 
@@ -28,8 +40,10 @@ end
 
 function PANEL:PerformLayout()
 
-	self:Center()
+	self:CenterVertical()
 	self:AlignLeft( 10 )
+
+	self.Tabs:SizeToContentWidth()
 
 end
 
