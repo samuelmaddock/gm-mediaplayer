@@ -1,5 +1,6 @@
 local math = math
 local ceil = math.ceil
+local clamp = math.Clamp
 
 local surface = surface
 local color_white = color_white
@@ -101,6 +102,8 @@ VOLUME_SLIDER.KnobSize = 12
 
 VOLUME_SLIDER.BarBgColor = Color( 13, 41, 62 )
 
+VOLUME_SLIDER.ScrollIncrement = 0.1 -- out of 1
+
 function VOLUME_SLIDER:Init()
 
 	self.BaseClass.Init( self )
@@ -126,6 +129,15 @@ end
 function VOLUME_SLIDER:PaintKnob( w, h )
 
 	draw.RoundedBoxEx( ceil(w/2), 0, 0, w, h, color_white, true, true, true, true )
+
+end
+
+function VOLUME_SLIDER:OnMouseWheeled( delta )
+
+	local change = self.ScrollIncrement * delta
+	local progress = clamp(self.m_fSlideX + change, 0, 1)
+
+	self:SetSlideX( progress )
 
 end
 
