@@ -14,6 +14,14 @@ local LastPress = nil
 local LastKey = nil
 local KeyControls = {}
 
+local function getEventArgs( a, b, c )
+	if c == nil then
+		return a, b
+	else
+		return b, c
+	end
+end
+
 local function InputThink()
 
 	if IsGameUIVisible() or IsConsoleVisible() then return end
@@ -96,6 +104,36 @@ function control.Add( key, name, onToggle )
 		LastPress = 0,
 		Toggle = onToggle
 	}
+
+end
+
+function control.AddKeyPress( key, name, onToggle )
+
+	control.Add( key, name, function( a, b, c )
+		local down, held = getEventArgs(a, b, c)
+
+		-- ignore if key down, but held OR key is not down
+		if down then
+			if held then return end
+		else
+			return
+		end
+
+		onToggle( a, b, c )
+	end )
+
+end
+
+function control.AddKeyRelease( key, name, onToggle )
+
+	control.Add( key, name, function( a, b, c )
+		local down, held = getEventArgs(a, b, c)
+
+		-- ignore if key is down
+		if down then return end
+
+		onToggle( a, b, c )
+	end )
 
 end
 

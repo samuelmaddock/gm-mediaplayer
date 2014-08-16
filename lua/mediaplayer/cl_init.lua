@@ -13,6 +13,9 @@ include "controls/dmediaplayerrequest.lua"
 include "shared.lua"
 include "cl_idlescreen.lua"
 
+-- menu
+include "menu/sidebar.lua"
+
 function MediaPlayer.Volume( volume )
 
 	if volume then

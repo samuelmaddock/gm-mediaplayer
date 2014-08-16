@@ -19,6 +19,10 @@ AddCSLuaFile "sh_mediaplayer.lua"
 AddCSLuaFile "sh_services.lua"
 AddCSLuaFile "sh_history.lua"
 
+-- menu
+AddCSLuaFile "menu/sidebar.lua"
+AddCSLuaFile "menu/volume_control.lua"
+
 include "shared.lua"
 include "sv_metadata.lua"
 

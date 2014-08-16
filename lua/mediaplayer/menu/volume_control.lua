@@ -4,6 +4,7 @@ local color_white = color_white
 local PANEL = {}
 
 PANEL.Margin = 12
+PANEL.BackgroundColor = Color( 28, 100, 157 )
 
 function PANEL:Init()
 
@@ -18,7 +19,7 @@ function PANEL:Init()
 	-- self.VolumeSlider:DockMargin( lrMargin, 0, lrMargin, 0 )
 
 	self.VolumeLabel = vgui.Create( "DLabel", self )
-	self.VolumeLabel:SetContentAlignment( 5 ) -- center
+	self.VolumeLabel:SetContentAlignment( 6 ) -- center right
 
 	self.Volume = -1
 
@@ -26,7 +27,7 @@ end
 
 function PANEL:Think()
 
-	local volume = MediaPlayer.Volume()
+	local volume = math.Round( MediaPlayer.Volume() * 100 )
 
 	if self.Volume ~= volume then
 		-- self.VolumeSlider:SetValue( volume )
@@ -37,18 +38,21 @@ function PANEL:Think()
 
 end
 
-function PANEL:Paint(w, h)
+function PANEL:Paint( w, h )
+
+	surface.SetDrawColor( self.BackgroundColor )
+	surface.DrawRect( 0, 0, w, h )
 
 end
 
 function PANEL:PerformLayout()
 
-	-- self.VolumeButton:CenterVertical()
-	-- self.VolumeButton:AlignLeft( self.Margin )
+	self.VolumeButton:CenterVertical()
+	self.VolumeButton:AlignLeft( self.Margin )
 
-	-- self.VolumeLabel:SizeToContents()
-	-- self.VolumeLabel:CenterVertical()
-	-- self.VolumeLabel:AlignLeft( self.Margin )
+	self.VolumeLabel:SizeToContents()
+	self.VolumeLabel:CenterVertical()
+	self.VolumeLabel:AlignRight( self.Margin )
 
 end
 
@@ -57,29 +61,24 @@ derma.DefineControl( "MP.VolumeControl", "", PANEL, "DPanel" )
 
 local VOLUME_BUTTON = {}
 
-local VolumeIconMat = Material( "mediaplayer/ui/volume.png" )
-
 function VOLUME_BUTTON:Init()
 
 	self.BaseClass.Init( self )
 
-end
+	self:SetSize( 18, 17 )
 
-function VOLUME_BUTTON:Paint(w, h)
-
-	surface.SetDrawColor( color_white )
-	surface.SetMaterial( VolumeIconMat )
-	surface.DrawRect( 0, 0, w, h )
+	self:SetImage( "mediaplayer/ui/volume.png" )
 
 end
 
 function VOLUME_BUTTON:DoClick()
 
 	-- TODO: Toggle mute
+	print "CLICKED VOLUME BUTTON"
 
 end
 
-derma.DefineControl( "MP.VolumeButton", "", VOLUME_BUTTON, "DLabel" )
+derma.DefineControl( "MP.VolumeButton", "", VOLUME_BUTTON, "DImageButton" )
 
 
 local VOLUME_SLIDER = {}
@@ -90,7 +89,7 @@ function VOLUME_SLIDER:Init()
 
 end
 
-function VOLUME_SLIDER:Paint(w, h)
+function VOLUME_SLIDER:Paint( w, h )
 
 	-- TODO
 

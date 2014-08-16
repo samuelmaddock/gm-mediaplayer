@@ -7,11 +7,11 @@ function PANEL:Init()
 	self:SetPaintBackgroundEnabled( true )
 	self:SetPaintBorderEnabled( false )
 
-	self:SetKeyboardInputEnabled( false )
-	self:SetMouseInputEnabled( true )
+	self:SetSize( 385, 580 )
 
 	self.VolumeControls = vgui.Create( "MP.VolumeControl", self )
 	self.VolumeControls:Dock( BOTTOM )
+	self.VolumeControls:SetHeight( 48 )
 
 end
 
@@ -44,7 +44,11 @@ function MediaPlayer.ShowSidebar()
 		sidebar = vgui.CreateFromTable( MP_SIDEBAR )
 	end
 
-	sidebar:Show()
+	sidebar:MakePopup()
+	sidebar:ParentToHUD()
+
+	sidebar:SetKeyboardInputEnabled( false )
+	sidebar:SetMouseInputEnabled( true )
 
 	MediaPlayer._Sidebar = sidebar
 
