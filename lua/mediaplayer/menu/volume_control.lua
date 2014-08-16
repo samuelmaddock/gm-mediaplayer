@@ -1,9 +1,13 @@
+local math = math
+local ceil = math.ceil
+
 local surface = surface
 local color_white = color_white
 
 local PANEL = {}
 
-PANEL.Margin = 12
+PANEL.Margin = 20
+PANEL.ButtonWidth = 18
 PANEL.BackgroundColor = Color( 28, 100, 157 )
 
 function PANEL:Init()
@@ -12,11 +16,11 @@ function PANEL:Init()
 
 	self.VolumeButton = vgui.Create( "MP.VolumeButton", self )
 
-	-- self.VolumeSlider = vgui.Create( "MP.VolumeSlider", self )
-	-- self.VolumeSlider:Dock( FILL )
+	self.VolumeSlider = vgui.Create( "MP.VolumeSlider", self )
+	self.VolumeSlider:Dock( FILL )
 
-	-- local lrMargin = self.Margin * 2
-	-- self.VolumeSlider:DockMargin( lrMargin, 0, lrMargin, 0 )
+	local lrMargin = self.Margin * 2 + self.ButtonWidth
+	self.VolumeSlider:DockMargin( lrMargin, 0, lrMargin, 0 )
 
 	self.VolumeLabel = vgui.Create( "DLabel", self )
 	self.VolumeLabel:SetContentAlignment( 6 ) -- center right
@@ -61,14 +65,23 @@ derma.DefineControl( "MP.VolumeControl", "", PANEL, "DPanel" )
 
 local VOLUME_BUTTON = {}
 
+VOLUME_BUTTON.EnabledIcon = "mediaplayer/ui/volume.vmt"
+local textId = surface.GetTextureID( "mediaplayer/ui/volume.vmt" )
+
 function VOLUME_BUTTON:Init()
 
 	self.BaseClass.Init( self )
 
-	self:SetSize( 18, 17 )
+	self:SetSize( 16, 15 )
 
-	self:SetImage( "mediaplayer/ui/volume.png" )
+	-- self:SetImage( self.EnabledIcon )
 
+end
+
+function VOLUME_BUTTON:PaintOver( w, h )
+	surface.SetDrawColor( color_white )
+	surface.SetTexture( textId )
+	surface.DrawTexturedRect( 0, 0, w, h )
 end
 
 function VOLUME_BUTTON:DoClick()
@@ -83,15 +96,36 @@ derma.DefineControl( "MP.VolumeButton", "", VOLUME_BUTTON, "DImageButton" )
 
 local VOLUME_SLIDER = {}
 
+VOLUME_SLIDER.BarHeight = 3
+VOLUME_SLIDER.KnobSize = 12
+
+VOLUME_SLIDER.BarBgColor = Color( 13, 41, 62 )
+
 function VOLUME_SLIDER:Init()
 
 	self.BaseClass.Init( self )
+
+	self.Knob:SetSize( self.KnobSize, self.KnobSize )
+	self.Knob.Paint = self.PaintKnob
 
 end
 
 function VOLUME_SLIDER:Paint( w, h )
 
-	-- TODO
+	local progress = self.m_fSlideX
+	local vmid = ceil((h / 2) - (self.BarHeight / 2))
+
+	surface.SetDrawColor( self.BarBgColor )
+	surface.DrawRect( 0, vmid, w, self.BarHeight )
+
+	surface.SetDrawColor( color_white )
+	surface.DrawRect( 0, vmid, ceil(w * progress), self.BarHeight )
+
+end
+
+function VOLUME_SLIDER:PaintKnob( w, h )
+
+	draw.RoundedBoxEx( ceil(w/2), 0, 0, w, h, color_white, true, true, true, true )
 
 end
 
