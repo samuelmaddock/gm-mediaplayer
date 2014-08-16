@@ -32,11 +32,14 @@ end
 
 function PANEL:Think()
 
-	local volume = math.Round( MediaPlayer.Volume() * 100 )
+	local unitVolume = MediaPlayer.Volume()
+	local volume = math.Round( unitVolume * 100 )
 
 	if self.Volume ~= volume then
-		-- self.VolumeSlider:SetValue( volume )
+		self.VolumeSlider:SetSlideX( unitVolume )
 		self.VolumeLabel:SetText( volume )
+
+		self:InvalidateChildren()
 
 		self.Volume = volume
 	end
@@ -111,6 +114,14 @@ function VOLUME_SLIDER:Init()
 	self.Knob:SetSize( self.KnobSize, self.KnobSize )
 	self.Knob.Paint = self.PaintKnob
 
+	-- Remove some hidden panel child from the inherited DSlider control; I have
+	-- no idea where it's being created...
+	for _, child in pairs( self:GetChildren() ) do
+		if child ~= self.Knob then
+			child:Remove()
+		end
+	end
+
 end
 
 function VOLUME_SLIDER:Paint( w, h )
@@ -137,7 +148,7 @@ function VOLUME_SLIDER:OnMouseWheeled( delta )
 	local change = self.ScrollIncrement * delta
 	local progress = clamp(self.m_fSlideX + change, 0, 1)
 
-	self:SetSlideX( progress )
+	MediaPlayer.Volume( progress )
 
 end
 

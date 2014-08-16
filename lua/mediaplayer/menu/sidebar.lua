@@ -40,10 +40,11 @@ function MediaPlayer.ShowSidebar()
 
 	local sidebar = MediaPlayer._Sidebar
 
-	if not ValidPanel( sidebar ) then
-		sidebar = vgui.CreateFromTable( MP_SIDEBAR )
+	if ValidPanel( sidebar ) then
+		sidebar:Remove()
 	end
 
+	sidebar = vgui.CreateFromTable( MP_SIDEBAR )
 	sidebar:MakePopup()
 	sidebar:ParentToHUD()
 
@@ -66,4 +67,4 @@ function MediaPlayer.HideSidebar()
 end
 
 control.AddKeyPress( KEY_C, "MP.ShowSidebar", MediaPlayer.ShowSidebar )
-control.AddKeyRelease( KEY_C, "MP.HideSidebar", MediaPlayer.HideSidebar )
+-- control.AddKeyRelease( KEY_C, "MP.HideSidebar", MediaPlayer.HideSidebar )
