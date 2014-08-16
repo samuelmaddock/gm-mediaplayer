@@ -7,13 +7,15 @@ PANEL.Margin = 12
 
 function PANEL:Init()
 
+	self.BaseClass.Init( self )
+
 	self.VolumeButton = vgui.Create( "MP.VolumeButton", self )
 
 	-- self.VolumeSlider = vgui.Create( "MP.VolumeSlider", self )
 	-- self.VolumeSlider:Dock( FILL )
 
-	local lrMargin = self.Margin * 2
-	self.VolumeSlider:DockMargin( lrMargin, 0, lrMargin, 0 )
+	-- local lrMargin = self.Margin * 2
+	-- self.VolumeSlider:DockMargin( lrMargin, 0, lrMargin, 0 )
 
 	self.VolumeLabel = vgui.Create( "DLabel", self )
 	self.VolumeLabel:SetContentAlignment( 5 ) -- center
@@ -41,12 +43,12 @@ end
 
 function PANEL:PerformLayout()
 
-	self.VolumeButton:CenterVertical()
-	self.VolumeButton:AlignLeft( self.Margin )
+	-- self.VolumeButton:CenterVertical()
+	-- self.VolumeButton:AlignLeft( self.Margin )
 
-	self.VolumeLabel:SizeToContents()
-	self.VolumeLabel:CenterVertical()
-	self.VolumeLabel:AlignLeft( self.Margin )
+	-- self.VolumeLabel:SizeToContents()
+	-- self.VolumeLabel:CenterVertical()
+	-- self.VolumeLabel:AlignLeft( self.Margin )
 
 end
 
@@ -59,16 +61,7 @@ local VolumeIconMat = Material( "mediaplayer/ui/volume.png" )
 
 function VOLUME_BUTTON:Init()
 
-	self:SetPaintBackground( true )
-
-	self:SetPaintBackgroundEnabled( false )
-	self:SetPaintBorderEnabled( false )
-
-	self:SetKeyboardInputEnabled( false )
-	self:SetMouseInputEnabled( true )
-
-	self.VolumeControls = vgui.Create( "MP.VolumeControl" )
-	self.VolumeControls:Dock( BOTTOM )
+	self.BaseClass.Init( self )
 
 end
 
@@ -86,23 +79,14 @@ function VOLUME_BUTTON:DoClick()
 
 end
 
-derma.DefineControl( "MP.VolumeButton", "", PANEL, "DLabel" )
+derma.DefineControl( "MP.VolumeButton", "", VOLUME_BUTTON, "DLabel" )
 
 
 local VOLUME_SLIDER = {}
 
 function VOLUME_SLIDER:Init()
 
-	self:SetPaintBackground( true )
-
-	self:SetPaintBackgroundEnabled( false )
-	self:SetPaintBorderEnabled( false )
-
-	self:SetKeyboardInputEnabled( false )
-	self:SetMouseInputEnabled( true )
-
-	self.VolumeControls = vgui.Create( "MP.VolumeControl" )
-	self.VolumeControls:Dock( BOTTOM )
+	self.BaseClass.Init( self )
 
 end
 
