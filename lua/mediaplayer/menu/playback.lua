@@ -26,6 +26,10 @@ function PANEL:Init()
 
 	self.MediaTime = vgui.Create( "MP.MediaTime", self )
 
+	-- TODO: remove testing defaults
+	self.MediaTime:SetStartTime( os.time() )
+	self.MediaTime:SetDuration( 43200 )
+
 	self.FavBtn = vgui.Create( "MP.FavoriteButton", self )
 
 	-- TODO: Only allow these buttons to show for admins

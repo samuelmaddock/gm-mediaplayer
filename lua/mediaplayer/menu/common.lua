@@ -60,9 +60,6 @@ function MEDIA_TIME:Init()
 	self.DurationLbl:SetFont( "MP.MediaDuration" )
 	-- self.DurationLbl:SetTextColor( color_white )
 
-	self:SetStartTime( os.time() )
-	self:SetDuration( 43200 )
-
 	self.NextThink = 0
 
 end
@@ -131,6 +128,7 @@ derma.DefineControl( "MP.MediaTime", "", MEDIA_TIME, "Panel" )
 
 local ADDED_BY = {}
 
+ADDED_BY.Height = 24
 ADDED_BY.NameOffset = 4
 
 function ADDED_BY:Init()
@@ -155,8 +153,7 @@ function ADDED_BY:PerformLayout()
 	self.NameLbl:SizeToContents()
 
 	local w = self.PrefixLbl:GetWide() + self.NameLbl:GetWide() + self.NameOffset
-	local h = math.max( self.PrefixLbl:GetTall(), self.PrefixLbl:GetTall() )
-	self:SetSize( w, h )
+	self:SetSize( w, self.Height )
 
 	self.PrefixLbl:AlignLeft( 0 )
 	self.NameLbl:MoveRightOf( self.PrefixLbl, self.NameOffset )
