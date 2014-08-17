@@ -1,5 +1,8 @@
+include "common.lua"
 include "sidebar_tabs.lua"
 include "volume_control.lua"
+include "playback.lua"
+include "queue.lua"
 
 local PANEL = {}
 
@@ -13,8 +16,8 @@ function PANEL:Init()
 	self.Tabs = vgui.Create( "MP.SidebarTabs", self )
 	self.Tabs:Dock( FILL )
 
-	local panel = vgui.Create( "Panel" )
-	self.Tabs:AddSheet( "CURRENTLY PLAYING", panel, nil, false, false )
+	local curplaytab = vgui.Create( "MP.CurrentlyPlayingTab" )
+	self.Tabs:AddSheet( "CURRENTLY PLAYING", curplaytab, nil, false, false )
 
 	local panel = vgui.Create( "Panel" )
 	self.Tabs:AddSheet( "RECENTLY VIEWED", panel, nil, false, false )

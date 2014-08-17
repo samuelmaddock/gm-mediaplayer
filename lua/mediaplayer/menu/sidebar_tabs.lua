@@ -111,6 +111,12 @@ derma.DefineControl( "MP.SidebarTabs", "", PANEL, "DPropertySheet" )
 
 local SIDEBAR_TAB = {}
 
+surface.CreateFont( "MP.TabTitle", {
+	font = "Roboto Regular",
+	size = 16,
+	weight = 400
+} )
+
 SIDEBAR_TAB.BgColor = Color( 28, 100, 157 )
 SIDEBAR_TAB.SelectedBorderColor = color_white
 SIDEBAR_TAB.SelectedBorderHeight = 2
@@ -119,6 +125,7 @@ function SIDEBAR_TAB:Init()
 
 	self.BaseClass.Init( self )
 
+	self:SetFont( "MP.TabTitle" )
 	self:SetContentAlignment( 5 )
 	self:SetTextInset( 0, 0 )
 
@@ -145,3 +152,19 @@ function SIDEBAR_TAB:ApplySchemeSettings()
 end
 
 derma.DefineControl( "MP.SidebarTab", "", SIDEBAR_TAB, "DTab" )
+
+
+
+local CURRENTLY_PLAYING_TAB = {}
+
+function CURRENTLY_PLAYING_TAB:Init()
+
+	self.PlaybackPanel = vgui.Create( "MP.Playback", self )
+	self.PlaybackPanel:Dock( TOP )
+
+	self.QueuePanel = vgui.Create( "MP.Queue", self )
+	self.QueuePanel:Dock( FILL )
+
+end
+
+derma.DefineControl( "MP.CurrentlyPlayingTab", "", CURRENTLY_PLAYING_TAB, "Panel" )
