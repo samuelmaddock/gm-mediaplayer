@@ -140,12 +140,27 @@ function VOLUME_SLIDER:PaintKnob( w, h )
 
 end
 
+function VOLUME_SLIDER:SetSlideX( value )
+
+	if self._lockVolume then return end
+
+	value = clamp(value, 0, 1)
+
+	self.m_fSlideX = value
+	self:InvalidateLayout()
+
+	self._lockVolume = true
+	MediaPlayer.Volume( value )
+	self._lockVolume = nil
+
+end
+
 function VOLUME_SLIDER:OnMouseWheeled( delta )
 
 	local change = self.ScrollIncrement * delta
-	local progress = clamp(self.m_fSlideX + change, 0, 1)
+	local value = clamp(self.m_fSlideX + change, 0, 1)
 
-	MediaPlayer.Volume( progress )
+	self:SetSlideX( value )
 
 end
 
