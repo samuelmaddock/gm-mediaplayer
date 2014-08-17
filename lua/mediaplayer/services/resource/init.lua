@@ -16,10 +16,18 @@ function SERVICE:GetMetadata( callback )
 		local pattern = self.TitleIncludeExtension and
 			FilenameExtPattern or FilenamePattern
 
-		local path = self.urlinfo.path
-		path = string.match( path, pattern ) -- get filename
+		if self.urlinfo.path then
+			local path = self.urlinfo.path
+			path = string.match( path, pattern ) -- get filename
 
-		title = urllib.unescape( path )
+			if path then
+				title = urllib.unescape( path )
+			else
+				title = self.url
+			end
+		else
+			title = self.url
+		end
 
 		self._metadata = {
 			title 		= title or self.Name,
