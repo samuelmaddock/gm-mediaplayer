@@ -30,10 +30,6 @@ function PANEL:Init()
 
 end
 
-function PANEL:Think()
-
-end
-
 function PANEL:Paint(w, h)
 
 	surface.SetDrawColor( 0, 0, 0, 140 )
@@ -61,6 +57,12 @@ function MediaPlayer.ShowSidebar()
 		sidebar:Remove()
 	end
 
+	local ent = LocalPlayer():GetEyeTrace().Entity
+	if not IsValid(ent) then return end
+
+	local mp = MediaPlayer.GetByObject( ent )
+	if not IsValid(mp) then return end
+
 	sidebar = vgui.CreateFromTable( MP_SIDEBAR )
 	sidebar:MakePopup()
 	sidebar:ParentToHUD()
@@ -69,6 +71,8 @@ function MediaPlayer.ShowSidebar()
 	sidebar:SetMouseInputEnabled( true )
 
 	MediaPlayer._Sidebar = sidebar
+
+	hook.Run( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, mp )
 
 end
 

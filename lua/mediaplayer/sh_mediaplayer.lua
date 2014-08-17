@@ -175,6 +175,25 @@ function MediaPlayer.GetAll()
 	return MediaPlayer.List
 end
 
+---
+-- Gets the media player associated with the given object.
+--
+-- @param obj Any object.
+--
+function MediaPlayer.GetByObject( obj )
+	local mp = nil
+
+	if isentity(obj) and obj.IsMediaPlayerEntity then
+		mp = obj:GetMediaPlayer()
+	elseif istable(obj) and obj.IsMediaPlayer then
+		mp = obj
+	elseif isstring(obj) then
+		mp = MediaPlayer.GetById(obj)
+	end
+
+	return mp
+end
+
 
 --[[---------------------------------------------------------
 	Media Player Think Loop

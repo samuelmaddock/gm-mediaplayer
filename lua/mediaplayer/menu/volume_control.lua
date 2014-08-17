@@ -26,23 +26,20 @@ function PANEL:Init()
 	self.VolumeLabel = vgui.Create( "DLabel", self )
 	self.VolumeLabel:SetContentAlignment( 6 ) -- center right
 
-	self.Volume = -1
+	self:OnVolumeChanged( MediaPlayer.Volume() )
+
+	hook.Add( MP.EVENTS.VOLUME_CHANGED, self, self.OnVolumeChanged )
 
 end
 
-function PANEL:Think()
+function PANEL:OnVolumeChanged( volume )
 
-	local unitVolume = MediaPlayer.Volume()
-	local volume = math.Round( unitVolume * 100 )
+	local scaledVolume = math.Round(volume * 100)
 
-	if self.Volume ~= volume then
-		self.VolumeSlider:SetSlideX( unitVolume )
-		self.VolumeLabel:SetText( volume )
+	self.VolumeSlider:SetSlideX( volume )
+	self.VolumeLabel:SetText( scaledVolume )
 
-		self:InvalidateChildren()
-
-		self.Volume = volume
-	end
+	self:InvalidateChildren()
 
 end
 

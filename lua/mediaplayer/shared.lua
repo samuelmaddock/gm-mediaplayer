@@ -1,4 +1,5 @@
 MediaPlayer = MediaPlayer or {}
+MP = MediaPlayer
 
 --[[---------------------------------------------------------
 	ConVars
@@ -65,6 +66,7 @@ end
 	Shared includes
 -----------------------------------------------------------]]
 
+include "sh_events.lua"
 include "sh_mediaplayer.lua"
 include "sh_services.lua"
 include "sh_history.lua"

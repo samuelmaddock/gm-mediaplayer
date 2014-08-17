@@ -18,6 +18,8 @@ include "menu/sidebar.lua"
 
 function MediaPlayer.Volume( volume )
 
+	local cur = MediaPlayer.Cvars.Volume:GetFloat()
+
 	if volume then
 
 		-- Normalize volume
@@ -34,9 +36,13 @@ function MediaPlayer.Volume( volume )
 			end
 		end
 
+		hook.Run( MP.EVENTS.VOLUME_CHANGED, volume, cur )
+
+		cur = volume
+
 	end
 
-	return MediaPlayer.Cvars.Volume:GetFloat()
+	return cur
 
 end
 
