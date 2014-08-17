@@ -7,6 +7,8 @@ local color_white = color_white
 
 local PANEL = {}
 
+PANEL.Height = 72
+
 PANEL.BgColor = Color( 13, 41, 62 )
 PANEL.Padding = 12
 
@@ -37,6 +39,32 @@ function PANEL:Init()
 	self.RemoveBtn = vgui.Create( "MP.RemoveButton", self )
 
 	self.AddedByLbl = vgui.Create( "MP.AddedBy", self )
+
+end
+
+function PANEL:OnMediaChanged( media )
+
+	if media then
+		self.MediaTitle:SetText( media:Title() )
+		self.MediaTime:SetStartTime( media:StartTime() )
+		self.MediaTime:SetDuration( media:Duration() )
+		self.AddedByLbl:SetPlayer( media:GetOwner(), media:OwnerName(), media:OwnerSteamID() )
+
+		self.AddedByLbl:Show()
+		self.FavBtn:Show()
+		if self.SkipBtn then self.SkipBtn:Show() end
+		if self.RemoveBtn then self.RemoveBtn:Show() end
+	else
+		self.MediaTitle:SetText( "No media playing" )
+		self.MediaTime:Clear()
+
+		self.AddedByLbl:Hide()
+		self.FavBtn:Hide()
+		if self.SkipBtn then self.SkipBtn:Hide() end
+		if self.RemoveBtn then self.RemoveBtn:Hide() end
+	end
+
+	self:InvalidateLayout()
 
 end
 
@@ -74,7 +102,7 @@ function PANEL:PerformLayout()
 
 	local w = self:GetWide()
 
-	self:SetTall( 72 )
+	self:SetTall( self.Height )
 
 	self.PlayPauseBtn:CenterVertical()
 	self.PlayPauseBtn:AlignLeft( self.Padding )

@@ -67,20 +67,29 @@ end
 function MEDIA_TIME:SetStartTime( time )
 	self.StartTime = time
 
+	local text = time and "0:00" or ""
+	self.TimeLbl:SetText( text )
+
 	self:UpdateDivider()
 end
 
 function MEDIA_TIME:SetDuration( duration )
 	self.Duration = duration
 
-	self.DurationLbl:SetText( string.FormatSeconds( duration ) )
+	local text = duration and string.FormatSeconds( duration ) or ""
+	self.DurationLbl:SetText( text )
+
 	self:UpdateDivider()
 end
 
 function MEDIA_TIME:UpdateDivider()
-	if self.StartTime and self.Duration then
-		self.DividerLbl:SetText( "/" )
-	end
+	local text = (self.StartTime and self.Duration) and "/" or ""
+	self.DividerLbl:SetText( text )
+end
+
+function MEDIA_TIME:Clear()
+	self:SetStartTime( nil )
+	self:SetDuration( nil )
 end
 
 function MEDIA_TIME:Think()
@@ -145,6 +154,11 @@ function ADDED_BY:Init()
 	self.NameLbl:SetTextColor( color_white )
 	self.NameLbl:SetContentAlignment( 8 )
 
+end
+
+function ADDED_BY:SetPlayer( ply, name, steamId )
+	self.NameLbl:SetText( name )
+	self.NameLbl:SetTooltip( steamId )
 end
 
 function ADDED_BY:PerformLayout()

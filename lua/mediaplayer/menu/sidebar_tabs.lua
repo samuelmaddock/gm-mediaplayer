@@ -157,6 +157,8 @@ derma.DefineControl( "MP.SidebarTab", "", SIDEBAR_TAB, "DTab" )
 
 local CURRENTLY_PLAYING_TAB = {}
 
+AccessorFunc( CURRENTLY_PLAYING_TAB, "MediaPlayerId", "MediaPlayerId" )
+
 function CURRENTLY_PLAYING_TAB:Init()
 
 	self.PlaybackPanel = vgui.Create( "MP.Playback", self )
@@ -164,6 +166,36 @@ function CURRENTLY_PLAYING_TAB:Init()
 
 	self.QueuePanel = vgui.Create( "MP.Queue", self )
 	self.QueuePanel:Dock( FILL )
+
+	hook.Add( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, self, self.OnMediaPlayerChanged )
+
+end
+
+function CURRENTLY_PLAYING_TAB:OnMediaPlayerChanged( mp )
+
+	self:SetMediaPlayerId( mp:GetId() )
+
+	if not self.MediaChangedHandle then
+		-- set current media
+		self.PlaybackPanel:OnMediaChanged( mp:GetMedia() )
+
+		-- listen for any future media changes
+		self.MediaChangedHandle = function(...) self.PlaybackPanel:OnMediaChanged(...) end
+		mp:on( MP.EVENTS.MEDIA_CHANGED, self.MediaChangedHandle )
+	end
+
+end
+
+function CURRENTLY_PLAYING_TAB:OnRemove()
+
+	local mpId = self:GetMediaPlayerId()
+	local mp = MediaPlayer.GetById( mpId )
+
+	hook.Remove( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, self )
+
+	if mp then
+		mp:removeListener( MP.EVENTS.MEDIA_CHANGED, self.MediaChangedHandle )
+	end
 
 end
 

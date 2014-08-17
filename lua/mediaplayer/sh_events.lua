@@ -1,4 +1,6 @@
-MP.EVENTS = {}
+MP.EVENTS = {
+	MEDIA_CHANGED = "mediaChanged"
+}
 
 if CLIENT then
 
