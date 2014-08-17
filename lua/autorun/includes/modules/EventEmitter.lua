@@ -6,9 +6,13 @@
 local EventEmitter = {}
 
 local function indexOfListener(listeners, listener)
+	local value
 	local i = #listeners
+
+
 	while i > 0 do
-		if listeners[i].listener == listener then
+		value = listeners[i]
+		if type(value) == 'table' and value.listener == listener then
 			return i
 		end
 		i = i - 1
@@ -27,12 +31,14 @@ end
 
 function EventEmitter:getListeners(evt)
 	local events = self:_getEvents()
-	local response, key
+	local response
 
 	-- TODO: accept pattern matching
 
 	if not events[evt] then
-		events[evt] = {}
+		local tbl = {}
+		tbl.__array = true
+		events[evt] = tbl
 	end
 
 	response = events[evt]
@@ -48,25 +54,32 @@ function EventEmitter:getListenersAsObject(evt)
 	local listeners = self:getListeners(evt)
 	local response
 
-	if type(listeners) == 'table' then
+	if listeners.__array then
 		response = {}
 		response[evt] = listeners
 	end
 
-	return response or listeners
+	return response or listeners, wrapped
 end
 
 function EventEmitter:addListener(evt, listener)
 	local listeners = self:getListenersAsObject(evt)
 	local listenerIsWrapped = type(listener) == 'table'
-	local key
 
 	for key, _ in pairs(listeners) do
 		if rawget(listeners, key) and indexOfListener(listeners[key], listener) == -1 then
-			table.insert(listeners[key], listenerIsWrapped and listener or {
-				listener = listener,
-				once = false
-			})
+			local value
+
+			if listenerIsWrapped then
+				value = listener
+			else
+				value = {
+					listener = listener,
+					once = false
+				}
+			end
+
+			table.insert(listeners[key], value)
 		end
 	end
 
@@ -86,7 +99,7 @@ EventEmitter.once = EventEmitter.addOnceListener
 
 function EventEmitter:removeListener(evt, listener)
 	local listeners = self:getListenersAsObject(evt)
-	local index, key
+	local index
 
 	for key, _ in pairs(listeners) do
 		if rawget(listeners, key) then
@@ -169,7 +182,7 @@ function EventEmitter:_getOnceReturnValue()
 end
 
 function EventEmitter:_getEvents()
-	if not rawget(self, '_events') then
+	if not self._events then
 		self._events = {}
 	end
 
