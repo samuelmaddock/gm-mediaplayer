@@ -11,6 +11,10 @@ FontTbl.font = "Roboto Medium"
 FontTbl.size = 18
 surface.CreateFont( "MP.MediaTime", FontTbl )
 
+FontTbl.font = "Roboto Medium"
+FontTbl.size = 18
+surface.CreateFont( "MP.QueueHeader", FontTbl )
+
 FontTbl.font = "Roboto Light"
 surface.CreateFont( "MP.MediaDuration", FontTbl )
 
@@ -21,6 +25,7 @@ surface.CreateFont( "MP.Prefix", FontTbl )
 FontTbl.font = "Roboto Bold"
 FontTbl.size = 16
 surface.CreateFont( "MP.AddedByName", FontTbl )
+
 
 local MEDIA_TITLE = {}
 
