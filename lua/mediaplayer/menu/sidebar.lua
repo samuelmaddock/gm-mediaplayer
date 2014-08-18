@@ -49,7 +49,7 @@ end
 local MP_SIDEBAR = vgui.RegisterTable( PANEL, "EditablePanel" )
 
 
-function MediaPlayer.ShowSidebar()
+function MediaPlayer.ShowSidebar( mp )
 
 	local sidebar = MediaPlayer._Sidebar
 
@@ -57,10 +57,13 @@ function MediaPlayer.ShowSidebar()
 		sidebar:Remove()
 	end
 
-	local ent = LocalPlayer():GetEyeTrace().Entity
-	if not IsValid(ent) then return end
+	if not mp then
+		local ent = LocalPlayer():GetEyeTrace().Entity
+		if not IsValid(ent) then return end
 
-	local mp = MediaPlayer.GetByObject( ent )
+		mp = MediaPlayer.GetByObject( ent )
+	end
+
 	if not IsValid(mp) then return end
 
 	sidebar = vgui.CreateFromTable( MP_SIDEBAR )
@@ -87,5 +90,29 @@ function MediaPlayer.HideSidebar()
 
 end
 
-control.AddKeyPress( KEY_C, "MP.ShowSidebar", MediaPlayer.ShowSidebar )
--- control.AddKeyRelease( KEY_C, "MP.HideSidebar", MediaPlayer.HideSidebar )
+-- control.AddKeyPress( KEY_C, "MP.ShowSidebar", function() MediaPlayer.ShowSidebar() end )
+-- control.AddKeyRelease( KEY_C, "MP.HideSidebar", function() MediaPlayer.HideSidebar() end )
+
+control.AddKeyPress( KEY_C, "MP.ShowSidebarTest", function()
+	-- Create test fixture
+	local mp = MediaPlayer.Create( 'ui-test-player' )
+
+	-- Create media object
+	local mediaUrl = "https://www.youtube.com/watch?v=IMorTE0lFLc"
+	local media = MediaPlayer.GetMediaForUrl( mediaUrl )
+
+	-- Set metadata
+	media._metadata = {
+		title = "Test media",
+		duration = 3600
+	}
+
+	media._OwnerName = "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+	media._OwnerSteamID = "STEAM_0:1:15862026"
+	media:StartTime( os.time() )
+
+	mp:SetMedia( media )
+
+	-- Display UI using fixture
+	MediaPlayer.ShowSidebar( mp )
+end )

@@ -161,12 +161,27 @@ function ADDED_BY:SetPlayer( ply, name, steamId )
 	self.NameLbl:SetTooltip( steamId )
 end
 
+function ADDED_BY:SetMaxWidth( width )
+	self.maxWidth = width
+	self:InvalidateLayout()
+end
+
 function ADDED_BY:PerformLayout()
 
 	self.PrefixLbl:SizeToContents()
 	self.NameLbl:SizeToContents()
 
-	local w = self.PrefixLbl:GetWide() + self.NameLbl:GetWide() + self.NameOffset
+	local pw = self.PrefixLbl:GetWide()
+	local nw = self.NameLbl:GetWide()
+	local w = pw + nw + self.NameOffset
+
+	if self.maxWidth then
+		w = math.min( w, self.maxWidth )
+
+		nw = math.max( 0, w - self.NameOffset - pw )
+		self.NameLbl:SetWide( nw )
+	end
+
 	self:SetSize( w, self.Height )
 
 	self.PrefixLbl:AlignLeft( 0 )

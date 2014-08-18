@@ -214,14 +214,6 @@ function MEDIAPLAYER:CanPlayerRequestMedia( ply, media )
 end
 
 ---
--- Determines if the player has privileges to use media controls (skip, seek,
--- etc.). Override this for custom behavior.
---
-function MEDIAPLAYER:IsPlayerPrivileged( ply )
-	return ply == self:GetOwner() or ply:IsAdmin()
-end
-
----
 -- Determine whether the media should be added to the queue.
 -- This should be overwritten if only certain media should be allowed.
 --

@@ -124,6 +124,12 @@ function PANEL:PerformLayout()
 	self.SkipBtn:MoveLeftOf( self.RemoveBtn, self.Padding )
 	self.SkipBtn:AlignBottom( self.Padding )
 
+	-- 'ADDED BY Name' needs to fit between the media time and the rightmost
+	-- buttons.
+	local addedByMaxWidth = ( self.SkipBtn:GetPos() - self.Padding ) -
+		( self.MediaTime:GetPos() + self.MediaTime:GetWide() + self.Padding )
+
+	self.AddedByLbl:SetMaxWidth( addedByMaxWidth )
 	self.AddedByLbl:MoveLeftOf( self.SkipBtn, self.Padding )
 	self.AddedByLbl:AlignBottom( self.Padding )
 

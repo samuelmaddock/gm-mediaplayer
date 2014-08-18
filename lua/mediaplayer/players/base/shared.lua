@@ -161,6 +161,14 @@ function MEDIAPLAYER:SetOwner( ply )
 	self._Owner = ply
 end
 
+---
+-- Determines if the player has privileges to use media controls (skip, seek,
+-- etc.). Override this for custom behavior.
+--
+function MEDIAPLAYER:IsPlayerPrivileged( ply )
+	return ply == self:GetOwner() or ply:IsAdmin()
+end
+
 --
 -- Media player update
 --
@@ -227,7 +235,7 @@ function MEDIAPLAYER:SetMedia( media )
 	self:OnMediaStarted( media )
 
 	-- NOTE: media can be nil!
-	self:emit('mediaChanged', media)
+	self:emit(MP.EVENTS.MEDIA_CHANGED, media)
 end
 
 --
