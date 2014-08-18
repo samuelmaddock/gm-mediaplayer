@@ -14,14 +14,14 @@ function SERVICE:Volume( volume )
 		local vol = volume > 1 and volume/100 or volume
 
 		-- IGModAudioChannel is limited by the actual gmod volume
-		local gmvolume = GetConVarNumber("volume")
-		if gmvolume > vol then
-			vol = vol / gmvolume
-		else
-			vol = 1
-		end
+		-- local gmvolume = GetConVarNumber("volume")
+		-- if gmvolume > vol then
+		-- 	vol = vol / gmvolume
+		-- else
+		-- 	vol = 1
+		-- end
 
-		self.Channel:SetVolume( vol )
+		self.Channel:SetVolume( math.sqrt(vol) )
 	end
 
 	return volume

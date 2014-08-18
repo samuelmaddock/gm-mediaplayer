@@ -10,7 +10,8 @@ if CLIENT then
 	} )
 
 	MP.EVENTS.UI = {
-		MEDIA_PLAYER_CHANGED = "mp.events.ui.mediaPlayerChanged"
+		MEDIA_PLAYER_CHANGED = "mp.events.ui.mediaPlayerChanged",
+		OPEN_REQUEST_MENU = "mp.events.ui.openRequestMenu"
 	}
 
 end

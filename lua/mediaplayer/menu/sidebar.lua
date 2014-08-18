@@ -30,6 +30,18 @@ function PANEL:Init()
 
 end
 
+function PANEL:SetupMediaPlayer( mp )
+
+	self._mp = mp
+	hook.Run( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, mp )
+
+	hook.Add( MP.EVENTS.UI.OPEN_REQUEST_MENU, self, function()
+		MediaPlayer.HideSidebar()
+		MediaPlayer.OpenRequestMenu( mp )
+	end )
+
+end
+
 function PANEL:Paint(w, h)
 
 	surface.SetDrawColor( 0, 0, 0, 140 )
@@ -73,9 +85,9 @@ function MediaPlayer.ShowSidebar( mp )
 	sidebar:SetKeyboardInputEnabled( false )
 	sidebar:SetMouseInputEnabled( true )
 
-	MediaPlayer._Sidebar = sidebar
+	sidebar:SetupMediaPlayer( mp )
 
-	hook.Run( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, mp )
+	MediaPlayer._Sidebar = sidebar
 
 end
 

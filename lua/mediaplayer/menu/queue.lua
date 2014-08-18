@@ -109,6 +109,10 @@ function ADD_VIDEO_BTN:Paint( w, h )
 
 end
 
+function ADD_VIDEO_BTN:DoClick()
+	hook.Run( MP.EVENTS.UI.OPEN_REQUEST_MENU )
+end
+
 derma.DefineControl( "MP.AddVideoButton", "", ADD_VIDEO_BTN, "DButton" )
 
 

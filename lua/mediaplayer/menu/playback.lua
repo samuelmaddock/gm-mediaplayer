@@ -72,15 +72,7 @@ function PANEL:OnMediaChanged( media )
 		self.MediaTitle:SetText( title )
 		self.MediaTitle:SetToolTip( title )
 
-		local startTime, duration = media:StartTime(), media:Duration()
-
-		self.MediaTime:SetStartTime( startTime )
-		self.MediaTime:SetDuration( duration )
-
 		self.AddedByLbl:SetPlayer( media:GetOwner(), media:OwnerName(), media:OwnerSteamID() )
-
-		self.Seekbar:SetStartTime( startTime )
-		self.Seekbar:SetDuration( duration )
 
 		self.AddedByLbl:Show()
 		self.FavBtn:Show()
@@ -90,13 +82,26 @@ function PANEL:OnMediaChanged( media )
 		self.MediaTitle:SetText( "No media playing" )
 		self.MediaTitle:SetTooltip( "" )
 
-		self.MediaTime:Clear()
-
 		self.AddedByLbl:Hide()
-		self.Seekbar:Hide()
 		self.FavBtn:Hide()
 		if self.SkipBtn then self.SkipBtn:Hide() end
 		if self.RemoveBtn then self.RemoveBtn:Hide() end
+	end
+
+	if media and media:IsTimed() then
+		local startTime, duration = media:StartTime(), media:Duration()
+
+		self.MediaTime:SetStartTime( startTime )
+		self.MediaTime:SetDuration( duration )
+
+		self.Seekbar:SetStartTime( startTime )
+		self.Seekbar:SetDuration( duration )
+
+		self.Seekbar:Show()
+	else
+		self.MediaTime:Clear()
+
+		self.Seekbar:Hide()
 	end
 
 	self:InvalidateLayout()
