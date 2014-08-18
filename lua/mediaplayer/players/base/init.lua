@@ -428,7 +428,7 @@ function MEDIAPLAYER:RequestSeek( ply, seekTime )
 		return
 	end
 
-	local startTime = os.time() - seconds
+	local startTime = RealTime() - seconds
 	media:StartTime( startTime )
 
 	self:UpdateListeners()

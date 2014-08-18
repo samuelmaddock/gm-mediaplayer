@@ -51,7 +51,7 @@ local TIME_OFFSET_THRESHOLD = 2
 -- are offset.
 --
 local function correctTime( time, serverTime )
-	local curTime = os.time()
+	local curTime = RealTime()
 	local diffTime = os.difftime( serverTime, curTime )
 
 	if math.abs(diffTime) > TIME_OFFSET_THRESHOLD then

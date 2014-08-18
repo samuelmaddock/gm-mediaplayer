@@ -100,7 +100,7 @@ function MEDIA_TIME:Think()
 
 	if self.NextThink > rt then return end
 
-	local curTime = os.time()
+	local curTime = RealTime()
 	local mediaTime
 
 	if self.StartTime then

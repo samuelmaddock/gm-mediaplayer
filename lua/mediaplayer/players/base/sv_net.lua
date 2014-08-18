@@ -43,6 +43,6 @@ function mpnet.WriteTime( time, sync )
 	if sync then
 		-- We must send the current time in case either the server or the
 		-- client's system clock is offset.
-		net.WriteInt( os.time(), 32 )
+		net.WriteInt( RealTime(), 32 )
 	end
 end

@@ -268,7 +268,7 @@ function SEEKBAR:GetProgress()
 		return 0
 	end
 
-	local curTime = os.time()
+	local curTime = RealTime()
 	local diffTime = curTime - self._startTime
 
 	return clamp(diffTime / self._duration, 0, 1)

@@ -66,7 +66,7 @@ function MediaPlayer.Metadata:Query( media )
 		end
 
 		local lastupdated = tonumber( results.last_updated )
-		local timediff = os.time() - lastupdated
+		local timediff = RealTime() - lastupdated
 
 		if timediff > MaxCacheAge then
 
@@ -127,14 +127,14 @@ function MediaPlayer.Metadata:Save( media )
 						media:Duration(),
 						sql.SQLStr( media:Thumbnail() ),
 						sql.SQLStr( util.TableToJSON(media._metadata.extra) ),
-						os.time(),
-						os.time(),
+						RealTime(),
+						RealTime(),
 						id )
 
 		else
 
 			query = "UPDATE `%s` SET request_count=request_count+1, last_request=%s WHERE id='%s'"
-			query = query:format( TableName, os.time(), id )
+			query = query:format( TableName, RealTime(), id )
 
 		end
 
@@ -147,8 +147,8 @@ function MediaPlayer.Metadata:Save( media )
 			string.format( "%s,", media:Duration() ) ..
 			string.format( "%s,", sql.SQLStr( media:Thumbnail() ) ) ..
 			string.format( "%s,", sql.SQLStr( util.TableToJSON(media._metadata.extra) ) ) ..
-			string.format( "%d,", os.time() ) ..
-			string.format( "%d)", os.time() )
+			string.format( "%d,", RealTime() ) ..
+			string.format( "%d)", RealTime() )
 
 	end
 

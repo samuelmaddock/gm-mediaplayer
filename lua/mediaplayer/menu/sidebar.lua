@@ -107,7 +107,7 @@ control.AddKeyPress( KEY_SLASH, "MP.ShowSidebarTest", function()
 
 		media._OwnerName = ownerName
 		media._OwnerSteamID = ownerSteamID
-		media:StartTime( startTime or os.time() )
+		media:StartTime( startTime or RealTime() )
 
 		return media
 	end
@@ -151,7 +151,7 @@ control.AddKeyPress( KEY_SLASH, "MP.ShowSidebarTest", function()
 		"https://www.youtube.com/watch?v=IMorTE0lFLc",
 		"(╯°□°）╯︵ ┻━┻",
 		"STEAM_0:1:15862026",
-		os.time() - 1800
+		RealTime() - 1800
 	) )
 
 	-- Display UI using fixture
