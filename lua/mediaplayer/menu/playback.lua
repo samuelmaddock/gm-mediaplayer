@@ -31,9 +31,10 @@ function PANEL:Init()
 
 	self.FavBtn = vgui.Create( "MP.FavoriteButton", self )
 
+	self.SkipBtn = vgui.Create( "MP.SkipButton", self )
+
 	-- TODO: Only allow these buttons to show for admins
-	if true then
-		self.SkipBtn = vgui.Create( "MP.SkipButton", self )
+	if false then
 		self.RemoveBtn = vgui.Create( "MP.RemoveButton", self )
 
 		self.OwnerActions = true
@@ -76,7 +77,7 @@ function PANEL:OnMediaChanged( media )
 
 		self.AddedByLbl:Show()
 		self.FavBtn:Show()
-		if self.SkipBtn then self.SkipBtn:Show() end
+		self.SkipBtn:Show()
 		if self.RemoveBtn then self.RemoveBtn:Show() end
 	else
 		self.MediaTitle:SetText( "No media playing" )
@@ -84,7 +85,7 @@ function PANEL:OnMediaChanged( media )
 
 		self.AddedByLbl:Hide()
 		self.FavBtn:Hide()
-		if self.SkipBtn then self.SkipBtn:Hide() end
+		self.SkipBtn:Hide()
 		if self.RemoveBtn then self.RemoveBtn:Hide() end
 	end
 
@@ -110,31 +111,8 @@ end
 
 function PANEL:Paint( w, h )
 
-	-- local progress = 0.5 -- TODO: get actual progress
-
-	-- local tbHalfHeight = ceil(self.TrackbarHeight / 2)
-	-- local knobHalfHeight = ceil(self.KnobSize / 2)
-
-	-- local pw = ceil(w * progress)
-
 	surface.SetDrawColor( self.BgColor )
 	surface.DrawRect( 0, 0, w, h )
-
-	-- DisableClipping( true )
-
-	-- 	-- trackbar progress
-	-- 	surface.SetDrawColor( self.TrackbarProgressColor )
-	-- 	surface.DrawRect( 0, h - tbHalfHeight, pw, self.TrackbarHeight )
-
-	-- 	-- knob
-	-- 	draw.RoundedBoxEx( knobHalfHeight,
-	-- 		pw,
-	-- 		h - tbHalfHeight - knobHalfHeight,
-	-- 		self.KnobSize, self.KnobSize,
-	-- 		color_white,
-	-- 		true, true, true, true )
-
-	-- DisableClipping( false )
 
 end
 
@@ -163,36 +141,25 @@ function PANEL:PerformLayout()
 	self.FavBtn:AlignTop( self.Padding )
 	self.FavBtn:AlignRight( self.Padding )
 
-	-- 'ADDED BY Name' needs to fit between the media time and the rightmost
-	-- buttons.
-	local addedByMaxWidth
+	self.SkipBtn:AlignBottom( self.Padding )
 
 	if self.OwnerActions then
-
 		self.RemoveBtn:AlignBottom( self.Padding )
 		self.RemoveBtn:AlignRight( self.Padding )
 
 		self.SkipBtn:MoveLeftOf( self.RemoveBtn, self.BtnPadding )
-		self.SkipBtn:AlignBottom( self.Padding )
-
-		addedByMaxWidth = ( self.SkipBtn:GetPos() - self.BtnPadding ) -
-			( self.MediaTime:GetPos() + self.MediaTime:GetWide() + self.Padding )
-
 	else
-
-		addedByMaxWidth = ( w - self.Padding ) -
-			( self.MediaTime:GetPos() + self.MediaTime:GetWide() + self.Padding )
-
+		self.SkipBtn:AlignRight( self.Padding )
 	end
+
+	-- 'ADDED BY Name' needs to fit between the media time and the rightmost
+	-- buttons.
+	local addedByMaxWidth = ( self.SkipBtn:GetPos() - self.BtnPadding ) -
+		( self.MediaTime:GetPos() + self.MediaTime:GetWide() + self.Padding )
 
 	self.AddedByLbl:SetMaxWidth( addedByMaxWidth )
 	self.AddedByLbl:AlignBottom( self.Padding )
-
-	if self.OwnerActions then
-		self.AddedByLbl:MoveLeftOf( self.SkipBtn, self.BtnPadding )
-	else
-		self.AddedByLbl:AlignRight( self.Padding )
-	end
+	self.AddedByLbl:MoveLeftOf( self.SkipBtn, self.BtnPadding )
 
 	local maxTitleWidth = ( self.FavBtn:GetPos() - self.BtnPadding ) -
 		( self.MediaTitle:GetPos() )
