@@ -118,7 +118,7 @@ control.AddKeyPress( KEY_SLASH, "MP.ShowSidebarTest", function()
 
 	mp:SetMedia( CreateMedia(
 		"Test media - really long title test asdfljkasdfasdjfgasdf",
-		3600,
+		10,
 		"https://www.youtube.com/watch?v=IMorTE0lFLc",
 		"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
 		"STEAM_0:1:15862026"

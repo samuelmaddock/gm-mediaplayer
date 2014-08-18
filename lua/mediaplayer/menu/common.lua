@@ -1,3 +1,5 @@
+local clamp = math.Clamp
+
 local FontTbl = {
 	font = "Roboto Medium",
 	size = 21,
@@ -102,7 +104,7 @@ function MEDIA_TIME:Think()
 	local mediaTime
 
 	if self.StartTime then
-		mediaTime = curTime - self.StartTime
+		mediaTime = clamp( curTime - self.StartTime, 0, self.Duration )
 
 		self.TimeLbl:SetText( string.FormatSeconds( mediaTime ) )
 		self:InvalidateLayout()
