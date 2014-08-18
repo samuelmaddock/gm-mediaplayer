@@ -23,6 +23,8 @@ function PANEL:OnQueueChanged( queue )
 
 	for _, media in pairs(queue) do
 		local item = vgui.Create( "MP.MediaItem" )
+		item:SetMedia( media )
+
 		self.List:AddItem( item )
 	end
 
@@ -153,19 +155,23 @@ MEDIA_ITEM.KnobSize = 8
 function MEDIA_ITEM:Init()
 
 	self.MediaTitle = vgui.Create( "MP.MediaTitle", self )
-	self.MediaTitle:SetText( "Very Bad Video That Everyone Hates Included" )
-
 	self.MediaTime = vgui.Create( "MP.MediaTime", self )
-
-	-- TODO: remove testing defaults
-	self.MediaTime:SetDuration( math.Rand(0, 86400) )
-
 	self.FavBtn = vgui.Create( "MP.FavoriteButton", self )
-
-	-- TODO: Only allow these buttons to show for admins
-	self.RemoveBtn = vgui.Create( "MP.RemoveButton", self )
-
 	self.AddedByLbl = vgui.Create( "MP.AddedBy", self )
+
+end
+
+function MEDIA_ITEM:SetMedia( media )
+
+	self.MediaTitle:SetText( media:Title() )
+	self.MediaTime:SetDuration( media:Duration() )
+	self.AddedByLbl:SetPlayer( media:GetOwner(), media:OwnerName(), media:OwnerSteamID() )
+
+	-- TODO: detect if player has privileges to remove media from queue
+	-- e.g. they requested the media or they're an admin
+	if true then
+		self.RemoveBtn = vgui.Create( "MP.RemoveButton", self )
+	end
 
 end
 
@@ -188,16 +194,33 @@ function MEDIA_ITEM:PerformLayout()
 
 	self.MediaTime:InvalidateLayout()
 	self.MediaTime:AlignLeft( self.HPadding )
-	self.MediaTime:AlignBottom( self.VPadding )
+	self.MediaTime:AlignBottom( self.VPadding - 3 )
 
 	self.FavBtn:AlignTop( self.VPadding )
 	self.FavBtn:AlignRight( self.HPadding )
 
-	self.RemoveBtn:AlignBottom( self.VPadding )
-	self.RemoveBtn:AlignRight( self.HPadding )
 
-	self.AddedByLbl:MoveLeftOf( self.RemoveBtn, self.HPadding )
+	local maxAddedByWidth
+
+	if self.RemoveBtn then
+		self.RemoveBtn:AlignBottom( self.VPadding )
+		self.RemoveBtn:AlignRight( self.HPadding )
+
+		maxAddedByWidth = ( self.RemoveBtn:GetPos() - 4 ) -
+			( self.MediaTime:GetPos() + self.MediaTime:GetWide() + self.HPadding )
+	else
+		maxAddedByWidth = ( w - self.HPadding ) -
+			( self.MediaTime:GetPos() + self.MediaTime:GetWide() + self.HPadding )
+	end
+
+	self.AddedByLbl:SetMaxWidth( maxAddedByWidth )
 	self.AddedByLbl:AlignBottom( self.VPadding )
+
+	if self.RemoveBtn then
+		self.AddedByLbl:MoveLeftOf( self.RemoveBtn, 4 )
+	else
+		self.AddedByLbl:AlignRight( self.HPadding )
+	end
 
 	local maxTitleWidth = self.FavBtn:GetPos() -
 		( self.MediaTitle:GetPos() + 5 )

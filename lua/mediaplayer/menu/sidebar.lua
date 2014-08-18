@@ -131,7 +131,7 @@ control.AddKeyPress( KEY_SLASH, "MP.ShowSidebarTest", function()
 
 	mp:AddMedia( CreateMedia(
 		"Test media - really long title test asdfljkasdfasdjfgasdf",
-		3600,
+		86400,
 		"https://www.youtube.com/watch?v=IMorTE0lFLc",
 		"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
 		"STEAM_0:1:15862026"
@@ -139,7 +139,7 @@ control.AddKeyPress( KEY_SLASH, "MP.ShowSidebarTest", function()
 
 	mp:AddMedia( CreateMedia(
 		"Hello world",
-		3600 * 24,
+		1800,
 		"https://www.youtube.com/watch?v=IMorTE0lFLc",
 		"Sam",
 		"STEAM_0:1:15862026"
@@ -147,9 +147,9 @@ control.AddKeyPress( KEY_SLASH, "MP.ShowSidebarTest", function()
 
 	mp:AddMedia( CreateMedia(
 		"ASDSDFawcasiudcg awlieufgawlie",
-		3600,
+		180,
 		"https://www.youtube.com/watch?v=IMorTE0lFLc",
-		"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+		"(╯°□°）╯︵ ┻━┻",
 		"STEAM_0:1:15862026",
 		os.time() - 1800
 	) )

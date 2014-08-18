@@ -150,7 +150,7 @@ function ADDED_BY:Init()
 
 	self.NameLbl = vgui.Create( "DLabel", self )
 	self.NameLbl:SetFont( "MP.AddedByName" )
-	self.NameLbl:SetText( "Foobar" )
+	self.NameLbl:SetText( "Unknown" )
 	self.NameLbl:SetTextColor( color_white )
 	self.NameLbl:SetContentAlignment( 8 )
 

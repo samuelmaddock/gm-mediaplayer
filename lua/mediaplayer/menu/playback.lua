@@ -45,6 +45,21 @@ function PANEL:Init()
 
 	self.AddedByLbl = vgui.Create( "MP.AddedBy", self )
 
+	self.NextThink = 0
+
+end
+
+function PANEL:Think()
+
+	local rt = RealTime()
+
+	if rt > self.NextThink then
+		-- Perform layout every second for when the media label changes width
+		self:InvalidateLayout()
+		self.NextThink = rt + 1
+	end
+
+
 end
 
 function PANEL:OnMediaChanged( media )
