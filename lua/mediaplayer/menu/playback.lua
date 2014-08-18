@@ -280,8 +280,10 @@ function SEEKBAR:Think()
 
 	-- if rt < self.NextThink then return end
 
-	self:SetSlideX( self:GetProgress() )
-	self:InvalidateLayout()
+	if not self:IsEditing() then
+		self:SetSlideX( self:GetProgress() )
+		self:InvalidateLayout()
+	end
 
 	-- self.NextThink = rt + 0.1
 
@@ -292,7 +294,7 @@ function SEEKBAR:Paint( w, h )
 	local midy = ceil( h / 2 )
 	local bary = ceil(midy - (self.BarHeight / 2))
 
-	local progress = self:GetProgress()
+	local progress = self:GetSlideX()
 
 	surface.SetDrawColor( self.ProgressColor )
 	surface.DrawRect( 0, bary, ceil(w * progress), self.BarHeight )
