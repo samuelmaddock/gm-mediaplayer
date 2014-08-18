@@ -159,6 +159,7 @@ function MEDIAPLAYER:NextMedia()
 	-- Grab media from the queue if available
 	if not self:IsQueueEmpty() then
 		media = table.remove( self._Queue, 1 )
+		self:QueueUpdated()
 	end
 
 	self:SetMedia( media )
@@ -304,6 +305,7 @@ function MEDIAPLAYER:RequestMedia( media, ply )
 
 		-- Add the media to the queue
 		self:AddMedia( media )
+		self:QueueUpdated()
 
 		local msg = string.format( "Added '%s' to the queue", media:Title() )
 		self:NotifyPlayer( ply, msg )

@@ -184,17 +184,27 @@ function CURRENTLY_PLAYING_TAB:OnMediaPlayerChanged( mp )
 		mp:on( MP.EVENTS.MEDIA_CHANGED, self.MediaChangedHandle )
 	end
 
+	if not self.QueueChangedHandle then
+		-- set current queue
+		self.QueuePanel:OnQueueChanged( mp:GetMediaQueue() )
+
+		-- listen for any future media changes
+		self.QueueChangedHandle = function(...) self.QueuePanel:OnQueueChanged(...) end
+		mp:on( MP.EVENTS.QUEUE_CHANGED, self.QueueChangedHandle )
+	end
+
 end
 
 function CURRENTLY_PLAYING_TAB:OnRemove()
 
+	hook.Remove( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, self )
+
 	local mpId = self:GetMediaPlayerId()
 	local mp = MediaPlayer.GetById( mpId )
 
-	hook.Remove( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, self )
-
 	if mp then
 		mp:removeListener( MP.EVENTS.MEDIA_CHANGED, self.MediaChangedHandle )
+		mp:removeListener( MP.EVENTS.QUEUE_CHANGED, self.QueueChangedHandle )
 	end
 
 end

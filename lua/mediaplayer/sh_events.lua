@@ -1,5 +1,6 @@
 MP.EVENTS = {
-	MEDIA_CHANGED = "mediaChanged"
+	MEDIA_CHANGED = "mediaChanged",
+	QUEUE_CHANGED = "mp.events.queueChanged"
 }
 
 if CLIENT then

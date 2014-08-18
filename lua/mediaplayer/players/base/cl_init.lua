@@ -40,6 +40,8 @@ local function OnMediaUpdate( len )
 		mp:AddMedia(media)
 	end
 
+	mp:QueueUpdated()
+
 	mp:SetPlayerState( state )
 
 	hook.Call( "OnMediaPlayerUpdate", mp )
@@ -67,6 +69,7 @@ local function OnMediaSet( len )
 
 	if mp:GetPlayerState() >= MP_STATE_PLAYING then
 		mp:OnMediaFinished()
+		mp:QueueUpdated()
 	end
 
 	local media = mp.net.ReadMedia()

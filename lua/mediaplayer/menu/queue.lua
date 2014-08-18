@@ -17,6 +17,17 @@ function PANEL:Init()
 
 end
 
+function PANEL:OnQueueChanged( queue )
+
+	self.List:Clear()
+
+	for _, media in pairs(queue) do
+		local item = vgui.Create( "MP.MediaItem" )
+		self.List:AddItem( item )
+	end
+
+end
+
 derma.DefineControl( "MP.Queue", "", PANEL, "Panel" )
 
 
@@ -111,13 +122,6 @@ function QUEUE_LIST:Init()
 
 	-- TODO: Replace with custom scrollbar
 	self:EnableVerticalScrollbar()
-
-	local itemTest
-
-	for i = 1, 3 do
-		itemTest = vgui.Create( "MP.MediaItem" )
-		self:AddItem( itemTest )
-	end
 
 end
 

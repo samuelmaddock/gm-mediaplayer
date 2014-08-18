@@ -90,28 +90,69 @@ function MediaPlayer.HideSidebar()
 
 end
 
--- control.AddKeyPress( KEY_C, "MP.ShowSidebar", function() MediaPlayer.ShowSidebar() end )
--- control.AddKeyRelease( KEY_C, "MP.HideSidebar", function() MediaPlayer.HideSidebar() end )
+control.AddKeyPress( KEY_C, "MP.ShowSidebar", function() MediaPlayer.ShowSidebar() end )
+control.AddKeyRelease( KEY_C, "MP.HideSidebar", function() MediaPlayer.HideSidebar() end )
 
-control.AddKeyPress( KEY_C, "MP.ShowSidebarTest", function()
+control.AddKeyPress( KEY_SLASH, "MP.ShowSidebarTest", function()
 	-- Create test fixture
 	local mp = MediaPlayer.Create( 'ui-test-player' )
 
-	-- Create media object
-	local mediaUrl = "https://www.youtube.com/watch?v=IMorTE0lFLc"
-	local media = MediaPlayer.GetMediaForUrl( mediaUrl )
+	local function CreateMedia( title, duration, url, ownerName, ownerSteamID, startTime )
+		local media = MediaPlayer.GetMediaForUrl( url )
 
-	-- Set metadata
-	media._metadata = {
-		title = "Test media",
-		duration = 3600
-	}
+		media._metadata = {
+			title = title,
+			duration = duration
+		}
 
-	media._OwnerName = "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
-	media._OwnerSteamID = "STEAM_0:1:15862026"
-	media:StartTime( os.time() )
+		media._OwnerName = ownerName
+		media._OwnerSteamID = ownerSteamID
+		media:StartTime( startTime or os.time() )
 
-	mp:SetMedia( media )
+		return media
+	end
+
+	---------------------------------
+	-- Create current media object
+	---------------------------------
+
+	mp:SetMedia( CreateMedia(
+		"Test media - really long title test asdfljkasdfasdjfgasdf",
+		3600,
+		"https://www.youtube.com/watch?v=IMorTE0lFLc",
+		"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+		"STEAM_0:1:15862026"
+	) )
+
+
+	---------------------------------
+	-- Create queued media
+	---------------------------------
+
+	mp:AddMedia( CreateMedia(
+		"Test media - really long title test asdfljkasdfasdjfgasdf",
+		3600,
+		"https://www.youtube.com/watch?v=IMorTE0lFLc",
+		"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+		"STEAM_0:1:15862026"
+	) )
+
+	mp:AddMedia( CreateMedia(
+		"Hello world",
+		3600 * 24,
+		"https://www.youtube.com/watch?v=IMorTE0lFLc",
+		"Sam",
+		"STEAM_0:1:15862026"
+	) )
+
+	mp:AddMedia( CreateMedia(
+		"ASDSDFawcasiudcg awlieufgawlie",
+		3600,
+		"https://www.youtube.com/watch?v=IMorTE0lFLc",
+		"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+		"STEAM_0:1:15862026",
+		os.time() - 1800
+	) )
 
 	-- Display UI using fixture
 	MediaPlayer.ShowSidebar( mp )

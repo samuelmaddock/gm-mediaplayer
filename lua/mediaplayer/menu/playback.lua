@@ -11,6 +11,7 @@ PANEL.Height = 72
 
 PANEL.BgColor = Color( 13, 41, 62 )
 PANEL.Padding = 12
+PANEL.BtnPadding = 4
 
 PANEL.TrackbarProgressColor = Color( 28, 100, 157 )
 PANEL.TrackbarHeight = 2
@@ -35,8 +36,12 @@ function PANEL:Init()
 	self.FavBtn = vgui.Create( "MP.FavoriteButton", self )
 
 	-- TODO: Only allow these buttons to show for admins
-	self.SkipBtn = vgui.Create( "MP.SkipButton", self )
-	self.RemoveBtn = vgui.Create( "MP.RemoveButton", self )
+	if true then
+		self.SkipBtn = vgui.Create( "MP.SkipButton", self )
+		self.RemoveBtn = vgui.Create( "MP.RemoveButton", self )
+
+		self.OwnerActions = true
+	end
 
 	self.AddedByLbl = vgui.Create( "MP.AddedBy", self )
 
@@ -45,9 +50,13 @@ end
 function PANEL:OnMediaChanged( media )
 
 	if media then
-		self.MediaTitle:SetText( media:Title() )
+		local title = media:Title()
+		self.MediaTitle:SetText( title )
+		self.MediaTitle:SetToolTip( title )
+
 		self.MediaTime:SetStartTime( media:StartTime() )
 		self.MediaTime:SetDuration( media:Duration() )
+
 		self.AddedByLbl:SetPlayer( media:GetOwner(), media:OwnerName(), media:OwnerSteamID() )
 
 		self.AddedByLbl:Show()
@@ -56,6 +65,8 @@ function PANEL:OnMediaChanged( media )
 		if self.RemoveBtn then self.RemoveBtn:Show() end
 	else
 		self.MediaTitle:SetText( "No media playing" )
+		self.MediaTitle:SetTooltip( "" )
+
 		self.MediaTime:Clear()
 
 		self.AddedByLbl:Hide()
@@ -113,28 +124,44 @@ function PANEL:PerformLayout()
 
 	self.MediaTime:InvalidateLayout()
 	self.MediaTime:MoveRightOf( self.PlayPauseBtn, self.Padding )
-	self.MediaTime:AlignBottom( self.Padding )
+	self.MediaTime:AlignBottom( self.Padding - 2 )
 
 	self.FavBtn:AlignTop( self.Padding )
 	self.FavBtn:AlignRight( self.Padding )
 
-	self.RemoveBtn:AlignBottom( self.Padding )
-	self.RemoveBtn:AlignRight( self.Padding )
-
-	self.SkipBtn:MoveLeftOf( self.RemoveBtn, self.Padding )
-	self.SkipBtn:AlignBottom( self.Padding )
-
 	-- 'ADDED BY Name' needs to fit between the media time and the rightmost
 	-- buttons.
-	local addedByMaxWidth = ( self.SkipBtn:GetPos() - self.Padding ) -
-		( self.MediaTime:GetPos() + self.MediaTime:GetWide() + self.Padding )
+	local addedByMaxWidth
+
+	if self.OwnerActions then
+
+		self.RemoveBtn:AlignBottom( self.Padding )
+		self.RemoveBtn:AlignRight( self.Padding )
+
+		self.SkipBtn:MoveLeftOf( self.RemoveBtn, self.BtnPadding )
+		self.SkipBtn:AlignBottom( self.Padding )
+
+		addedByMaxWidth = ( self.SkipBtn:GetPos() - self.BtnPadding ) -
+			( self.MediaTime:GetPos() + self.MediaTime:GetWide() + self.Padding )
+
+	else
+
+		addedByMaxWidth = ( w - self.Padding ) -
+			( self.MediaTime:GetPos() + self.MediaTime:GetWide() + self.Padding )
+
+	end
 
 	self.AddedByLbl:SetMaxWidth( addedByMaxWidth )
-	self.AddedByLbl:MoveLeftOf( self.SkipBtn, self.Padding )
 	self.AddedByLbl:AlignBottom( self.Padding )
 
-	local maxTitleWidth = self.FavBtn:GetPos() -
-		( self.MediaTitle:GetPos() + 5 )
+	if self.OwnerActions then
+		self.AddedByLbl:MoveLeftOf( self.SkipBtn, self.BtnPadding )
+	else
+		self.AddedByLbl:AlignRight( self.Padding )
+	end
+
+	local maxTitleWidth = ( self.FavBtn:GetPos() - self.BtnPadding ) -
+		( self.MediaTitle:GetPos() )
 
 	if self.MediaTitle:GetWide() > maxTitleWidth then
 		self.MediaTitle:SetWide( maxTitleWidth )

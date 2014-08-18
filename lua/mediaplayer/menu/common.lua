@@ -137,7 +137,7 @@ derma.DefineControl( "MP.MediaTime", "", MEDIA_TIME, "Panel" )
 
 local ADDED_BY = {}
 
-ADDED_BY.Height = 24
+ADDED_BY.Height = 21
 ADDED_BY.NameOffset = 4
 
 function ADDED_BY:Init()
@@ -178,8 +178,10 @@ function ADDED_BY:PerformLayout()
 	if self.maxWidth then
 		w = math.min( w, self.maxWidth )
 
-		nw = math.max( 0, w - self.NameOffset - pw )
-		self.NameLbl:SetWide( nw )
+		-- Clips name label to the maximum width; looks kind of bad since the
+		-- ellipsis start too early for some reason.
+		-- nw = math.max( 0, w - self.NameOffset - pw )
+		-- self.NameLbl:SetWide( nw )
 	end
 
 	self:SetSize( w, self.Height )
@@ -187,13 +189,15 @@ function ADDED_BY:PerformLayout()
 	self.PrefixLbl:AlignLeft( 0 )
 	self.NameLbl:MoveRightOf( self.PrefixLbl, self.NameOffset )
 
-	self.PrefixLbl:CenterVertical()
-	self.NameLbl:CenterVertical()
+	-- align text baselines
+	self.PrefixLbl:AlignBottom( 3 )
+	self.NameLbl:AlignBottom( 3 )
 
 end
 
 derma.DefineControl( "MP.AddedBy", "", ADDED_BY, "Panel" )
 
+local BUTTON_SIZE = 21
 
 local FAVORITE_BTN = {}
 
@@ -204,10 +208,21 @@ function FAVORITE_BTN:Init()
 
 	self.BaseClass.Init( self )
 
-	self:SetSize( 21, 21 )
+	self:SetSize( BUTTON_SIZE, BUTTON_SIZE )
+	self:SetStretchToFit( false )
+
 	self:SetImage( self.FavStarOutlined )
 
 	self.Outlined = true
+
+end
+
+function FAVORITE_BTN:SetImage( strImage, strBackup )
+
+	self.m_Image:SetImage( strImage, strBackup )
+
+	self.m_Image.ActualWidth = 21
+	self.m_Image.ActualHeight = 21
 
 end
 
@@ -246,8 +261,12 @@ function SKIP_BTN:Init()
 
 	self.BaseClass.Init( self )
 
-	self:SetSize( 16, 16 )
+	self:SetSize( BUTTON_SIZE, BUTTON_SIZE )
+	self:SetStretchToFit( false )
+
 	self:SetImage( self.Icon )
+	self.m_Image.ActualWidth = 16
+	self.m_Image.ActualHeight = 16
 
 end
 
@@ -268,8 +287,12 @@ function REMOVE_BTN:Init()
 
 	self.BaseClass.Init( self )
 
-	self:SetSize( 17, 20 )
+	self:SetSize( BUTTON_SIZE, BUTTON_SIZE )
+	self:SetStretchToFit( false )
+
 	self:SetImage( self.Icon )
+	self.m_Image.ActualWidth = 17
+	self.m_Image.ActualHeight = 20
 
 end
 

@@ -267,6 +267,13 @@ function MEDIAPLAYER:IsQueueEmpty()
 	return #self._Queue == 0
 end
 
+---
+-- Called when the queue is updated; emits a change event.
+--
+function MEDIAPLAYER:QueueUpdated()
+	self:emit( MP.EVENTS.QUEUE_CHANGED, self._Queue )
+end
+
 --
 -- Add media to the queue.
 --
