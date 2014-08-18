@@ -199,33 +199,45 @@ end
 
 derma.DefineControl( "MP.AddedBy", "", ADDED_BY, "Panel" )
 
-local BUTTON_SIZE = 21
+local SIDEBAR_BTN = {
+	Size = 21,
+	Icon = "mediaplayer/ui/skip.png",
+	IconW = 21,
+	IconH = 21
+}
 
-local FAVORITE_BTN = {}
-
-FAVORITE_BTN.FavStarOutlined = "mediaplayer/ui/fav_star_outline.png"
-FAVORITE_BTN.FavStar = "mediaplayer/ui/fav_star.png"
-
-function FAVORITE_BTN:Init()
+function SIDEBAR_BTN:Init()
 
 	self.BaseClass.Init( self )
 
-	self:SetSize( BUTTON_SIZE, BUTTON_SIZE )
+	self:SetSize( self.Size, self.Size )
 	self:SetStretchToFit( false )
 
-	self:SetImage( self.FavStarOutlined )
-
-	self.Outlined = true
+	self:SetImage( self.Icon )
 
 end
 
-function FAVORITE_BTN:SetImage( strImage, strBackup )
+function SIDEBAR_BTN:SetImage( strImage, strBackup )
 
 	self.m_Image:SetImage( strImage, strBackup )
 
-	self.m_Image.ActualWidth = 21
-	self.m_Image.ActualHeight = 21
+	self.m_Image.ActualWidth = self.IconW
+	self.m_Image.ActualHeight = self.IconH
 
+end
+
+derma.DefineControl( "MP.SidebarButton", "", SIDEBAR_BTN, "DImageButton" )
+
+
+local FAVORITE_BTN = {
+	FavStarOutlined = "mediaplayer/ui/fav_star_outline.png",
+	FavStar = "mediaplayer/ui/fav_star.png",
+	Icon = FAVORITE_BTN.FavStarOutlined
+}
+
+function FAVORITE_BTN:Init()
+	self.BaseClass.Init( self )
+	self.Outlined = true
 end
 
 function FAVORITE_BTN:Think()
@@ -252,25 +264,14 @@ function FAVORITE_BTN:DoClick()
 
 end
 
-derma.DefineControl( "MP.FavoriteButton", "", FAVORITE_BTN, "DImageButton" )
+derma.DefineControl( "MP.FavoriteButton", "", FAVORITE_BTN, "MP.SidebarButton" )
 
 
-local SKIP_BTN = {}
-
-SKIP_BTN.Icon = "mediaplayer/ui/skip.png"
-
-function SKIP_BTN:Init()
-
-	self.BaseClass.Init( self )
-
-	self:SetSize( BUTTON_SIZE, BUTTON_SIZE )
-	self:SetStretchToFit( false )
-
-	self:SetImage( self.Icon )
-	self.m_Image.ActualWidth = 16
-	self.m_Image.ActualHeight = 16
-
-end
+local SKIP_BTN = {
+	Icon = "mediaplayer/ui/skip.png",
+	IconW = 16,
+	IconH = 16
+}
 
 function SKIP_BTN:DoClick()
 
@@ -278,25 +279,14 @@ function SKIP_BTN:DoClick()
 
 end
 
-derma.DefineControl( "MP.SkipButton", "", SKIP_BTN, "DImageButton" )
+derma.DefineControl( "MP.SkipButton", "", SKIP_BTN, "MP.SidebarButton" )
 
 
-local REMOVE_BTN = {}
-
-REMOVE_BTN.Icon = "mediaplayer/ui/delete.png"
-
-function REMOVE_BTN:Init()
-
-	self.BaseClass.Init( self )
-
-	self:SetSize( BUTTON_SIZE, BUTTON_SIZE )
-	self:SetStretchToFit( false )
-
-	self:SetImage( self.Icon )
-	self.m_Image.ActualWidth = 17
-	self.m_Image.ActualHeight = 20
-
-end
+local REMOVE_BTN = {
+	Icon = "mediaplayer/ui/delete.png",
+	IconW = 17,
+	IconH = 20
+}
 
 function REMOVE_BTN:DoClick()
 
@@ -304,4 +294,4 @@ function REMOVE_BTN:DoClick()
 
 end
 
-derma.DefineControl( "MP.RemoveButton", "", REMOVE_BTN, "DImageButton" )
+derma.DefineControl( "MP.RemoveButton", "", REMOVE_BTN, "MP.SidebarButton" )
