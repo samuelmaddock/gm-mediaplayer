@@ -171,10 +171,13 @@ function MEDIA_ITEM:SetMedia( media )
 	self.MediaTime:SetDuration( media:Duration() )
 	self.AddedByLbl:SetPlayer( media:GetOwner(), media:OwnerName(), media:OwnerSteamID() )
 
+	self.FavBtn:SetMedia( media )
+
 	-- TODO: detect if player has privileges to remove media from queue
 	-- e.g. they requested the media or they're an admin
 	if true then
 		self.RemoveBtn = vgui.Create( "MP.RemoveButton", self )
+		self.RemoveBtn:SetMedia( media )
 	end
 
 end

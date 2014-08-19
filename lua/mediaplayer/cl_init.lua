@@ -208,6 +208,24 @@ function MediaPlayer.Seek( mp, time )
 
 end
 
+---
+-- Remove the given media.
+--
+-- @param Entity|Table|String	Media player reference.
+-- @param String				Media unique ID.
+--
+function MediaPlayer.RequestRemove( mp, mediaUID )
+
+	local mpId = GetMediaPlayerId( mp )
+	if not mpId then return end
+
+	net.Start( "MEDIAPLAYER.RequestRemove" )
+		net.WriteString( mpId )
+		net.WriteString( mediaUID )
+	net.SendToServer()
+
+end
+
 
 --[[---------------------------------------------------------
 	Utility functions

@@ -11,7 +11,10 @@ if CLIENT then
 
 	MP.EVENTS.UI = {
 		MEDIA_PLAYER_CHANGED = "mp.events.ui.mediaPlayerChanged",
-		OPEN_REQUEST_MENU = "mp.events.ui.openRequestMenu"
+		OPEN_REQUEST_MENU = "mp.events.ui.openRequestMenu",
+		FAVORITE_MEDIA = "mp.events.ui.favoriteMedia",
+		VOTESKIP_MEDIA = "mp.events.ui.voteskipMedia",
+		REMOVE_MEDIA = "mp.events.ui.removeMedia"
 	}
 
 end

@@ -202,6 +202,8 @@ derma.DefineControl( "MP.AddedBy", "", ADDED_BY, "Panel" )
 
 local SIDEBAR_BTN = {}
 
+AccessorFunc( SIDEBAR_BTN, "m_Media", "Media" )
+
 function SIDEBAR_BTN:Init()
 
 	self:SetDrawBackground( false )
@@ -216,7 +218,6 @@ function SIDEBAR_BTN:Init()
 	self:SetColor( Color( 255, 255, 255, 255 ) )
 
 	self:SetSize( 21, 21 )
-	-- self:SetImage( "mediaplayer/ui/skip.png" )
 
 end
 
@@ -276,7 +277,7 @@ end
 
 function FAVORITE_BTN:DoClick()
 
-	-- TODO: Favorite media
+	hook.Run( MP.EVENTS.UI.FAVORITE_MEDIA, self.m_Media )
 
 end
 
@@ -296,7 +297,7 @@ end
 
 function SKIP_BTN:DoClick()
 
-	-- TODO: Skip current media
+	hook.Run( MP.EVENTS.UI.VOTESKIP_MEDIA, self.m_Media )
 
 end
 
@@ -316,7 +317,7 @@ end
 
 function REMOVE_BTN:DoClick()
 
-	-- TODO: Remove current media
+	hook.Run( MP.EVENTS.UI.REMOVE_MEDIA, self.m_Media )
 
 end
 

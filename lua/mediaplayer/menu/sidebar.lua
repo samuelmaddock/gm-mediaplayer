@@ -40,6 +40,18 @@ function PANEL:SetupMediaPlayer( mp )
 		MediaPlayer.OpenRequestMenu( mp )
 	end )
 
+	hook.Add( MP.EVENTS.UI.FAVORITE_MEDIA, self, function( _, media )
+		-- TODO
+	end )
+
+	hook.Add( MP.EVENTS.UI.VOTESKIP_MEDIA, self, function( _, media )
+		-- TODO
+	end )
+
+	hook.Add( MP.EVENTS.UI.REMOVE_MEDIA, self, function( _, media )
+		MediaPlayer.RequestRemove( mp, media:UniqueID() )
+	end )
+
 end
 
 function PANEL:Paint(w, h)
