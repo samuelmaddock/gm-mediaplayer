@@ -450,7 +450,7 @@ function MEDIAPLAYER:RequestRemove( ply, mediaUID )
 	end
 
 	if MediaPlayer.DEBUG then
-		print( "MEDIAPLAYER.RequsetRemove", ply, mediaUID )
+		print( "MEDIAPLAYER.RequestRemove", ply, mediaUID )
 	end
 
 	local privileged = self:IsPlayerPrivileged(ply)
@@ -470,11 +470,10 @@ function MEDIAPLAYER:RequestRemove( ply, mediaUID )
 			end
 		end
 
-		if media:GetOwner() == ply or privileged then
+		if media and ( media:GetOwner() == ply or privileged ) then
 			table.remove( self._Queue, idx )
+			self:BroadcastUpdate()
 		end
-
-		self:BroadcastUpdate()
 	end
 
 end
