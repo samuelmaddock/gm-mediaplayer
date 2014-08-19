@@ -109,6 +109,12 @@ function PANEL:OnMediaChanged( media )
 
 end
 
+function PANEL:OnPlayerStateChanged( playerState )
+
+	self.PlayPauseBtn:SetPlayerState( playerState )
+
+end
+
 function PANEL:Paint( w, h )
 
 	surface.SetDrawColor( self.BgColor )
@@ -176,22 +182,43 @@ end
 derma.DefineControl( "MP.Playback", "", PANEL, "Panel" )
 
 
-local PLAYPAUSE_BTN = {}
+local PLAYPAUSE_BTN = {
+	StateIcons = {
+		[1] = nil, -- MP_STATE_ENDED
+		[2] = "mediaplayer/ui/pause.png", -- MP_STATE_PLAYING
+		[3] = "mediaplayer/ui/play.png" -- MP_STATE_PAUSED
+	}
+}
 
 function PLAYPAUSE_BTN:Init()
 
 	self.BaseClass.Init( self )
 
 	self:SetSize( 19, 25 )
-	self:SetImage( "mediaplayer/ui/play.png" )
 
 	-- TODO: Set cursor type depending on whether player is admin/owner
+
+end
+
+function PLAYPAUSE_BTN:SetPlayerState( playerState )
+
+	playerState = (playerState or 0) + 1 -- Lua can't index 0
+
+	local icon = self.StateIcons[ playerState ]
+
+	if icon then
+		self:SetImage( icon )
+		self.m_Image:Show()
+	else
+		self.m_Image:Hide()
+	end
 
 end
 
 function PLAYPAUSE_BTN:DoClick()
 
 	-- TODO: Toggle between playing and pausing state if player is admin/owner
+	-- hook.Run( MP.EVENTS.UI.REQUEST_PLAYER_STATE_CHANGE, nil )
 
 end
 

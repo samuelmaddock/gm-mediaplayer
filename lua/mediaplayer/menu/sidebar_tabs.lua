@@ -193,6 +193,17 @@ function CURRENTLY_PLAYING_TAB:OnMediaPlayerChanged( mp )
 		mp:on( MP.EVENTS.QUEUE_CHANGED, self.QueueChangedHandle )
 	end
 
+	if not self.PlayerStateChangeHandle then
+		-- set current player state
+		self.PlaybackPanel:OnPlayerStateChanged( mp:GetPlayerState() )
+
+		-- listen for any future player state changes
+		self.PlayerStateChangeHandle = function(...)
+			self.PlaybackPanel:OnPlayerStateChanged(...)
+		end
+		mp:on( MP.EVENTS.PLAYER_STATE_CHANGED, self.PlayerStateChangeHandle )
+	end
+
 end
 
 function CURRENTLY_PLAYING_TAB:OnRemove()
@@ -205,6 +216,7 @@ function CURRENTLY_PLAYING_TAB:OnRemove()
 	if mp then
 		mp:removeListener( MP.EVENTS.MEDIA_CHANGED, self.MediaChangedHandle )
 		mp:removeListener( MP.EVENTS.QUEUE_CHANGED, self.QueueChangedHandle )
+		mp:removeListener( MP.EVENTS.PLAYER_STATE_CHANGED, self.PlayerStateChangeHandle )
 	end
 
 end

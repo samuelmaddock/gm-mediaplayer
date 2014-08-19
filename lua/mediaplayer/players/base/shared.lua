@@ -121,6 +121,8 @@ function MEDIAPLAYER:OnPlayerStateChanged( old, new )
 			media:Pause()
 		end
 	end
+
+	self:emit( MP.EVENTS.PLAYER_STATE_CHANGED, new, old )
 end
 
 --
