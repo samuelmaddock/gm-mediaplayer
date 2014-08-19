@@ -199,21 +199,24 @@ end
 
 derma.DefineControl( "MP.AddedBy", "", ADDED_BY, "Panel" )
 
-local SIDEBAR_BTN = {
-	Size = 21,
-	Icon = "mediaplayer/ui/skip.png",
-	IconW = 21,
-	IconH = 21
-}
+
+local SIDEBAR_BTN = {}
 
 function SIDEBAR_BTN:Init()
 
-	self.BaseClass.Init( self )
-
-	self:SetSize( self.Size, self.Size )
+	self:SetDrawBackground( false )
+	self:SetDrawBorder( false )
 	self:SetStretchToFit( false )
 
-	self:SetImage( self.Icon )
+	self:SetCursor( "hand" )
+	self.m_Image = vgui.Create( "DImage", self )
+
+	self:SetText( "" )
+
+	self:SetColor( Color( 255, 255, 255, 255 ) )
+
+	self:SetSize( 21, 21 )
+	-- self:SetImage( "mediaplayer/ui/skip.png" )
 
 end
 
@@ -221,9 +224,14 @@ function SIDEBAR_BTN:SetImage( strImage, strBackup )
 
 	self.m_Image:SetImage( strImage, strBackup )
 
-	self.m_Image.ActualWidth = self.IconW
-	self.m_Image.ActualHeight = self.IconH
+	self.m_Image.ActualWidth = self.m_iIconWidth or 21
+	self.m_Image.ActualHeight = self.m_iIconHeight or 21
 
+end
+
+function SIDEBAR_BTN:SetIconSize( w, h )
+	self.m_iIconWidth = w
+	self.m_iIconHeight = h
 end
 
 derma.DefineControl( "MP.SidebarButton", "", SIDEBAR_BTN, "DImageButton" )
@@ -231,28 +239,36 @@ derma.DefineControl( "MP.SidebarButton", "", SIDEBAR_BTN, "DImageButton" )
 
 local FAVORITE_BTN = {
 	FavStarOutlined = "mediaplayer/ui/fav_star_outline.png",
-	FavStar = "mediaplayer/ui/fav_star.png",
-	Icon = FAVORITE_BTN.FavStarOutlined
+	FavStar = "mediaplayer/ui/fav_star.png"
 }
 
+AccessorFunc( FAVORITE_BTN, "Favorited", "Favorited" )
+
 function FAVORITE_BTN:Init()
+
 	self.BaseClass.Init( self )
+
+	self:SetImage( self.FavStarOutlined )
+	self:SetFavorited( false )
 	self.Outlined = true
+
 end
 
 function FAVORITE_BTN:Think()
 
-	local hovered = self:IsHovered()
+	if not self.Favorited then
+		local hovered = self:IsHovered()
 
-	if self.Outlined then
-		if hovered then
-			self:SetImage( self.FavStar )
-			self.Outlined = false
-		end
-	else
-		if not hovered then
-			self:SetImage( self.FavStarOutlined )
-			self.Outlined = true
+		if self.Outlined then
+			if hovered then
+				self:SetImage( self.FavStar )
+				self.Outlined = false
+			end
+		else
+			if not hovered then
+				self:SetImage( self.FavStarOutlined )
+				self.Outlined = true
+			end
 		end
 	end
 
@@ -267,11 +283,16 @@ end
 derma.DefineControl( "MP.FavoriteButton", "", FAVORITE_BTN, "MP.SidebarButton" )
 
 
-local SKIP_BTN = {
-	Icon = "mediaplayer/ui/skip.png",
-	IconW = 16,
-	IconH = 16
-}
+local SKIP_BTN = {}
+
+function SKIP_BTN:Init()
+
+	self.BaseClass.Init( self )
+
+	self:SetIconSize( 16, 16 )
+	self:SetImage( "mediaplayer/ui/skip.png" )
+
+end
 
 function SKIP_BTN:DoClick()
 
@@ -282,11 +303,16 @@ end
 derma.DefineControl( "MP.SkipButton", "", SKIP_BTN, "MP.SidebarButton" )
 
 
-local REMOVE_BTN = {
-	Icon = "mediaplayer/ui/delete.png",
-	IconW = 17,
-	IconH = 20
-}
+local REMOVE_BTN = {}
+
+function REMOVE_BTN:Init()
+
+	self.BaseClass.Init( self )
+
+	self:SetIconSize( 17, 20 )
+	self:SetImage( "mediaplayer/ui/delete.png" )
+
+end
 
 function REMOVE_BTN:DoClick()
 
