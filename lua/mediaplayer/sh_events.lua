@@ -15,7 +15,8 @@ if CLIENT then
 		OPEN_REQUEST_MENU = "mp.events.ui.openRequestMenu",
 		FAVORITE_MEDIA = "mp.events.ui.favoriteMedia",
 		VOTESKIP_MEDIA = "mp.events.ui.voteskipMedia",
-		REMOVE_MEDIA = "mp.events.ui.removeMedia"
+		REMOVE_MEDIA = "mp.events.ui.removeMedia",
+		TOGGLE_PAUSE = "mp.events.ui.togglePause"
 	}
 
 end

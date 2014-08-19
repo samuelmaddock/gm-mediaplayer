@@ -52,6 +52,10 @@ function PANEL:SetupMediaPlayer( mp )
 		MediaPlayer.RequestRemove( mp, media:UniqueID() )
 	end )
 
+	hook.Add( MP.EVENTS.UI.TOGGLE_PAUSE, self, function()
+		MediaPlayer.Pause( mp )
+	end )
+
 end
 
 function PANEL:Paint(w, h)

@@ -202,6 +202,8 @@ end
 
 function PLAYPAUSE_BTN:SetPlayerState( playerState )
 
+	self.PlayerState = playerState
+
 	playerState = (playerState or 0) + 1 -- Lua can't index 0
 
 	local icon = self.StateIcons[ playerState ]
@@ -218,7 +220,7 @@ end
 function PLAYPAUSE_BTN:DoClick()
 
 	-- TODO: Toggle between playing and pausing state if player is admin/owner
-	-- hook.Run( MP.EVENTS.UI.REQUEST_PLAYER_STATE_CHANGE, nil )
+	hook.Run( MP.EVENTS.UI.TOGGLE_PAUSE )
 
 end
 
