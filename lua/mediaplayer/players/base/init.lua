@@ -440,6 +440,45 @@ function MEDIAPLAYER:RequestSeek( ply, seekTime )
 
 end
 
+function MEDIAPLAYER:RequestRemove( ply, mediaUID )
+
+	if not (self:GetPlayerState() >= MP_STATE_PLAYING) then return end
+
+	-- Player must be valid and also a listener
+	if not ( IsValid(ply) and self:HasListener(ply) ) then
+		return
+	end
+
+	if MediaPlayer.DEBUG then
+		print( "MEDIAPLAYER.RequsetRemove", ply, mediaUID )
+	end
+
+	local privileged = self:IsPlayerPrivileged(ply)
+	local currentMedia = self:GetMedia()
+
+	if currentMedia:UniqueID() == mediaUID then
+		if privileged then
+			self:NextMedia()
+		end
+	else
+		local idx, media
+
+		for k, v in pairs(self._Queue) do
+			if v:UniqueID() == mediaUID then
+				idx, media = k, v
+				break
+			end
+		end
+
+		if media:GetOwner() == ply or privileged then
+			table.remove( self._Queue, idx )
+		end
+
+		self:BroadcastUpdate()
+	end
+
+end
+
 
 --[[---------------------------------------------------------
 	Media Player Updates

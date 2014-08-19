@@ -57,6 +57,7 @@ util.AddNetworkString( "MEDIAPLAYER.RequestMedia" )
 util.AddNetworkString( "MEDIAPLAYER.RequestPause" )
 util.AddNetworkString( "MEDIAPLAYER.RequestSkip" )
 util.AddNetworkString( "MEDIAPLAYER.RequestSeek" )
+util.AddNetworkString( "MEDIAPLAYER.RequestRemove" )
 
 local ListenDelay = 0.5 -- seconds
 
@@ -182,13 +183,32 @@ local function OnSeekMedia( len, ply )
 	local mp = NetReadMediaPlayer()
 	if not mp then return end
 
-	if MediaPlayer.DEBUG then
-		print("MEDIAPLAYER.RequestSeek:", mp:GetId(), ply)
-	end
-
 	local seekTime = net.ReadString()
+
+	if MediaPlayer.DEBUG then
+		print("MEDIAPLAYER.RequestSeek:", mp:GetId(), seekTime, ply)
+	end
 
 	mp:RequestSeek( ply, seekTime )
 
 end
 net.Receive( "MEDIAPLAYER.RequestSeek", OnSeekMedia )
+
+
+local function OnRemoveMedia( len, ply )
+
+	if not IsValid(ply) then return end
+
+	local mp = NetReadMediaPlayer()
+	if not mp then return end
+
+	local mediaUID = net.ReadString()
+
+	if MediaPlayer.DEBUG then
+		print("MEDIAPLAYER.RequestRemove:", mp:GetId(), mediaUID, ply)
+	end
+
+	mp:RequestRemove( ply, mediaUID )
+
+end
+net.Receive( "MEDIAPLAYER.RequestRemove", OnRemoveMedia )
