@@ -32,6 +32,7 @@ local function LoadMediaPlayer()
 		AddCSLuaFile "includes/modules/browserpool.lua"
 		AddCSLuaFile "includes/modules/control.lua"
 		AddCSLuaFile "includes/modules/htmlmaterial.lua"
+		AddCSLuaFile "includes/modules/spritesheet.lua"
 		AddCSLuaFile "includes/extensions/cl_draw.lua"
 
 		-- initialize serverside mediaplayer
@@ -41,6 +42,7 @@ local function LoadMediaPlayer()
 		include "includes/modules/browserpool.lua"
 		include "includes/modules/control.lua"
 		include "includes/modules/htmlmaterial.lua"
+		include "includes/modules/spritesheet.lua"
 		include "includes/extensions/cl_draw.lua"
 
 		-- initialize clientside mediaplayer

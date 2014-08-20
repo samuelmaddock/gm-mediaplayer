@@ -124,6 +124,7 @@ control.AddKeyRelease( KEY_C, "MP.HideSidebar", function() MediaPlayer.HideSideb
 control.AddKeyPress( KEY_SLASH, "MP.ShowSidebarTest", function()
 	-- Create test fixture
 	local mp = MediaPlayer.Create( 'ui-test-player' )
+	mp:SetPlayerState( MP_STATE_PLAYING )
 
 	local function CreateMedia( title, duration, url, ownerName, ownerSteamID, startTime )
 		local media = MediaPlayer.GetMediaForUrl( url )
