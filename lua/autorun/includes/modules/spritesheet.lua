@@ -64,6 +64,7 @@ function spritesheet.GetIconSize( name )
 	local icon = icons[name]
 	if not icon then
 		MsgN( "Invalid icon '" .. tostring(name) .. "' passed into spritesheet.GetIconSize!" )
+		return
 	end
 
 	return icon.w, icon.h
@@ -77,6 +78,7 @@ function spritesheet.DrawIcon( name, x, y, w, h, color )
 	local icon = icons[name]
 	if not icon then
 		MsgN( "Invalid icon '" .. tostring(name) .. "' passed into spritesheet.DrawIcon!" )
+		return
 	end
 
 	otw, oth = icon.matWidth, icon.matHeight
