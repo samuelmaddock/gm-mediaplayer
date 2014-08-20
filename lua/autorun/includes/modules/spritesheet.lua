@@ -33,6 +33,7 @@ local function registerIcon( icon )
 	return true
 end
 
+
 ---
 -- Registers a single or list of icons.
 --
@@ -54,6 +55,20 @@ function spritesheet.Register( iconTbl )
 
 	return true
 end
+
+
+---
+-- Gets the icon's width and height
+--
+function spritesheet.GetIconSize( name )
+	local icon = icons[name]
+	if not icon then
+		MsgN( "Invalid icon '" .. tostring(name) .. "' passed into spritesheet.GetIconSize!" )
+	end
+
+	return icon.w, icon.h
+end
+
 
 local verts = {{},{},{},{}}
 local otw, oth, tw, th, uoffset, voffset, umax, vmax
