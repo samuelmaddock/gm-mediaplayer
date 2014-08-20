@@ -185,8 +185,8 @@ derma.DefineControl( "MP.Playback", "", PANEL, "Panel" )
 local PLAYPAUSE_BTN = {
 	StateIcons = {
 		[1] = nil, -- MP_STATE_ENDED
-		[2] = "mediaplayer/ui/pause.png", -- MP_STATE_PLAYING
-		[3] = "mediaplayer/ui/play.png" -- MP_STATE_PAUSED
+		[2] = "mp-pause", -- MP_STATE_PLAYING
+		[3] = "mp-play" -- MP_STATE_PAUSED
 	}
 }
 
@@ -194,7 +194,7 @@ function PLAYPAUSE_BTN:Init()
 
 	self.BaseClass.Init( self )
 
-	self:SetSize( 19, 25 )
+	self:SetSize( 22, 25 )
 
 	-- TODO: Set cursor type depending on whether player is admin/owner
 
@@ -209,10 +209,10 @@ function PLAYPAUSE_BTN:SetPlayerState( playerState )
 	local icon = self.StateIcons[ playerState ]
 
 	if icon then
-		self:SetImage( icon )
-		self.m_Image:Show()
+		self:SetIcon( icon )
+		self:SetIconVisible(true)
 	else
-		self.m_Image:Hide()
+		self:SetIconVisible(false)
 	end
 
 end
@@ -224,7 +224,7 @@ function PLAYPAUSE_BTN:DoClick()
 
 end
 
-derma.DefineControl( "MP.PlayPauseButton", "", PLAYPAUSE_BTN, "DImageButton" )
+derma.DefineControl( "MP.PlayPauseButton", "", PLAYPAUSE_BTN, "MP.SidebarButton" )
 
 
 local SEEKBAR = {}

@@ -200,48 +200,286 @@ end
 derma.DefineControl( "MP.AddedBy", "", ADDED_BY, "Panel" )
 
 
-local SIDEBAR_BTN = {}
+--[[--------------------------------------------
+	Icons spritesheet
+----------------------------------------------]]
 
-AccessorFunc( SIDEBAR_BTN, "m_Media", "Media" )
+local mpSpritesheetMat = Material( "mediaplayer/ui/spritesheet.png" )
+local blockSize = 24
 
-function SIDEBAR_BTN:Init()
+local function mpIcon( name, i, j, w, h )
+	return {
+		name = name,
+		mat = mpSpritesheetMat,
+		w = w,
+		h = h,
+		xoffset = i * blockSize,
+		yoffset = j * blockSize
+	}
+end
+
+spritesheet.Register {
+	mpIcon( "mp-thumbs-up",			0, 0, 21, 21 ),
+	mpIcon( "mp-thumbs-down",		1, 0, 21, 21 ),
+	mpIcon( "mp-delete",			2, 0, 17, 20 ),
+	mpIcon( "mp-favorite",			3, 0, 21, 21 ),
+	mpIcon( "mp-favorite-outline", 	4, 0, 21, 21 ),
+	mpIcon( "mp-volume-mute", 		0, 1, 18, 17 ),
+	mpIcon( "mp-volume", 			1, 1, 18, 17 ),
+	mpIcon( "mp-back", 				2, 1, 21, 21 ),
+	mpIcon( "mp-forward", 			3, 1, 21, 21 ),
+	mpIcon( "mp-home", 				4, 1, 21, 21 ),
+	mpIcon( "mp-close", 			0, 2, 21, 21 ),
+	mpIcon( "mp-skip", 				1, 2, 16, 16 ),
+	mpIcon( "mp-refresh", 			2, 2, 21, 21 ),
+	mpIcon( "mp-plus", 				3, 2, 21, 21 ),
+
+	mpIcon( "mp-play", 				3, 4, 19, 25 ),
+	mpIcon( "mp-pause",				4, 4, 22, 24 ),
+}
+
+
+--[[--------------------------------------------
+	DIcon
+----------------------------------------------]]
+
+local spritesheet = spritesheet
+
+local DICON = {}
+
+AccessorFunc( DICON, "m_strIcon", 				"Icon" )
+AccessorFunc( DICON, "m_Color", 				"IconColor" )
+AccessorFunc( DICON, "m_bKeepAspect", 			"KeepAspect" )
+
+function DICON:Init()
+
+	self:SetIconColor( color_white )
+	self:SetMouseInputEnabled( false )
+	self:SetKeyboardInputEnabled( false )
+
+	self:SetKeepAspect( false )
+
+	self.IconWidth = 10
+	self.IconHeight = 10
+
+end
+
+function DICON:SetIcon( icon )
+
+	self.m_strIcon = icon
+
+	self.IconWidth, self.IconHeight = spritesheet.GetIconSize( icon )
+
+end
+
+function DICON:SizeToContents( strImage )
+
+	self:SetSize( self.IconWidth, self.IconHeight )
+
+end
+
+function DICON:Paint( w, h )
+	self:PaintAt( 0, 0, w, h )
+end
+
+function DICON:PaintAt( x, y, dw, dh )
+
+	if not self.m_strIcon then return end
+
+	if ( self.m_bKeepAspect ) then
+
+		local w = self.IconWidth
+		local h = self.IconHeight
+
+		-- Image is bigger than panel, shrink to suitable size
+		if ( w > dw and h > dh ) then
+
+			if ( w > dw ) then
+
+				local diff = dw / w
+				w = w * diff
+				h = h * diff
+
+			end
+
+			if ( h > dh ) then
+
+				local diff = dh / h
+				w = w * diff
+				h = h * diff
+
+			end
+
+		end
+
+		if ( w < dw ) then
+
+			local diff = dw / w
+			w = w * diff
+			h = h * diff
+
+		end
+
+		if ( h < dh ) then
+
+			local diff = dh / h
+			w = w * diff
+			h = h * diff
+
+		end
+
+		local OffX = (dw - w) * 0.5
+		local OffY = (dh - h) * 0.5
+
+		spritesheet.DrawIcon( self.m_strIcon, OffX+y, OffY+y, w, h, self.m_Color )
+		return true
+
+	end
+
+	spritesheet.DrawIcon( self.m_strIcon, x, y, dw, dh, self.m_Color )
+	return true
+
+end
+
+derma.DefineControl( "DIcon", "", DICON, "DPanel" )
+
+
+--[[--------------------------------------------
+	DIconButton
+----------------------------------------------]]
+
+local DICONBTN = {}
+
+AccessorFunc( DICONBTN, "m_strIcon", "Icon" )
+AccessorFunc( DICONBTN, "m_bStretchToFit", 			"StretchToFit" )
+
+function DICONBTN:Init()
 
 	self:SetDrawBackground( false )
 	self:SetDrawBorder( false )
 	self:SetStretchToFit( false )
 
 	self:SetCursor( "hand" )
-	self.m_Image = vgui.Create( "DImage", self )
+	self.m_Icon = vgui.Create( "DIcon", self )
 
 	self:SetText( "" )
 
 	self:SetColor( Color( 255, 255, 255, 255 ) )
 
+end
+
+function DICONBTN:SetIconVisible( bBool )
+
+	self.m_Icon:SetVisible( bBool )
+
+end
+
+function DICONBTN:SetIcon( strIcon )
+
+	self.m_Icon:SetIcon( strIcon )
+
+end
+
+function DICONBTN:SetColor( col )
+
+	self.m_Icon:SetIconColor( col )
+
+end
+
+function DICONBTN:GetIcon()
+
+	return self.m_Icon:GetIcon()
+
+end
+
+function DICONBTN:SetKeepAspect( bKeep )
+
+	self.m_Icon:SetKeepAspect( bKeep )
+
+end
+
+function DICONBTN:SizeToContents( )
+
+	self.m_Icon:SizeToContents()
+	self:SetSize( self.m_Icon:GetWide(), self.m_Icon:GetTall() )
+
+end
+
+function DICONBTN:OnMousePressed( mousecode )
+
+	DButton.OnMousePressed( self, mousecode )
+
+
+	if ( self.m_bStretchToFit ) then
+
+		self.m_Icon:SetPos( 2, 2 )
+		self.m_Icon:SetSize( self:GetWide() - 4, self:GetTall() - 4 )
+
+	else
+
+		self.m_Icon:SizeToContents()
+		self.m_Icon:SetSize( self.m_Icon:GetWide() * 0.8, self.m_Icon:GetTall() * 0.8 )
+		self.m_Icon:Center()
+
+	end
+
+end
+
+function DICONBTN:OnMouseReleased( mousecode )
+
+	DButton.OnMouseReleased( self, mousecode )
+
+	if ( self.m_bStretchToFit ) then
+
+		self.m_Icon:SetPos( 0, 0 )
+		self.m_Icon:SetSize( self:GetSize() )
+
+	else
+
+		self.m_Icon:SizeToContents()
+		self.m_Icon:Center()
+
+	end
+
+end
+
+function DICONBTN:PerformLayout()
+
+	if ( self.m_bStretchToFit ) then
+
+		self.m_Icon:SetPos( 0, 0 )
+		self.m_Icon:SetSize( self:GetSize() )
+
+	else
+
+		self.m_Icon:SizeToContents()
+		self.m_Icon:Center()
+
+	end
+
+end
+
+derma.DefineControl( "DIconButton", "", DICONBTN, "DButton" )
+
+
+--[[--------------------------------------------
+	Sidebar buttons
+----------------------------------------------]]
+
+local SIDEBAR_BTN = {}
+
+AccessorFunc( SIDEBAR_BTN, "m_Media", "Media" )
+
+function SIDEBAR_BTN:Init()
+
 	self:SetSize( 21, 21 )
 
 end
 
-function SIDEBAR_BTN:SetImage( strImage, strBackup )
-
-	self.m_Image:SetImage( strImage, strBackup )
-
-	self.m_Image.ActualWidth = self.m_iIconWidth or 21
-	self.m_Image.ActualHeight = self.m_iIconHeight or 21
-
-end
-
-function SIDEBAR_BTN:SetIconSize( w, h )
-	self.m_iIconWidth = w
-	self.m_iIconHeight = h
-end
-
-derma.DefineControl( "MP.SidebarButton", "", SIDEBAR_BTN, "DImageButton" )
+derma.DefineControl( "MP.SidebarButton", "", SIDEBAR_BTN, "DIconButton" )
 
 
-local FAVORITE_BTN = {
-	FavStarOutlined = "mediaplayer/ui/fav_star_outline.png",
-	FavStar = "mediaplayer/ui/fav_star.png"
-}
+local FAVORITE_BTN = {}
 
 AccessorFunc( FAVORITE_BTN, "Favorited", "Favorited" )
 
@@ -249,7 +487,7 @@ function FAVORITE_BTN:Init()
 
 	self.BaseClass.Init( self )
 
-	self:SetImage( self.FavStarOutlined )
+	self:SetIcon( "mp-favorite-outline" )
 	self:SetFavorited( false )
 	self.Outlined = true
 
@@ -262,12 +500,12 @@ function FAVORITE_BTN:Think()
 
 		if self.Outlined then
 			if hovered then
-				self:SetImage( self.FavStar )
+				self:SetIcon( "mp-favorite" )
 				self.Outlined = false
 			end
 		else
 			if not hovered then
-				self:SetImage( self.FavStarOutlined )
+				self:SetIcon( "mp-favorite-outline" )
 				self.Outlined = true
 			end
 		end
@@ -290,8 +528,7 @@ function SKIP_BTN:Init()
 
 	self.BaseClass.Init( self )
 
-	self:SetIconSize( 16, 16 )
-	self:SetImage( "mediaplayer/ui/skip.png" )
+	self:SetIcon( "mp-skip" )
 
 end
 
@@ -310,8 +547,7 @@ function REMOVE_BTN:Init()
 
 	self.BaseClass.Init( self )
 
-	self:SetIconSize( 17, 20 )
-	self:SetImage( "mediaplayer/ui/delete.png" )
+	self:SetIcon( "mp-delete" )
 
 end
 

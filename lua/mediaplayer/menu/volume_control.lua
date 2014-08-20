@@ -66,23 +66,13 @@ derma.DefineControl( "MP.VolumeControl", "", PANEL, "DPanel" )
 
 local VOLUME_BUTTON = {}
 
-VOLUME_BUTTON.EnabledIcon = "mediaplayer/ui/volume.vmt"
-local textId = surface.GetTextureID( "mediaplayer/ui/volume.vmt" )
-
 function VOLUME_BUTTON:Init()
 
 	self.BaseClass.Init( self )
 
-	self:SetSize( 16, 15 )
+	self:SetIcon( 'mp-volume' )
+	self:SetSize( 18, 17 )
 
-	-- self:SetImage( self.EnabledIcon )
-
-end
-
-function VOLUME_BUTTON:PaintOver( w, h )
-	surface.SetDrawColor( color_white )
-	surface.SetTexture( textId )
-	surface.DrawTexturedRect( 0, 0, w, h )
 end
 
 function VOLUME_BUTTON:DoClick()
@@ -92,7 +82,7 @@ function VOLUME_BUTTON:DoClick()
 
 end
 
-derma.DefineControl( "MP.VolumeButton", "", VOLUME_BUTTON, "DImageButton" )
+derma.DefineControl( "MP.VolumeButton", "", VOLUME_BUTTON, "MP.SidebarButton" )
 
 
 local VOLUME_SLIDER = {}
