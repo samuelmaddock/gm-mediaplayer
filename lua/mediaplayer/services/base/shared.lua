@@ -73,11 +73,11 @@ end
 SERVICE.GetOwner = SERVICE.Owner
 
 function SERVICE:OwnerName()
-	return self._OwnerName
+	return self._OwnerName or ""
 end
 
 function SERVICE:OwnerSteamID()
-	return self._OwnerSteamID
+	return self._OwnerSteamID or ""
 end
 
 function SERVICE:OwnerInfo()
