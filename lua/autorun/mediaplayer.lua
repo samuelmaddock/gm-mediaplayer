@@ -85,6 +85,3 @@ end
 
 -- First time load
 LoadMediaPlayer()
-
--- Fix for Lua refresh not always working...
-hook.Add( "OnReloaded", "MediaPlayerRefresh", LoadMediaPlayer )
