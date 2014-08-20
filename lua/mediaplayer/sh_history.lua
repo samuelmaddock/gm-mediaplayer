@@ -50,7 +50,7 @@ function MediaPlayer.History:LogRequest( media )
 			media:UniqueID(),
 			sql.SQLStr( media:Url() ),
 			sql.SQLStr( ply:Nick() ),
-			ply:SteamID64() )
+			ply:SteamID64() or -1 )
 
 	local result = sql.Query(query)
 
@@ -80,7 +80,7 @@ JOIN mediaplayer_metadata AS M
 WHERE steamid='%s'
 LIMIT %d]],
 			TableName,
-			ply:SteamID64(),
+			ply:SteamID64() or -1,
 			limit )
 
 	local result = sql.Query(query)
