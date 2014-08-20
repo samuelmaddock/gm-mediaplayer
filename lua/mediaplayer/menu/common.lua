@@ -1,3 +1,4 @@
+local ceil = math.ceil
 local clamp = math.Clamp
 
 local FontTbl = {
@@ -221,7 +222,7 @@ end
 spritesheet.Register {
 	mpIcon( "mp-thumbs-up",			0, 0, 21, 21 ),
 	mpIcon( "mp-thumbs-down",		1, 0, 21, 21 ),
-	mpIcon( "mp-delete",			2, 0, 17, 20 ),
+	mpIcon( "mp-delete",			2, 0, 15, 20 ),
 	mpIcon( "mp-favorite",			3, 0, 21, 21 ),
 	mpIcon( "mp-favorite-outline", 	4, 0, 21, 21 ),
 	mpIcon( "mp-volume-mute", 		0, 1, 18, 17 ),
@@ -328,8 +329,8 @@ function DICON:PaintAt( x, y, dw, dh )
 
 		end
 
-		local OffX = (dw - w) * 0.5
-		local OffY = (dh - h) * 0.5
+		local OffX = ceil((dw - w) * 0.5)
+		local OffY = ceil((dh - h) * 0.5)
 
 		spritesheet.DrawIcon( self.m_strIcon, OffX+y, OffY+y, w, h, self.m_Color )
 		return true
@@ -475,6 +476,11 @@ function SIDEBAR_BTN:Init()
 	self:SetSize( 21, 21 )
 
 end
+
+-- function SIDEBAR_BTN:Paint(w,h)
+-- 	surface.SetDrawColor(255,0,0)
+-- 	surface.DrawRect(0,0,w,h)
+-- end
 
 derma.DefineControl( "MP.SidebarButton", "", SIDEBAR_BTN, "DIconButton" )
 
