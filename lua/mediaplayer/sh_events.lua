@@ -17,7 +17,10 @@ if CLIENT then
 		VOTESKIP_MEDIA = "mp.events.ui.voteskipMedia",
 		REMOVE_MEDIA = "mp.events.ui.removeMedia",
 		TOGGLE_PAUSE = "mp.events.ui.togglePause",
-		SEEK = "mp.events.ui.seek"
+		SEEK = "mp.events.ui.seek",
+
+		START_SEEKING = "mp.events.ui.startSeeking",
+		STOP_SEEKING = "mp.events.ui.stopSeeking"
 	}
 
 end

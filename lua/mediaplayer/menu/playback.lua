@@ -28,6 +28,8 @@ function PANEL:Init()
 	self.MediaTitle:SetText( "Very Bad Video That Everyone Hates Included" )
 
 	self.MediaTime = vgui.Create( "MP.MediaTime", self )
+	self.MediaTime:SetShowCurrentTime( true )
+	self.MediaTime:SetListenForSeekEvents( true )
 
 	self.FavBtn = vgui.Create( "MP.FavoriteButton", self )
 
@@ -90,16 +92,12 @@ function PANEL:OnMediaChanged( media )
 	end
 
 	if media and media:IsTimed() then
-		local startTime, duration = media:StartTime(), media:Duration()
-
-		self.MediaTime:SetStartTime( startTime )
-		self.MediaTime:SetDuration( duration )
+		self.MediaTime:SetMedia( media )
 
 		self.Seekbar:SetMedia( media )
-
 		self.Seekbar:Show()
 	else
-		self.MediaTime:Clear()
+		self.MediaTime:SetMedia( nil )
 
 		self.Seekbar:SetMedia( nil )
 		self.Seekbar:Hide()
@@ -261,6 +259,8 @@ function SEEKBAR:OnMousePressed( mcode )
 	-- TODO: only allow admins/owners to control seeking
 	if not true then return end
 
+	hook.Run( MP.EVENTS.UI.START_SEEKING, self )
+
 	self.BaseClass.OnMousePressed( self, mcode )
 
 end
@@ -269,6 +269,8 @@ function SEEKBAR:OnMouseReleased( mcode )
 
 	-- TODO: only allow admins/owners to control seeking
 	if not true then return end
+
+	hook.Run( MP.EVENTS.UI.STOP_SEEKING, self )
 
 	if self.m_Media then
 		local seekTime = ceil(self.m_fSlideX * self.m_Media:Duration())
@@ -285,6 +287,7 @@ function SEEKBAR:Think()
 
 	if media and not self:IsEditing() then
 		local progress = media:CurrentTime() / media:Duration()
+		progress = clamp(progress, 0, 1)
 
 		self:SetSlideX( progress )
 		self:InvalidateLayout()

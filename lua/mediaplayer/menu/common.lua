@@ -43,8 +43,9 @@ derma.DefineControl( "MP.MediaTitle", "", MEDIA_TITLE, "DLabel" )
 
 local MEDIA_TIME = {}
 
-AccessorFunc( MEDIA_TIME, "StartTime", "StartTime" )
-AccessorFunc( MEDIA_TIME, "Duration", "Duration" )
+AccessorFunc( MEDIA_TIME, "m_Media", "Media" )
+AccessorFunc( MEDIA_TIME, "m_bShowCurrentTime", "ShowCurrentTime" )
+AccessorFunc( MEDIA_TIME, "m_bShowDuration", "ShowDuration" )
 
 function MEDIA_TIME:Init()
 
@@ -63,36 +64,55 @@ function MEDIA_TIME:Init()
 	self.DurationLbl:SetFont( "MP.MediaDuration" )
 	-- self.DurationLbl:SetTextColor( color_white )
 
+	self:SetShowCurrentTime( false )
+	self:SetShowDuration( true )
+
 	self.NextThink = 0
 
 end
 
-function MEDIA_TIME:SetStartTime( time )
-	self.StartTime = time
+function MEDIA_TIME:SetMedia( media )
+	self.m_Media = media
 
-	local text = time and "0:00" or ""
-	self.TimeLbl:SetText( text )
-
-	self:UpdateDivider()
-end
-
-function MEDIA_TIME:SetDuration( duration )
-	self.Duration = duration
-
-	local text = duration and string.FormatSeconds( duration ) or ""
-	self.DurationLbl:SetText( text )
-
-	self:UpdateDivider()
+	if media then
+		self.DurationLbl:SetText( string.FormatSeconds( media:Duration() ) )
+		self:UpdateDivider()
+	end
 end
 
 function MEDIA_TIME:UpdateDivider()
-	local text = (self.StartTime and self.Duration) and "/" or ""
+	local text = (self.m_bShowCurrentTime and self.m_bShowDuration) and "/" or ""
 	self.DividerLbl:SetText( text )
 end
 
-function MEDIA_TIME:Clear()
-	self:SetStartTime( nil )
-	self:SetDuration( nil )
+function MEDIA_TIME:SetListenForSeekEvents( listen )
+	if listen and not self._listening then
+		hook.Add( MP.EVENTS.UI.START_SEEKING, self, function(_, pnl) self:OnStartSeeking(pnl) end )
+		hook.Add( MP.EVENTS.UI.STOP_SEEKING, self, function() self:OnStopSeeking() end )
+	elseif not listen and self._listening then
+		self:StopListeningForSeekEvents()
+	end
+
+	self._listening = listen
+end
+
+function MEDIA_TIME:StopListeningForSeekEvents()
+	hook.Remove( MP.EVENTS.UI.START_SEEKING, self )
+	hook.Remove( MP.EVENTS.UI.STOP_SEEKING, self )
+end
+
+function MEDIA_TIME:OnStartSeeking( seekbarPnl )
+	self._seekbar = seekbarPnl
+end
+
+function MEDIA_TIME:OnStopSeeking()
+	self._seekbar = nil
+end
+
+function MEDIA_TIME:OnRemove()
+	if self._listening then
+		self:StopListeningForSeekEvents()
+	end
 end
 
 function MEDIA_TIME:Think()
@@ -101,17 +121,31 @@ function MEDIA_TIME:Think()
 
 	if self.NextThink > rt then return end
 
-	local curTime = RealTime()
-	local mediaTime
+	if self.m_Media then
 
-	if self.StartTime then
-		mediaTime = clamp( curTime - self.StartTime, 0, self.Duration )
+		if self.m_bShowCurrentTime then
+			local mediaTime
+			local duration = self.m_Media:Duration()
 
-		self.TimeLbl:SetText( string.FormatSeconds( mediaTime ) )
-		self:InvalidateLayout()
+			if self._seekbar then
+				local progress = self._seekbar.m_fSlideX or 0
+				mediaTime = progress * duration
+			else
+				mediaTime = self.m_Media:CurrentTime()
+			end
+
+			mediaTime = clamp(mediaTime, 0, duration)
+			self.TimeLbl:SetText( string.FormatSeconds( mediaTime ) )
+			self:UpdateDivider()
+		end
+
+	else
+		-- TODO: hide info?
 	end
 
-	self.NextThink = rt + 0.5
+	self:InvalidateLayout()
+
+	self.NextThink = rt + 0.1
 
 end
 

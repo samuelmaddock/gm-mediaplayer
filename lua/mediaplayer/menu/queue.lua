@@ -168,7 +168,7 @@ end
 function MEDIA_ITEM:SetMedia( media )
 
 	self.MediaTitle:SetText( media:Title() )
-	self.MediaTime:SetDuration( media:Duration() )
+	self.MediaTime:SetMedia( media )
 	self.AddedByLbl:SetPlayer( media:GetOwner(), media:OwnerName(), media:OwnerSteamID() )
 
 	self.FavBtn:SetMedia( media )
