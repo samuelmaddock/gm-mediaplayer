@@ -98,6 +98,7 @@ function PANEL:OnMediaChanged( media )
 		self.Seekbar:Show()
 	else
 		self.MediaTime:SetMedia( nil )
+		self.MediaTime:Hide()
 
 		self.Seekbar:SetMedia( nil )
 		self.Seekbar:Hide()
@@ -244,6 +245,15 @@ function SEEKBAR:Init()
 	self.Knob:SetSize( self.KnobSize, self.KnobSize )
 	self.Knob.Paint = self.PaintKnob
 
+	self.Knob.OnMousePressed = function( panel, mousecode )
+			self:OnStartEditing( self )
+			DButton.OnMousePressed( panel, mousecode )
+		end
+	self.Knob.OnMouseReleased = function( panel, mousecode )
+			self:OnStopEditing( self )
+			DButton.OnMouseReleased( panel, mousecode )
+		end
+
 	-- Remove some hidden panel child from the inherited DSlider control; I have
 	-- no idea where it's being created...
 	for _, child in pairs( self:GetChildren() ) do
@@ -254,18 +264,16 @@ function SEEKBAR:Init()
 
 end
 
-function SEEKBAR:OnMousePressed( mcode )
+function SEEKBAR:OnStartEditing()
 
 	-- TODO: only allow admins/owners to control seeking
 	if not true then return end
 
 	hook.Run( MP.EVENTS.UI.START_SEEKING, self )
 
-	self.BaseClass.OnMousePressed( self, mcode )
-
 end
 
-function SEEKBAR:OnMouseReleased( mcode )
+function SEEKBAR:OnStopEditing()
 
 	-- TODO: only allow admins/owners to control seeking
 	if not true then return end
@@ -277,8 +285,16 @@ function SEEKBAR:OnMouseReleased( mcode )
 		hook.Run( MP.EVENTS.UI.SEEK, seekTime )
 	end
 
-	self.BaseClass.OnMouseReleased( self, mcode )
+end
 
+function SEEKBAR:OnMousePressed( mcode )
+	self:OnStartEditing()
+	self.BaseClass.OnMousePressed( self, mcode )
+end
+
+function SEEKBAR:OnMouseReleased( mcode )
+	self:OnStopEditing()
+	self.BaseClass.OnMouseReleased( self, mcode )
 end
 
 function SEEKBAR:Think()
