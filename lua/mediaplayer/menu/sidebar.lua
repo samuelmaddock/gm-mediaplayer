@@ -28,6 +28,8 @@ function PANEL:Init()
 
 	self:InvalidateLayout( true )
 
+	self._hooks = {}
+
 end
 
 function PANEL:SetupMediaPlayer( mp )
@@ -35,27 +37,43 @@ function PANEL:SetupMediaPlayer( mp )
 	self._mp = mp
 	hook.Run( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, mp, self )
 
-	hook.Add( MP.EVENTS.UI.OPEN_REQUEST_MENU, self, function()
+	self:RegisterHook( MP.EVENTS.UI.OPEN_REQUEST_MENU, function( mp )
 		MediaPlayer.HideSidebar()
 		MediaPlayer.OpenRequestMenu( mp )
 	end )
 
-	hook.Add( MP.EVENTS.UI.FAVORITE_MEDIA, self, function( _, media )
+	self:RegisterHook( MP.EVENTS.UI.FAVORITE_MEDIA, function( mp, _, media )
 		-- TODO
 	end )
 
-	hook.Add( MP.EVENTS.UI.VOTESKIP_MEDIA, self, function( _, media )
+	self:RegisterHook( MP.EVENTS.UI.VOTESKIP_MEDIA, function( mp, _, media )
 		-- TODO
 	end )
 
-	hook.Add( MP.EVENTS.UI.REMOVE_MEDIA, self, function( _, media )
+	self:RegisterHook( MP.EVENTS.UI.REMOVE_MEDIA, function( mp, _, media )
 		MediaPlayer.RequestRemove( mp, media:UniqueID() )
 	end )
 
-	hook.Add( MP.EVENTS.UI.TOGGLE_PAUSE, self, function()
+	self:RegisterHook( MP.EVENTS.UI.TOGGLE_PAUSE, function( mp, _, media )
 		MediaPlayer.Pause( mp )
 	end )
 
+end
+
+function PANEL:RegisterHook( hookname, callback )
+	table.insert( self._hooks, hookname )
+
+	hook.Add( hookname, self, function(...)
+		callback( self._mp, ... )
+	end )
+end
+
+function PANEL:OnRemove()
+	for _, hookname in ipairs(self._hooks) do
+		hook.Remove( hookname, self )
+	end
+
+	self._hooks = nil
 end
 
 function PANEL:Paint(w, h)
