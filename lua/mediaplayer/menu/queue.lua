@@ -78,19 +78,19 @@ local ADD_VIDEO_BTN = {}
 ADD_VIDEO_BTN.Color = Color( 232, 78, 64 )
 ADD_VIDEO_BTN.HoverColor = Color( 252, 98, 84 )
 
-ADD_VIDEO_BTN.PlusIcon = "mediaplayer/ui/plus.png"
-
 function ADD_VIDEO_BTN:Init()
 
-	self.BaseClass.Init( self )
+	self.BtnLbl = vgui.Create( "DLabel", self )
+	self.BtnLbl:SetText( "Button" )
 
-	self:SetFont( "MP.QueueHeader" )
-	self:SetText( "ADD A VIDEO" )
-	self:SetTextColor( color_white )
+	self:SetLabelSpacing( 4 )
+	self:SetPadding( 4 )
 
-	self:SetIcon( self.PlusIcon )
+	self.BtnLbl:SetFont( "MP.QueueHeader" )
+	self.BtnLbl:SetText( "ADD MEDIA" )
+	self.BtnLbl:SetTextColor( color_white )
 
-	self:SetSize( 118, 24 )
+	self:SetIcon( "mp-plus" )
 
 end
 
@@ -113,7 +113,7 @@ function ADD_VIDEO_BTN:DoClick()
 	hook.Run( MP.EVENTS.UI.OPEN_REQUEST_MENU )
 end
 
-derma.DefineControl( "MP.AddVideoButton", "", ADD_VIDEO_BTN, "DButton" )
+derma.DefineControl( "MP.AddVideoButton", "", ADD_VIDEO_BTN, "DIconLabeledButton" )
 
 
 local QUEUE_LIST = {}

@@ -233,7 +233,7 @@ spritesheet.Register {
 	mpIcon( "mp-close", 			0, 2, 21, 21 ),
 	mpIcon( "mp-skip", 				1, 2, 16, 16 ),
 	mpIcon( "mp-refresh", 			2, 2, 21, 21 ),
-	mpIcon( "mp-plus", 				3, 2, 21, 21 ),
+	mpIcon( "mp-plus", 				3, 2, 14, 14 ),
 
 	mpIcon( "mp-play", 				3, 4, 19, 25 ),
 	mpIcon( "mp-pause",				4, 4, 22, 24 ),
@@ -406,44 +406,6 @@ function DICONBTN:SizeToContents( )
 
 end
 
-function DICONBTN:OnMousePressed( mousecode )
-
-	DButton.OnMousePressed( self, mousecode )
-
-
-	--[[if ( self.m_bStretchToFit ) then
-
-		self.m_Icon:SetPos( 2, 2 )
-		self.m_Icon:SetSize( self:GetWide() - 4, self:GetTall() - 4 )
-
-	else
-
-		self.m_Icon:SizeToContents()
-		self.m_Icon:SetSize( self.m_Icon:GetWide() * 0.8, self.m_Icon:GetTall() * 0.8 )
-		self.m_Icon:Center()
-
-	end]]
-
-end
-
-function DICONBTN:OnMouseReleased( mousecode )
-
-	DButton.OnMouseReleased( self, mousecode )
-
-	--[[if ( self.m_bStretchToFit ) then
-
-		self.m_Icon:SetPos( 0, 0 )
-		self.m_Icon:SetSize( self:GetSize() )
-
-	else
-
-		self.m_Icon:SizeToContents()
-		self.m_Icon:Center()
-
-	end]]
-
-end
-
 function DICONBTN:PerformLayout()
 
 	if ( self.m_bStretchToFit ) then
@@ -461,6 +423,47 @@ function DICONBTN:PerformLayout()
 end
 
 derma.DefineControl( "DIconButton", "", DICONBTN, "DButton" )
+
+
+--[[--------------------------------------------
+	DIconButton
+----------------------------------------------]]
+
+local DICONLBLBTN = {}
+
+AccessorFunc( DICONLBLBTN, "m_LabelSpacing", "LabelSpacing" )
+AccessorFunc( DICONLBLBTN, "m_Padding", "Padding" )
+
+function DICONLBLBTN:Init()
+
+	self.BaseClass.Init( self )
+
+	self.BtnLbl = vgui.Create( "DLabel", self )
+	self.BtnLbl:SetText( "" )
+
+	self:SetLabelSpacing( 4 )
+	self:SetPadding( 4 )
+
+end
+
+function DICONLBLBTN:PerformLayout()
+
+	self.m_Icon:SizeToContents()
+	self.m_Icon:AlignLeft( self.m_Padding )
+
+	self.BtnLbl:SizeToContents()
+	self.BtnLbl:MoveRightOf( self.m_Icon, self.m_LabelSpacing )
+
+	local w = self.BtnLbl:GetPos() + self.BtnLbl:GetWide() + self.m_Padding
+	local h = math.max( self.m_Icon:GetTall(), self.BtnLbl:GetTall() )
+	self:SetWide( w, h )
+
+	self.m_Icon:CenterVertical()
+	self.BtnLbl:CenterVertical()
+
+end
+
+derma.DefineControl( "DIconLabeledButton", "", DICONLBLBTN, "DIconButton" )
 
 
 --[[--------------------------------------------
