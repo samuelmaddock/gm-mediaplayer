@@ -411,7 +411,7 @@ function DICONBTN:OnMousePressed( mousecode )
 	DButton.OnMousePressed( self, mousecode )
 
 
-	if ( self.m_bStretchToFit ) then
+	--[[if ( self.m_bStretchToFit ) then
 
 		self.m_Icon:SetPos( 2, 2 )
 		self.m_Icon:SetSize( self:GetWide() - 4, self:GetTall() - 4 )
@@ -422,7 +422,7 @@ function DICONBTN:OnMousePressed( mousecode )
 		self.m_Icon:SetSize( self.m_Icon:GetWide() * 0.8, self.m_Icon:GetTall() * 0.8 )
 		self.m_Icon:Center()
 
-	end
+	end]]
 
 end
 
@@ -430,7 +430,7 @@ function DICONBTN:OnMouseReleased( mousecode )
 
 	DButton.OnMouseReleased( self, mousecode )
 
-	if ( self.m_bStretchToFit ) then
+	--[[if ( self.m_bStretchToFit ) then
 
 		self.m_Icon:SetPos( 0, 0 )
 		self.m_Icon:SetSize( self:GetSize() )
@@ -440,7 +440,7 @@ function DICONBTN:OnMouseReleased( mousecode )
 		self.m_Icon:SizeToContents()
 		self.m_Icon:Center()
 
-	end
+	end]]
 
 end
 

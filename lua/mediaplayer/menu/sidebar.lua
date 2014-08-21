@@ -33,7 +33,7 @@ end
 function PANEL:SetupMediaPlayer( mp )
 
 	self._mp = mp
-	hook.Run( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, mp )
+	hook.Run( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, mp, self )
 
 	hook.Add( MP.EVENTS.UI.OPEN_REQUEST_MENU, self, function()
 		MediaPlayer.HideSidebar()
