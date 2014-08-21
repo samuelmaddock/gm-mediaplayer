@@ -16,7 +16,8 @@ if CLIENT then
 		FAVORITE_MEDIA = "mp.events.ui.favoriteMedia",
 		VOTESKIP_MEDIA = "mp.events.ui.voteskipMedia",
 		REMOVE_MEDIA = "mp.events.ui.removeMedia",
-		TOGGLE_PAUSE = "mp.events.ui.togglePause"
+		TOGGLE_PAUSE = "mp.events.ui.togglePause",
+		SEEK = "mp.events.ui.seek"
 	}
 
 end

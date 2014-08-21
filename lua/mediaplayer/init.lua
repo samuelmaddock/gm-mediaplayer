@@ -183,7 +183,7 @@ local function OnSeekMedia( len, ply )
 	local mp = NetReadMediaPlayer()
 	if not mp then return end
 
-	local seekTime = net.ReadString()
+	local seekTime = net.ReadInt(32)
 
 	if MediaPlayer.DEBUG then
 		print("MEDIAPLAYER.RequestSeek:", mp:GetId(), seekTime, ply)

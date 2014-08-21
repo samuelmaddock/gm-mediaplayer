@@ -95,13 +95,13 @@ function PANEL:OnMediaChanged( media )
 		self.MediaTime:SetStartTime( startTime )
 		self.MediaTime:SetDuration( duration )
 
-		self.Seekbar:SetStartTime( startTime )
-		self.Seekbar:SetDuration( duration )
+		self.Seekbar:SetMedia( media )
 
 		self.Seekbar:Show()
 	else
 		self.MediaTime:Clear()
 
+		self.Seekbar:SetMedia( nil )
 		self.Seekbar:Hide()
 	end
 
@@ -234,6 +234,8 @@ SEEKBAR.BarHeight = 2
 
 SEEKBAR.ProgressColor = Color( 28, 100, 157 )
 
+AccessorFunc( SEEKBAR, "m_Media", "Media" )
+
 function SEEKBAR:Init()
 
 	self.BaseClass.Init( self )
@@ -252,41 +254,41 @@ function SEEKBAR:Init()
 		end
 	end
 
-	-- self.NextThink = 0
+end
+
+function SEEKBAR:OnMousePressed( mcode )
+
+	-- TODO: only allow admins/owners to control seeking
+	if not true then return end
+
+	self.BaseClass.OnMousePressed( self, mcode )
 
 end
 
-function SEEKBAR:SetStartTime( time )
-	self._startTime = time
-end
+function SEEKBAR:OnMouseReleased( mcode )
 
-function SEEKBAR:SetDuration( duration )
-	self._duration = duration
-end
+	-- TODO: only allow admins/owners to control seeking
+	if not true then return end
 
-function SEEKBAR:GetProgress()
-	if not (self._startTime or self._duration) then
-		return 0
+	if self.m_Media then
+		local seekTime = ceil(self.m_fSlideX * self.m_Media:Duration())
+		hook.Run( MP.EVENTS.UI.SEEK, seekTime )
 	end
 
-	local curTime = RealTime()
-	local diffTime = curTime - self._startTime
+	self.BaseClass.OnMouseReleased( self, mcode )
 
-	return clamp(diffTime / self._duration, 0, 1)
 end
 
 function SEEKBAR:Think()
 
-	-- local rt = RealTime()
+	local media = self.m_Media
 
-	-- if rt < self.NextThink then return end
+	if media and not self:IsEditing() then
+		local progress = media:CurrentTime() / media:Duration()
 
-	if not self:IsEditing() then
-		self:SetSlideX( self:GetProgress() )
+		self:SetSlideX( progress )
 		self:InvalidateLayout()
 	end
-
-	-- self.NextThink = rt + 0.1
 
 end
 

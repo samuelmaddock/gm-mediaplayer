@@ -190,6 +190,28 @@ function MediaPlayer.Skip( mp )
 
 end
 
+-- TODO: move this elsewhere
+local function ParseHHMMSS( time )
+    local tbl = {}
+
+	-- insert fragments in reverse
+	for fragment, _ in string.gmatch(time, ":?(%d+)") do
+		table.insert(tbl, 1, tonumber(fragment) or 0)
+	end
+
+	if #tbl == 0 then
+		return nil
+	end
+
+	local seconds = 0
+
+	for i = 1, #tbl do
+		seconds = seconds + tbl[i] * math.max(60 ^ (i-1), 1)
+	end
+
+	return seconds
+end
+
 ---
 -- Seek to a specific time in the current media.
 --
@@ -201,9 +223,16 @@ function MediaPlayer.Seek( mp, time )
 	local mpId = GetMediaPlayerId( mp )
 	if not mpId then return end
 
+	-- always convert to time in seconds before sending
+	if type(time) == 'string' then
+		time = ParseHHMMSS(time) or 0
+	end
+
+	print("SEEKTEST", mp, time)
+
 	net.Start( "MEDIAPLAYER.RequestSeek" )
 		net.WriteString( mpId )
-		net.WriteString( time )
+		net.WriteInt( time, 32 )
 	net.SendToServer()
 
 end

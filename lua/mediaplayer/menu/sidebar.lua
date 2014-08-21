@@ -58,12 +58,16 @@ function PANEL:SetupMediaPlayer( mp )
 		MediaPlayer.Pause( mp )
 	end )
 
+	self:RegisterHook( MP.EVENTS.UI.SEEK, function( mp, seekTime )
+		MediaPlayer.Seek( mp, seekTime )
+	end )
+
 end
 
 function PANEL:RegisterHook( hookname, callback )
 	table.insert( self._hooks, hookname )
 
-	hook.Add( hookname, self, function(...)
+	hook.Add( hookname, self, function(panel, ...)
 		callback( self._mp, ... )
 	end )
 end
