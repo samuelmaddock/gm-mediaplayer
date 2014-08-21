@@ -159,13 +159,16 @@ local CURRENTLY_PLAYING_TAB = {}
 
 AccessorFunc( CURRENTLY_PLAYING_TAB, "MediaPlayerId", "MediaPlayerId" )
 
-function CURRENTLY_PLAYING_TAB:Init()
+CURRENTLY_PLAYING_TAB.BgColor = Color( 7, 21, 33 )
 
-	self.PlaybackPanel = vgui.Create( "MP.Playback", self )
-	self.PlaybackPanel:Dock( TOP )
+function CURRENTLY_PLAYING_TAB:Init()
 
 	self.QueuePanel = vgui.Create( "MP.Queue", self )
 	self.QueuePanel:Dock( FILL )
+	self.QueuePanel:DockMargin( 0, -4, 0, 0 ) -- fix offset due to seekbar
+
+	self.PlaybackPanel = vgui.Create( "MP.Playback", self )
+	self.PlaybackPanel:Dock( TOP )
 
 	hook.Add( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, self, self.OnMediaPlayerChanged )
 
@@ -219,6 +222,11 @@ function CURRENTLY_PLAYING_TAB:OnRemove()
 		mp:removeListener( MP.EVENTS.PLAYER_STATE_CHANGED, self.PlayerStateChangeHandle )
 	end
 
+end
+
+function CURRENTLY_PLAYING_TAB:Paint( w, h )
+	surface.SetDrawColor( self.BgColor )
+	surface.DrawRect( 0, 0, w, h )
 end
 
 derma.DefineControl( "MP.CurrentlyPlayingTab", "", CURRENTLY_PLAYING_TAB, "Panel" )

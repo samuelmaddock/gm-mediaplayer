@@ -46,9 +46,6 @@ function PANEL:Init()
 
 	self.Seekbar = vgui.Create( "MP.Seekbar", self )
 
-	-- Must be higher than other panels to render the seekbar
-	self:SetZPos( 2 )
-
 	self.NextThink = 0
 
 end
@@ -117,7 +114,7 @@ end
 function PANEL:Paint( w, h )
 
 	surface.SetDrawColor( self.BgColor )
-	surface.DrawRect( 0, 0, w, h )
+	surface.DrawRect( 0, 0, w, h - self.SeekbarHeight / 2 )
 
 end
 
@@ -175,6 +172,8 @@ function PANEL:PerformLayout()
 
 	self.Seekbar:SetSize( w, self.SeekbarHeight )
 	self.Seekbar:SetPos( 0, h - self.SeekbarHeight )
+
+	self:SetTall( self.Height + self.SeekbarHeight / 2 )
 
 end
 
@@ -238,9 +237,6 @@ AccessorFunc( SEEKBAR, "m_Media", "Media" )
 function SEEKBAR:Init()
 
 	self.BaseClass.Init( self )
-
-	self:SetZPos( 16000 )
-	self.Knob:SetZPos( 16000 )
 
 	self.Knob:SetSize( self.KnobSize, self.KnobSize )
 	self.Knob.Paint = self.PaintKnob

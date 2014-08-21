@@ -118,8 +118,6 @@ derma.DefineControl( "MP.AddVideoButton", "", ADD_VIDEO_BTN, "DIconLabeledButton
 
 local QUEUE_LIST = {}
 
-QUEUE_LIST.BgColor = Color( 7, 21, 33 )
-
 function QUEUE_LIST:Init()
 
 	self.BaseClass.Init( self )
@@ -128,13 +126,6 @@ function QUEUE_LIST:Init()
 
 	-- TODO: Replace with custom scrollbar
 	self:EnableVerticalScrollbar()
-
-end
-
-function QUEUE_LIST:Paint( w, h )
-
-	surface.SetDrawColor( self.BgColor )
-	surface.DrawRect( 0, 0, w, h )
 
 end
 

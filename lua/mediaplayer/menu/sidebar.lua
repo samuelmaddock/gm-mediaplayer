@@ -51,10 +51,12 @@ function PANEL:SetupMediaPlayer( mp )
 	end )
 
 	self:RegisterHook( MP.EVENTS.UI.REMOVE_MEDIA, function( mp, _, media )
+		if not media then return end
 		MediaPlayer.RequestRemove( mp, media:UniqueID() )
 	end )
 
 	self:RegisterHook( MP.EVENTS.UI.TOGGLE_PAUSE, function( mp, _, media )
+		if not media then return end
 		MediaPlayer.Pause( mp )
 	end )
 
