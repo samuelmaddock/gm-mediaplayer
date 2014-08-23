@@ -10,14 +10,6 @@ local function LoadMediaPlayer()
 	-- Check if MediaPlayer has already been loaded
 	if MediaPlayer then
 		MediaPlayer.__refresh = true
-
-		-- HACK: Lua refresh fix; access local variable of baseclass lib
-		local _, BaseClassTable = debug.getupvalue(baseclass.Get, 1)
-		for classname, _ in pairs(BaseClassTable) do
-			if classname:find("mp_") then
-				BaseClassTable[classname] = nil
-			end
-		end
 	end
 
 	-- shared includes

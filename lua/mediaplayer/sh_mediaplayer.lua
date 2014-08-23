@@ -4,6 +4,24 @@
 
 MediaPlayer.Type = {}
 
+local function setBaseClass( name, tbl )
+	local classname = "mp_" .. name
+
+	if MediaPlayer.Type[name] ~= nil then
+		if MediaPlayer.DEBUG then
+			Msg("Media player type '" .. name .. "' is already registered. ")
+			Msg("Clearing baseclass...\n")
+		end
+
+		-- HACK: removes registered baseclass if it already exists to avoid Lua
+		-- refresh table.Merge errors...
+		local _, BaseClassTable = debug.getupvalue(baseclass.Get, 1)
+		BaseClassTable[classname] = nil
+	end
+
+	baseclass.Set( classname, tbl )
+end
+
 ---
 -- Registers a media player type.
 --
@@ -42,10 +60,8 @@ function MediaPlayer.Register( tbl )
 		})
 	end
 
-	local classname = "mp_" .. name
-
 	-- Store media player type as a base class
-	baseclass.Set( classname, tbl )
+	setBaseClass( name, tbl )
 
 	-- Save player type
 	MediaPlayer.Type[name] = tbl
