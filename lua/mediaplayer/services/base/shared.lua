@@ -84,6 +84,11 @@ function SERVICE:OwnerInfo()
 	return OwnerInfoPattern:format( self._OwnerName, self._OwnerSteamID )
 end
 
+function SERVICE:IsOwner( ply )
+	return ply == self:GetOwner() or
+		ply:SteamID() == self:OwnerSteamID()
+end
+
 function SERVICE:Title()
 	return self._metadata and self._metadata.title or "Unknown"
 end

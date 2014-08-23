@@ -227,8 +227,6 @@ function MediaPlayer.Seek( mp, time )
 		time = ParseHHMMSS(time) or 0
 	end
 
-	print("SEEKTEST", mp, time)
-
 	net.Start( "MEDIAPLAYER.RequestSeek" )
 		net.WriteString( mpId )
 		net.WriteInt( time, 32 )
@@ -246,6 +244,7 @@ function MediaPlayer.RequestRemove( mp, mediaUID )
 
 	local mpId = GetMediaPlayerId( mp )
 	if not mpId then return end
+
 
 	net.Start( "MEDIAPLAYER.RequestRemove" )
 		net.WriteString( mpId )

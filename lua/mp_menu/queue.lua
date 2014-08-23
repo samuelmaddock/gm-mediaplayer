@@ -164,9 +164,9 @@ function MEDIA_ITEM:SetMedia( media )
 
 	self.FavBtn:SetMedia( media )
 
-	-- TODO: detect if player has privileges to remove media from queue
-	-- e.g. they requested the media or they're an admin
-	if true then
+	-- Detect if player has privileges to remove media from queue
+	local privileged = hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER )
+	if privileged or media:IsOwner( LocalPlayer() ) then
 		self.RemoveBtn = vgui.Create( "MP.RemoveButton", self )
 		self.RemoveBtn:SetMedia( media )
 	end

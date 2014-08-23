@@ -11,7 +11,9 @@ MP.EVENTS.UI = {
 	SEEK = "mp.events.ui.seek",
 
 	START_SEEKING = "mp.events.ui.startSeeking",
-	STOP_SEEKING = "mp.events.ui.stopSeeking"
+	STOP_SEEKING = "mp.events.ui.stopSeeking",
+
+	PRIVILEGED_PLAYER = "mp.events.ui.privilegedPlayer"
 }
 
 include "sidebar.lua"

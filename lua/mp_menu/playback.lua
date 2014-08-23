@@ -35,10 +35,8 @@ function PANEL:Init()
 
 	self.SkipBtn = vgui.Create( "MP.SkipButton", self )
 
-	-- TODO: Only allow these buttons to show for admins
-	if false then
+	if hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER ) then
 		self.RemoveBtn = vgui.Create( "MP.RemoveButton", self )
-
 		self.OwnerActions = true
 	end
 
@@ -99,6 +97,10 @@ function PANEL:OnMediaChanged( media )
 
 		self.Seekbar:SetMedia( nil )
 		self.Seekbar:Hide()
+	end
+
+	if self.RemoveBtn then
+		self.RemoveBtn:SetMedia( media )
 	end
 
 	self:InvalidateLayout()
@@ -194,8 +196,6 @@ function PLAYPAUSE_BTN:Init()
 
 	self:SetSize( 22, 25 )
 
-	-- TODO: Set cursor type depending on whether player is admin/owner
-
 end
 
 function PLAYPAUSE_BTN:SetPlayerState( playerState )
@@ -213,11 +213,17 @@ function PLAYPAUSE_BTN:SetPlayerState( playerState )
 		self:SetIconVisible(false)
 	end
 
+	-- Set cursor type depending on whether player is admin/owner
+	if hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER ) then
+		self:SetCursor( "hand" )
+	else
+		self:SetCursor( "arrow" )
+	end
+
 end
 
 function PLAYPAUSE_BTN:DoClick()
 
-	-- TODO: Toggle between playing and pausing state if player is admin/owner
 	hook.Run( MP.EVENTS.UI.TOGGLE_PAUSE )
 
 end
@@ -262,8 +268,8 @@ end
 
 function SEEKBAR:OnStartEditing()
 
-	-- TODO: only allow admins/owners to control seeking
-	if not true then return end
+	-- only allow admins/owners to control seeking
+	if not hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER ) then return end
 
 	hook.Run( MP.EVENTS.UI.START_SEEKING, self )
 
@@ -271,8 +277,8 @@ end
 
 function SEEKBAR:OnStopEditing()
 
-	-- TODO: only allow admins/owners to control seeking
-	if not true then return end
+	-- only allow admins/owners to control seeking
+	if not hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER ) then return end
 
 	hook.Run( MP.EVENTS.UI.STOP_SEEKING, self )
 

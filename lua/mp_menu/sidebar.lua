@@ -28,58 +28,6 @@ function PANEL:Init()
 
 	self:InvalidateLayout( true )
 
-	self._hooks = {}
-
-end
-
-function PANEL:SetupMediaPlayer( mp )
-
-	self._mp = mp
-	hook.Run( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, mp, self )
-
-	self:RegisterHook( MP.EVENTS.UI.OPEN_REQUEST_MENU, function( mp )
-		MediaPlayer.HideSidebar()
-		MediaPlayer.OpenRequestMenu( mp )
-	end )
-
-	self:RegisterHook( MP.EVENTS.UI.FAVORITE_MEDIA, function( mp, _, media )
-		-- TODO
-	end )
-
-	self:RegisterHook( MP.EVENTS.UI.VOTESKIP_MEDIA, function( mp, _, media )
-		-- TODO
-	end )
-
-	self:RegisterHook( MP.EVENTS.UI.REMOVE_MEDIA, function( mp, _, media )
-		if not media then return end
-		MediaPlayer.RequestRemove( mp, media:UniqueID() )
-	end )
-
-	self:RegisterHook( MP.EVENTS.UI.TOGGLE_PAUSE, function( mp, _, media )
-		if not media then return end
-		MediaPlayer.Pause( mp )
-	end )
-
-	self:RegisterHook( MP.EVENTS.UI.SEEK, function( mp, seekTime )
-		MediaPlayer.Seek( mp, seekTime )
-	end )
-
-end
-
-function PANEL:RegisterHook( hookname, callback )
-	table.insert( self._hooks, hookname )
-
-	hook.Add( hookname, self, function(panel, ...)
-		callback( self._mp, ... )
-	end )
-end
-
-function PANEL:OnRemove()
-	for _, hookname in ipairs(self._hooks) do
-		hook.Remove( hookname, self )
-	end
-
-	self._hooks = nil
 end
 
 function PANEL:Paint(w, h)
@@ -101,6 +49,62 @@ end
 local MP_SIDEBAR = vgui.RegisterTable( PANEL, "EditablePanel" )
 
 
+local sidebarHooks
+
+local function registerSidebarHook( hookname, callback, mp )
+
+	table.insert( sidebarHooks, hookname )
+
+	hook.Add( hookname, "MP.Sidebar", function(...)
+		if MediaPlayer.DEBUG then
+			print("MP.EVENTS.UI", hookname)
+			PrintTable({...})
+		end
+
+		return callback(...)
+	end )
+
+end
+
+local function setupSidebarHooks( mp )
+
+	-- Register sidebar hooks
+	sidebarHooks = {}
+
+	registerSidebarHook( MP.EVENTS.UI.OPEN_REQUEST_MENU, function()
+		MediaPlayer.HideSidebar()
+		MediaPlayer.OpenRequestMenu( mp )
+	end )
+
+	registerSidebarHook( MP.EVENTS.UI.FAVORITE_MEDIA, function( media )
+		-- TODO
+	end )
+
+	registerSidebarHook( MP.EVENTS.UI.VOTESKIP_MEDIA, function( media )
+		-- TODO
+	end )
+
+	registerSidebarHook( MP.EVENTS.UI.REMOVE_MEDIA, function( media )
+		print("TEST", media)
+		if not media then return end
+		MediaPlayer.RequestRemove( mp, media:UniqueID() )
+	end )
+
+	registerSidebarHook( MP.EVENTS.UI.TOGGLE_PAUSE, function()
+		MediaPlayer.Pause( mp )
+	end )
+
+	registerSidebarHook( MP.EVENTS.UI.SEEK, function( seekTime )
+		MediaPlayer.Seek( mp, seekTime )
+	end )
+
+	registerSidebarHook( MP.EVENTS.UI.PRIVILEGED_PLAYER, function()
+		local ply = LocalPlayer()
+		return mp:IsPlayerPrivileged(ply)
+	end )
+
+end
+
 function MediaPlayer.ShowSidebar( mp )
 
 	local sidebar = MediaPlayer._Sidebar
@@ -118,6 +122,8 @@ function MediaPlayer.ShowSidebar( mp )
 
 	if not IsValid(mp) then return end
 
+	setupSidebarHooks(mp)
+
 	sidebar = vgui.CreateFromTable( MP_SIDEBAR )
 	sidebar:MakePopup()
 	sidebar:ParentToHUD()
@@ -125,7 +131,7 @@ function MediaPlayer.ShowSidebar( mp )
 	sidebar:SetKeyboardInputEnabled( false )
 	sidebar:SetMouseInputEnabled( true )
 
-	sidebar:SetupMediaPlayer( mp )
+	hook.Run( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, mp )
 
 	MediaPlayer._Sidebar = sidebar
 
@@ -136,6 +142,12 @@ function MediaPlayer.HideSidebar()
 	local sidebar = MediaPlayer._Sidebar
 
 	if ValidPanel( sidebar ) then
+		for _, hookname in ipairs(sidebarHooks) do
+			hook.Remove( hookname, "MP.Sidebar" )
+		end
+
+		sidebarHooks = nil
+
 		sidebar:Remove()
 		MediaPlayer._Sidebar = nil
 	end
