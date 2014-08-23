@@ -29,7 +29,9 @@ function MediaPlayer.Volume( volume )
 		for _, mp in pairs(MediaPlayer.GetAll()) do
 			if mp:IsPlaying() then
 				local media = mp:CurrentMedia()
-				media:Volume( volume )
+				if media then
+					media:Volume( volume )
+				end
 			end
 		end
 
