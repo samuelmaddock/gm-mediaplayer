@@ -55,6 +55,18 @@ local function LoadMediaPlayer()
 	IncludeCS "menubar/mp_options.lua"
 	include "properties/mediaplayer.lua"
 
+	--
+	-- Media Player menu includes; remove these if you would rather not include
+	-- the sidebar menu.
+	--
+	if SERVER then
+		AddCSLuaFile "mp_menu/cl_init.lua"
+		include "mp_menu/init.lua"
+	else
+		include "mp_menu/cl_init.lua"
+	end
+
+
 	if SERVER then
 		-- Reinstall media players on Lua refresh
 		for _, mp in pairs(MediaPlayer.GetAll()) do
