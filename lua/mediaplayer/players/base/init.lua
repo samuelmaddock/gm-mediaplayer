@@ -175,7 +175,11 @@ function MEDIAPLAYER:SendMedia( media, ply )
 		print( "MEDIAPLAYER.SendMedia", media )
 	end
 
-	self:UpdateListeners()
+	-- If we're only sending media to a single player, we don't need to update
+	-- all listeners
+	if not ply then
+		self:UpdateListeners()
+	end
 
 	local startTime = media and media:StartTime() or 0
 
@@ -222,34 +226,6 @@ end
 --
 function MEDIAPLAYER:ShouldAddMedia( media )
 	return true
-end
-
--- TODO: Remove this function in favor of RequestMedia
-function MEDIAPLAYER:RequestUrl( url, ply )
-
-	if not IsValid(ply) then return end
-
-	if MediaPlayer.DEBUG then
-		print( "MEDIAPLAYER.RequestUrl", url, ply )
-	end
-
-	-- Queue must have space for the request
-	if #self._Queue == self.MaxMediaItems then
-		self:NotifyPlayer( ply, "The media player queue is full." )
-		return
-	end
-
-	-- Validate the URL
-	if not MediaPlayer.ValidUrl( url ) then
-		self:NotifyPlayer( ply, "The requested URL wasn't valid." )
-		return
-	end
-
-	-- Build the media object for the URL
-	local media = MediaPlayer.GetMediaForUrl( url )
-
-	self:RequestMedia( media, ply )
-
 end
 
 function MEDIAPLAYER:RequestMedia( media, ply )
