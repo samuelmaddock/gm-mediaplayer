@@ -443,10 +443,11 @@ function MEDIAPLAYER:BroadcastUpdate( ply )
 	self:UpdateListeners()
 
 	net.Start( "MEDIAPLAYER.Update" )
-		net.WriteString( self:GetId() )
-		net.WriteString( self.Name )
+		net.WriteString( self:GetId() )		-- unique ID
+		net.WriteString( self.Name )		-- media player type
+		net.WriteEntity( self:GetOwner() )
 		self.net.WritePlayerState( self:GetPlayerState() )
-		self:NetWriteUpdate()
+		self:NetWriteUpdate()				-- mp type-specific info
 		net.WriteUInt( #self._Queue, math.CeilPower2(self.MaxMediaItems)/2 )
 		for _, media in pairs(self._Queue) do
 			self.net.WriteMedia(media)

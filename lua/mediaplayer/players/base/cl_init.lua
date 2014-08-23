@@ -25,6 +25,10 @@ local function OnMediaUpdate( len )
 		mp = MediaPlayer.Create( mpId, mpType )
 	end
 
+	-- Read owner; may be NULL
+	local owner = net.ReadEntity()
+	mp:SetOwner( owner )
+
 	local state = mp.net.ReadPlayerState()
 
 	-- Read extended update information

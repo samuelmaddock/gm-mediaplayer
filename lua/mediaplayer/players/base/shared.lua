@@ -27,7 +27,7 @@ NUM_MP_STATE = 3
 function MEDIAPLAYER:Init(params)
 	self._Queue = {}		-- media queue
 	self._Media = nil		-- current media
-	self._Owner = nil		-- theater owner
+	self._Owner = nil		-- media player owner
 
 	self._State = MP_STATE_ENDED -- waiting for new media
 
