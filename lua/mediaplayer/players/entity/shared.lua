@@ -19,9 +19,6 @@ function MEDIAPLAYER:Init(...)
 	if SERVER then
 		-- Manually manage listeners by default
 		self._TransmitState = TRANSMIT_NEVER
-	else--if CLIENT and self.Render then
-		hook.Add( "HUDPaint", self, self.DrawFullscreen )
-		hook.Add( "PostDrawOpaqueRenderables", self, self.Draw )
 	end
 end
 
@@ -34,6 +31,10 @@ function MEDIAPLAYER:SetEntity(ent)
 		if IsValid(creator) and creator:IsPlayer() then
 			self:SetOwner(creator)
 		end
+	else
+		-- Setup hooks for drawing the screen onto the entity
+		hook.Add( "HUDPaint", self, self.DrawFullscreen )
+		hook.Add( "PostDrawOpaqueRenderables", self, self.Draw )
 	end
 end
 

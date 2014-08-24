@@ -42,7 +42,7 @@ end
 
 local DefaultConfig = {
 	offset	= Vector(0,0,0),	-- translation from entity origin
-	angle	= Angle(0,0,0),		-- rotation
+	angle	= Angle(0,90,90),	-- rotation
 	-- attachment = "corner"	-- attachment name
 	width = 64,					-- screen width
 	height = 64 * 9/16			-- screen height
