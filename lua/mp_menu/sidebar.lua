@@ -120,9 +120,9 @@ function MediaPlayer.ShowSidebar( mp )
 	-- First check if we're looking at a media player
 	if not mp then
 		local ent = LocalPlayer():GetEyeTrace().Entity
-		if not IsValid(ent) then return end
-
-		mp = MediaPlayer.GetByObject( ent )
+		if IsValid(ent) then
+			mp = MediaPlayer.GetByObject( ent )
+		end
 	end
 
 	-- Else, maybe the gamemode handles this some other way (location system, etc.)
