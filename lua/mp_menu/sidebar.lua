@@ -146,6 +146,9 @@ function MediaPlayer.ShowSidebar( mp )
 
 	MediaPlayer._Sidebar = sidebar
 
+	-- Can be used to extend sidebar functionality
+	hook.Run( MP.EVENTS.UI.SETUP_SIDEBAR, sidebar, mp )
+
 end
 
 function MediaPlayer.HideSidebar()

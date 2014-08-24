@@ -58,7 +58,6 @@ function PANEL:Think()
 		self.NextThink = rt + 1
 	end
 
-
 end
 
 function PANEL:OnMediaChanged( media )
