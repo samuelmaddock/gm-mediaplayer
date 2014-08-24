@@ -204,7 +204,10 @@ end
 --
 function MEDIAPLAYER:CanPlayerRequestMedia( ply, media )
 	-- Check service whitelist if it exists on the mediaplayer
-	if self.ServiceWhitelist and not table.HasValue(self.ServiceWhitelist, media.Id) then
+	if self.ServiceWhitelist and not (
+			table.HasValue(self.ServiceWhitelist, media.Id) or
+			ply:IsAdmin()
+		) then
 		local names = MediaPlayer.GetValidServiceNames(self.ServiceWhitelist)
 
 		local msg = "The requested media isn't supported; accepted services are as followed:\n"
