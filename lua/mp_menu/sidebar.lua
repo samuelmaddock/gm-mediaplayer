@@ -169,7 +169,7 @@ end
 -- control.AddKeyPress( KEY_C, "MP.ShowSidebar", function() MediaPlayer.ShowSidebar() end )
 -- control.AddKeyRelease( KEY_C, "MP.HideSidebar", function() MediaPlayer.HideSidebar() end )
 
-control.AddKeyPress( KEY_SLASH, "MP.ShowSidebarTest", function()
+control.AddKeyPress( KEY_PAGEUP, "MP.ShowSidebarTest", function()
 	-- Create test fixture
 	local mp = MediaPlayer.Create( 'ui-test-player' )
 	mp:SetPlayerState( MP_STATE_PLAYING )
