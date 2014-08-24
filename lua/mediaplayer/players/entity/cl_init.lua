@@ -43,6 +43,10 @@ end
 local RenderScale = 0.1
 local InfoScale = 1/17
 
+function MEDIAPLAYER:GetOrientation()
+	return self.Entity and self.Entity:GetMediaPlayerPosition() or nil
+end
+
 function MEDIAPLAYER:Draw( bDrawingDepth, bDrawingSkybox )
 
 	local ent = self.Entity
@@ -54,11 +58,8 @@ function MEDIAPLAYER:Draw( bDrawingDepth, bDrawingSkybox )
 		return
 	end
 
-	local media = self:CurrentMedia()
-
-	-- TODO: Draw thumbnail at far distances?
-
-	local w, h, pos, ang = ent:GetMediaPlayerPosition()
+	local media = self:GetMedia()
+	local w, h, pos, ang = self:GetOrientation()
 
 	-- Render scale
 	local rw, rh = w / RenderScale, h / RenderScale
@@ -76,10 +77,7 @@ function MEDIAPLAYER:Draw( bDrawingDepth, bDrawingSkybox )
 		-- Media info
 		Start3D2D( pos, ang, InfoScale )
 			local iw, ih = w / InfoScale, h / InfoScale
-			local succ, err = pcall( self.DrawMediaInfo, self, media, iw, ih )
-			if not succ then
-				print( err )
-			end
+			self:DrawMediaInfo( media, iw, ih )
 		End3D2D()
 
 	else

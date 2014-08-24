@@ -113,6 +113,11 @@ function MediaPlayer.ShowSidebar( mp )
 		sidebar:Remove()
 	end
 
+	--
+	-- Find a valid media player to use for the sidebar
+	--
+
+	-- First check if we're looking at a media player
 	if not mp then
 		local ent = LocalPlayer():GetEyeTrace().Entity
 		if not IsValid(ent) then return end
@@ -120,6 +125,12 @@ function MediaPlayer.ShowSidebar( mp )
 		mp = MediaPlayer.GetByObject( ent )
 	end
 
+	-- Else, maybe the gamemode handles this some other way (location system, etc.)
+	if not mp then
+		mp = hook.Run( "GetMediaPlayer" )
+	end
+
+	-- If we still can't find a media player, give up..
 	if not IsValid(mp) then return end
 
 	setupSidebarHooks(mp)

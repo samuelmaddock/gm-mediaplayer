@@ -12,8 +12,10 @@ end
 --
 -- Installs a media player reference to the entity.
 --
--- @param Table|String	mp	Media player table or string type.
-function EntityMeta:InstallMediaPlayer( mp )
+-- @param Table|String?  mp    Media player table or string type.
+-- @param String?        mpId  Media player unique ID.
+--
+function EntityMeta:InstallMediaPlayer( mp, mpId )
 	if not istable(mp) then
 		local mpType = isstring(mp) and mp or "entity"
 
@@ -24,7 +26,7 @@ function EntityMeta:InstallMediaPlayer( mp )
 			mpType = "entity" -- default
 		end
 
-		local mpId = "Entity" .. self:EntIndex()
+		local mpId = mpId or "Entity" .. self:EntIndex()
 		mp = MediaPlayer.Create( mpId, mpType )
 	end
 
