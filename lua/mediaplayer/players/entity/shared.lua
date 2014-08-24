@@ -10,7 +10,15 @@ local MEDIAPLAYER = MEDIAPLAYER
 MEDIAPLAYER.Name = "entity"
 
 function MEDIAPLAYER:IsValid()
-	return self.Entity and IsValid(self.Entity)
+	local ent = self.Entity
+
+	if ent then
+		return IsValid(ent)
+	end
+
+	-- Client may still be waiting on the entity to be created by the network;
+	-- let's just say it's valid until the entity is setup
+	return true
 end
 
 function MEDIAPLAYER:Init(...)
