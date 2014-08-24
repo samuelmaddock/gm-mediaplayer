@@ -44,7 +44,13 @@ local RenderScale = 0.1
 local InfoScale = 1/17
 
 function MEDIAPLAYER:GetOrientation()
-	return self.Entity and self.Entity:GetMediaPlayerPosition() or nil
+	local ent = self.Entity
+
+	if ent then
+		return ent:GetMediaPlayerPosition()
+	end
+
+	return nil
 end
 
 function MEDIAPLAYER:Draw( bDrawingDepth, bDrawingSkybox )
