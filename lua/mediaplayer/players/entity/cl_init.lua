@@ -53,6 +53,17 @@ function MEDIAPLAYER:GetOrientation()
 	return nil
 end
 
+---
+-- Draws the idlescreen; this is drawn when there is no media playing.
+--
+function MEDIAPLAYER:DrawIdlescreen( w, h )
+	local browser = MediaPlayer.GetIdlescreen()
+
+	if ValidPanel(browser) then
+		self:DrawHTML( browser, w, h )
+	end
+end
+
 function MEDIAPLAYER:Draw( bDrawingDepth, bDrawingSkybox )
 
 	local ent = self.Entity
@@ -88,13 +99,9 @@ function MEDIAPLAYER:Draw( bDrawingDepth, bDrawingSkybox )
 
 	else
 
-		local browser = MediaPlayer.GetIdlescreen()
-
-		if ValidPanel(browser) then
-			Start3D2D( pos, ang, RenderScale )
-				self:DrawHTML( browser, rw, rh )
-			End3D2D()
-		end
+		Start3D2D( pos, ang, RenderScale )
+			self:DrawIdlescreen( rw, rh )
+		End3D2D()
 
 	end
 
