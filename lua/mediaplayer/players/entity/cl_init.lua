@@ -91,9 +91,12 @@ function MEDIAPLAYER:Draw( bDrawingDepth, bDrawingSkybox )
 		end
 		-- TODO: else draw 'not yet implemented' screen?
 
+		-- scale based off of height
+		local scale = InfoScale * ( h / 70 )
+
 		-- Media info
-		Start3D2D( pos, ang, InfoScale )
-			local iw, ih = w / InfoScale, h / InfoScale
+		Start3D2D( pos, ang, scale )
+			local iw, ih = w / scale, h / scale
 			self:DrawMediaInfo( media, iw, ih )
 		End3D2D()
 
