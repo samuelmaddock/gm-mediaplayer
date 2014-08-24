@@ -23,14 +23,17 @@ AddCSLuaFile "sh_history.lua"
 include "shared.lua"
 include "sv_metadata.lua"
 
-local function NetReadMediaPlayer()
+-- TODO: move this into its own file
+MediaPlayer.net = MediaPlayer.net or {}
+
+function MediaPlayer.net.ReadMediaPlayer()
 
 	local mpId = net.ReadString()
 	local mp = MediaPlayer.GetById(mpId)
 
 	if not IsValid(mp) then
 		if MediaPlayer.DEBUG then
-			print("MEDIAPLAYER.Request: Invalid media player ID", mpId, mp, ply)
+			print("MEDIAPLAYER.Request: Invalid media player ID", mpId, mp)
 		end
 		return false
 	end
@@ -111,7 +114,7 @@ local function OnMediaRequest( len, ply )
 
 	-- TODO: impose request delay for player
 
-	local mp = NetReadMediaPlayer()
+	local mp = MediaPlayer.net.ReadMediaPlayer()
 	if not mp then return end
 
 	local url = net.ReadString()
@@ -139,7 +142,7 @@ local function OnPauseMedia( len, ply )
 
 	if not IsValid(ply) then return end
 
-	local mp = NetReadMediaPlayer()
+	local mp = MediaPlayer.net.ReadMediaPlayer()
 	if not mp then return end
 
 	if MediaPlayer.DEBUG then
@@ -155,7 +158,7 @@ local function OnSkipMedia( len, ply )
 
 	if not IsValid(ply) then return end
 
-	local mp = NetReadMediaPlayer()
+	local mp = MediaPlayer.net.ReadMediaPlayer()
 	if not mp then return end
 
 	if MediaPlayer.DEBUG then
@@ -172,7 +175,7 @@ local function OnSeekMedia( len, ply )
 
 	if not IsValid(ply) then return end
 
-	local mp = NetReadMediaPlayer()
+	local mp = MediaPlayer.net.ReadMediaPlayer()
 	if not mp then return end
 
 	local seekTime = net.ReadInt(32)
@@ -191,7 +194,7 @@ local function OnRemoveMedia( len, ply )
 
 	if not IsValid(ply) then return end
 
-	local mp = NetReadMediaPlayer()
+	local mp = MediaPlayer.net.ReadMediaPlayer()
 	if not mp then return end
 
 	local mediaUID = net.ReadString()
