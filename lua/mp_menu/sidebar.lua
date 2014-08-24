@@ -165,8 +165,9 @@ function MediaPlayer.HideSidebar()
 
 end
 
-control.AddKeyPress( KEY_C, "MP.ShowSidebar", function() MediaPlayer.ShowSidebar() end )
-control.AddKeyRelease( KEY_C, "MP.HideSidebar", function() MediaPlayer.HideSidebar() end )
+-- TODO: figure out a better way to bind showing the sidebar menu
+-- control.AddKeyPress( KEY_C, "MP.ShowSidebar", function() MediaPlayer.ShowSidebar() end )
+-- control.AddKeyRelease( KEY_C, "MP.HideSidebar", function() MediaPlayer.HideSidebar() end )
 
 control.AddKeyPress( KEY_SLASH, "MP.ShowSidebarTest", function()
 	-- Create test fixture
