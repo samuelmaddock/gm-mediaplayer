@@ -64,6 +64,8 @@ function MEDIAPLAYER:DrawIdlescreen( w, h )
 	end
 end
 
+local BaseInfoHeight = 60
+
 function MEDIAPLAYER:Draw( bDrawingDepth, bDrawingSkybox )
 
 	local ent = self.Entity
@@ -92,7 +94,7 @@ function MEDIAPLAYER:Draw( bDrawingDepth, bDrawingSkybox )
 		-- TODO: else draw 'not yet implemented' screen?
 
 		-- scale based off of height
-		local scale = InfoScale * ( h / 70 )
+		local scale = InfoScale * ( h / BaseInfoHeight )
 
 		-- Media info
 		Start3D2D( pos, ang, scale )
