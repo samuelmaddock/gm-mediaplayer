@@ -53,6 +53,7 @@ function EntityMeta:GetMediaPlayerPosition()
 
 	local w = (cfg.width or DefaultConfig.width)
 	local h = (cfg.height or DefaultConfig.height)
+	local angles = (cfg.angle or DefaultConfig.angle)
 
 	local pos, ang
 
@@ -82,12 +83,9 @@ function EntityMeta:GetMediaPlayerPosition()
 	-- Set angles
 	ang = ang or self:GetAngles() -- TODO: use GetRenderAngles?
 
-	-- Rotate angle based on the config
-	if cfg.angle then
-		ang:RotateAroundAxis( ang:Right(), cfg.angle.p )
-		ang:RotateAroundAxis( ang:Up(), cfg.angle.y )
-		ang:RotateAroundAxis( ang:Forward(), cfg.angle.r )
-	end
+	ang:RotateAroundAxis( ang:Right(), angles.p )
+	ang:RotateAroundAxis( ang:Up(), angles.y )
+	ang:RotateAroundAxis( ang:Forward(), angles.r )
 
 	return w, h, pos, ang
 end
