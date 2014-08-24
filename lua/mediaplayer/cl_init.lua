@@ -56,15 +56,6 @@ function MediaPlayer.Resolution( resolution )
 
 end
 
--- TODO: Change to using a subscribe model rather than polling
-function MediaPlayer.Poll( id )
-
-	net.Start( "MEDIAPLAYER.Update" )
-		net.WriteString( id )
-	net.SendToServer()
-
-end
-
 local function GetMediaPlayerId( obj )
 	local mpId
 

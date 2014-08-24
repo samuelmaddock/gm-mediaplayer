@@ -463,16 +463,6 @@ function MEDIAPLAYER:NetWriteUpdate()
 	-- Allows for another media player type to extend update net messages
 end
 
--- Player requesting queue update
-net.Receive( "MEDIAPLAYER.Update", function(len, ply)
-	local id = net.ReadString()
-	local mp = MediaPlayer.GetById(id)
-	if not mp then return end
-	-- TODO: prevent request spam
-	mp:BroadcastUpdate(ply)
-end )
-
-
 function MEDIAPLAYER:NotifyPlayer( ply, msg )
 	ply:ChatPrint( msg )
 end
