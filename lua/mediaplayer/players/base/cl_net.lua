@@ -47,25 +47,19 @@ end
 local TIME_OFFSET_THRESHOLD = 2
 
 ---
--- Adjusts time returned from the server in case server and client system clocks
--- are offset.
+-- Adjusts time returned from the server since RealTime will always differ.
 --
 local function correctTime( time, serverTime )
 	local curTime = RealTime()
 	local diffTime = os.difftime( serverTime, curTime )
 
 	if math.abs(diffTime) > TIME_OFFSET_THRESHOLD then
-		if MediaPlayer.DEBUG then
-			print("mpnet.ReadTime: Server and client epoch differs", diffTime)
-		end
-
 		return time - diffTime
 	else
 		return time
 	end
 end
 
--- Unix epoch is a 32-bit signed integer
 function mpnet.ReadTime()
 	local time = net.ReadInt(32)
 	local sync = net.ReadBit() == 1
