@@ -20,8 +20,9 @@ function PANEL:Init()
 	local curplaytab = vgui.Create( "MP.CurrentlyPlayingTab" )
 	self.Tabs:AddSheet( "CURRENTLY PLAYING", curplaytab, nil, false, false )
 
-	local panel = vgui.Create( "Panel" )
-	self.Tabs:AddSheet( "RECENTLY VIEWED", panel, nil, false, false )
+	-- TODO: Implement clientside media history for recently viewed tab
+	-- local panel = vgui.Create( "Panel" )
+	-- self.Tabs:AddSheet( "RECENTLY VIEWED", panel, nil, false, false )
 
 	self.VolumeControls = vgui.Create( "MP.VolumeControl", self )
 	self.VolumeControls:Dock( BOTTOM )
@@ -50,13 +51,17 @@ end
 local MP_SIDEBAR = vgui.RegisterTable( PANEL, "EditablePanel" )
 
 
-local sidebarHooks
+local SidebarPresenter = {
+	hooks = {}
+}
 
-local function registerSidebarHook( hookname, callback, mp )
+AccessorFunc( SidebarPresenter, "m_Media", "Media" )
 
-	table.insert( sidebarHooks, hookname )
+function SidebarPresenter:RegisterHook( hookname, callback )
 
-	hook.Add( hookname, "MP.Sidebar", function(...)
+	table.insert( self.hooks, hookname )
+
+	hook.Add( hookname, "MP.SidebarPresenter", function(...)
 		if MediaPlayer.DEBUG then
 			print("MP.EVENTS.UI", hookname)
 			PrintTable({...})
@@ -67,52 +72,90 @@ local function registerSidebarHook( hookname, callback, mp )
 
 end
 
-local function setupSidebarHooks( mp )
+function SidebarPresenter:SetupEvents()
 
-	-- Register sidebar hooks
-	sidebarHooks = {}
+	local mp = self:GetMedia()
 
-	registerSidebarHook( MP.EVENTS.UI.OPEN_REQUEST_MENU, function()
-		MediaPlayer.HideSidebar()
+	self:RegisterHook( MP.EVENTS.UI.OPEN_REQUEST_MENU, function()
+		self:HideSidebar()
 		MediaPlayer.OpenRequestMenu( mp )
 	end )
 
-	registerSidebarHook( MP.EVENTS.UI.FAVORITE_MEDIA, function( media )
+	self:RegisterHook( MP.EVENTS.UI.FAVORITE_MEDIA, function( media )
 		-- TODO
 	end )
 
-	registerSidebarHook( MP.EVENTS.UI.VOTESKIP_MEDIA, function( media )
+	self:RegisterHook( MP.EVENTS.UI.VOTESKIP_MEDIA, function( media )
 		-- TODO
 	end )
 
-	registerSidebarHook( MP.EVENTS.UI.REMOVE_MEDIA, function( media )
-		print("TEST", media)
+	self:RegisterHook( MP.EVENTS.UI.REMOVE_MEDIA, function( media )
 		if not media then return end
 		MediaPlayer.RequestRemove( mp, media:UniqueID() )
 	end )
 
-	registerSidebarHook( MP.EVENTS.UI.TOGGLE_PAUSE, function()
+	self:RegisterHook( MP.EVENTS.UI.TOGGLE_PAUSE, function()
 		MediaPlayer.Pause( mp )
 	end )
 
-	registerSidebarHook( MP.EVENTS.UI.SEEK, function( seekTime )
+	self:RegisterHook( MP.EVENTS.UI.SEEK, function( seekTime )
 		MediaPlayer.Seek( mp, seekTime )
 	end )
 
-	registerSidebarHook( MP.EVENTS.UI.PRIVILEGED_PLAYER, function()
+	self:RegisterHook( MP.EVENTS.UI.PRIVILEGED_PLAYER, function()
 		local ply = LocalPlayer()
 		return mp:IsPlayerPrivileged(ply)
 	end )
 
 end
 
-function MediaPlayer.ShowSidebar( mp )
+function SidebarPresenter:ClearEvents()
 
-	local sidebar = MediaPlayer._Sidebar
-
-	if ValidPanel( sidebar ) then
-		sidebar:Remove()
+	for _, hookname in ipairs(self.hooks) do
+		hook.Remove( hookname, "MP.SidebarPresenter" )
 	end
+
+end
+
+function SidebarPresenter:ShowSidebar( mp )
+
+	self:SetMedia( mp )
+
+	if ValidPanel(self.Sidebar) then
+		self:HideSidebar()
+	end
+
+	self:SetupEvents()
+
+	-- Can be used to extend sidebar functionality
+	hook.Run( MP.EVENTS.UI.SETUP_SIDEBAR, self, mp )
+
+	local sidebar = vgui.CreateFromTable( MP_SIDEBAR )
+	sidebar:MakePopup()
+	sidebar:ParentToHUD()
+
+	sidebar:SetKeyboardInputEnabled( false )
+	sidebar:SetMouseInputEnabled( true )
+
+	hook.Run( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, mp )
+
+	self.Sidebar = sidebar
+
+end
+
+function SidebarPresenter:HideSidebar()
+
+	self:ClearEvents()
+
+	if ValidPanel(self.Sidebar) then
+		self.Sidebar:Remove()
+	end
+
+	self.Sidebar = nil
+
+end
+
+function MediaPlayer.ShowSidebar( mp )
 
 	--
 	-- Find a valid media player to use for the sidebar
@@ -134,44 +177,19 @@ function MediaPlayer.ShowSidebar( mp )
 	-- If we still can't find a media player, give up..
 	if not IsValid(mp) then return end
 
-	setupSidebarHooks(mp)
-
-	sidebar = vgui.CreateFromTable( MP_SIDEBAR )
-	sidebar:MakePopup()
-	sidebar:ParentToHUD()
-
-	sidebar:SetKeyboardInputEnabled( false )
-	sidebar:SetMouseInputEnabled( true )
-
-	hook.Run( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, mp )
-
-	MediaPlayer._Sidebar = sidebar
-
-	-- Can be used to extend sidebar functionality
-	hook.Run( MP.EVENTS.UI.SETUP_SIDEBAR, sidebar, mp )
+	SidebarPresenter:ShowSidebar( mp )
 
 end
 
 function MediaPlayer.HideSidebar()
 
-	local sidebar = MediaPlayer._Sidebar
-
-	if ValidPanel( sidebar ) then
-		for _, hookname in ipairs(sidebarHooks) do
-			hook.Remove( hookname, "MP.Sidebar" )
-		end
-
-		sidebarHooks = nil
-
-		sidebar:Remove()
-		MediaPlayer._Sidebar = nil
-	end
+	SidebarPresenter:HideSidebar()
 
 end
 
 -- TODO: figure out a better way to bind showing the sidebar menu
--- control.AddKeyPress( KEY_C, "MP.ShowSidebar", function() MediaPlayer.ShowSidebar() end )
--- control.AddKeyRelease( KEY_C, "MP.HideSidebar", function() MediaPlayer.HideSidebar() end )
+control.AddKeyPress( KEY_PAGEDOWN, "MP.ShowSidebar", function() MediaPlayer.ShowSidebar() end )
+control.AddKeyRelease( KEY_PAGEDOWN, "MP.HideSidebar", function() MediaPlayer.HideSidebar() end )
 
 control.AddKeyPress( KEY_PAGEUP, "MP.ShowSidebarTest", function()
 	-- Create test fixture
