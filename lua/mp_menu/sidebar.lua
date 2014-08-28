@@ -3,6 +3,7 @@ include "sidebar_tabs.lua"
 include "volume_control.lua"
 include "playback.lua"
 include "queue.lua"
+include "horizontal_list.lua"
 
 local PANEL = {}
 
