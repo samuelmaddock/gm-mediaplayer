@@ -205,6 +205,12 @@ end
 
 function ADDED_BY:PerformLayout()
 
+	local name = self.NameLbl:GetText()
+	if name == "" then
+		self:SetSize( 0, self.Height )
+		return
+	end
+
 	self.PrefixLbl:SizeToContents()
 	self.NameLbl:SizeToContents()
 
