@@ -85,10 +85,6 @@ function SidebarPresenter:SetupEvents()
 		-- TODO
 	end )
 
-	self:RegisterHook( MP.EVENTS.UI.VOTESKIP_MEDIA, function( media )
-		-- TODO
-	end )
-
 	self:RegisterHook( MP.EVENTS.UI.REMOVE_MEDIA, function( media )
 		if not media then return end
 		MediaPlayer.RequestRemove( mp, media:UniqueID() )

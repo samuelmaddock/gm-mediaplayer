@@ -36,16 +36,12 @@ function PANEL:Init()
 
 	self.FavBtn = vgui.Create( "MP.FavoriteButton", self )
 
-	-- TODO: add skip button in a hook
-	local SkipBtn = vgui.Create( "MP.SkipButton" )
-	self:AddButton( SkipBtn )
+	hook.Run( MP.EVENTS.UI.SETUP_PLAYBACK_PANEL, self )
 
 	if hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER ) then
 		self.RemoveBtn = vgui.Create( "MP.RemoveButton" )
 		self:AddButton( self.RemoveBtn )
 	end
-
-	hook.Run( MP.EVENTS.UI.SETUP_PLAYBACK_PANEL, self )
 
 	self.AddedByLbl = vgui.Create( "MP.AddedBy", self )
 
