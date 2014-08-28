@@ -1,5 +1,8 @@
 local MediaPlayer = MediaPlayer
 
+local HasFocus = system.HasFocus
+local MuteUnfocused = MediaPlayer.Cvars.MuteUnfocused
+
 --[[---------------------------------------------------------
 	Base Media Player
 -----------------------------------------------------------]]
@@ -171,7 +174,7 @@ function MEDIAPLAYER:IsPlayerPrivileged( ply )
 	return ply == self:GetOwner() or ply:IsAdmin()
 end
 
---
+---
 -- Media player update
 --
 function MEDIAPLAYER:Think()
@@ -210,8 +213,16 @@ function MEDIAPLAYER:Think()
 	if CLIENT and validMedia then
 		media:Sync()
 
-		-- TODO: check if volume has changed first?
-		media:Volume( MediaPlayer.Volume() )
+		local volume
+
+		-- TODO: add a GAMEMODE hook to determine if sound should be muted
+		if not HasFocus() and MuteUnfocused:GetBool() then
+			volume = 0
+		else
+			volume = MediaPlayer.Volume()
+		end
+
+		media:Volume( volume )
 	end
 
 end
