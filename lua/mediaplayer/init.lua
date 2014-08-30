@@ -20,9 +20,9 @@ AddCSLuaFile "sh_events.lua"
 AddCSLuaFile "sh_mediaplayer.lua"
 AddCSLuaFile "sh_services.lua"
 AddCSLuaFile "sh_history.lua"
+AddCSLuaFile "sh_metadata.lua"
 
 include "shared.lua"
-include "sv_metadata.lua"
 
 -- TODO: move this into its own file
 MediaPlayer.net = MediaPlayer.net or {}
