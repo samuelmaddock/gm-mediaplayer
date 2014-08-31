@@ -11,6 +11,7 @@ end
 
 function mpnet.WriteMedia( media )
 	if media then
+		net.WriteString( media:UniqueID() )
 		net.WriteString( media:Url() )
 		net.WriteString( media:Title() )
 		mpnet.WriteDuration( media:Duration() )

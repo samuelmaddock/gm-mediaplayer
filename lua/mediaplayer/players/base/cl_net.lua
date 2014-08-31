@@ -10,12 +10,13 @@ function mpnet.ReadDuration()
 end
 
 function mpnet.ReadMedia()
-	local url = net.ReadString()
+	local uid = net.ReadString()
 
-	if url == EOT then
+	if uid == EOT then
 		return nil
 	end
 
+	local url = net.ReadString()
 	local title = net.ReadString()
 	local duration = mpnet.ReadDuration()
 	local ownerName = net.ReadString()
@@ -23,6 +24,9 @@ function mpnet.ReadMedia()
 
 	-- Create media object
 	local media = MediaPlayer.GetMediaForUrl( url )
+
+	-- Set uniqud ID to match the server
+	media._id = uid
 
 	-- Set metadata
 	media._metadata = {
