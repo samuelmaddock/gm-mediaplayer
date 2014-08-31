@@ -4,7 +4,7 @@ PANEL.BackgroundColor = Color(22, 22, 22)
 
 local CloseTexture = Material( "theater/close.png" )
 
-AccessorFunc( PANEL, '_mp', 'MediaPlayer' )
+AccessorFunc( PANEL, 'm_MediaPlayer', 'MediaPlayer' )
 
 function PANEL:Init()
 
@@ -63,6 +63,20 @@ function PANEL:Init()
 	-- Listen for all mouse press events
 	hook.Add( "GUIMousePressed", self, self.OnGUIMousePressed )
 
+end
+
+function PANEL:SetMediaPlayer( mp )
+	self.m_MediaPlayer = mp
+
+	-- Send list of supported services to the request page for filtering out
+	-- service icons
+	local serviceIDs = mp:GetSupportedServiceIDs()
+	serviceIDs = table.concat( serviceIDs, "," )
+
+	local js = "if (gmod.setServices !== undefined) { gmod.setServices(%s); }"
+	js = js:format( js, string.JavascriptSafe(serviceIDs) )
+
+	self:QueueJavascript( js )
 end
 
 function PANEL:Paint( w, h )

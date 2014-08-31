@@ -43,6 +43,18 @@ function MediaPlayer.GetValidServiceNames( whitelist )
 	return tbl
 end
 
+function MediaPlayer.GetSupportedServiceIDs()
+	local tbl = {}
+
+	for _, service in pairs(MediaPlayer.Services) do
+		if not rawget(service, "Abstract") then
+			table.insert( tbl, service.Id )
+		end
+	end
+
+	return tbl
+end
+
 function MediaPlayer.ValidUrl( url )
 
 	for id, service in pairs(MediaPlayer.Services) do

@@ -394,3 +394,23 @@ function MEDIAPLAYER:Remove()
 
 	end
 end
+
+function MEDIAPLAYER:GetSupportedServiceIDs()
+
+	local serviceIDs = table.Copy( MediaPlayer.GetSupportedServiceIDs() )
+
+	if self.ServiceWhitelist then
+		local tbl = {}
+
+		for _, id in ipairs(serviceIDs) do
+			if not table.HasValue( self.ServiceWhitelist, id ) then
+				table.insert( tbl, id )
+			end
+		end
+
+		serviceIDs = tbl
+	end
+
+	return serviceIDs
+
+end
