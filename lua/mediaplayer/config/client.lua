@@ -25,7 +25,7 @@ MediaPlayer.SetConfig({
 		-- URL of the request menu.
 		-- @type String
 		--
-		url = "http://gmtower.org/apps/mediaplayer/"
+		url = "http://pixeltailgames.github.io/gm-mediaplayer/request.html"
 
 	}
 
