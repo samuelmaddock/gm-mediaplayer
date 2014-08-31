@@ -6,15 +6,6 @@ local CloseTexture = Material( "theater/close.png" )
 
 AccessorFunc( PANEL, "m_MediaPlayer", "MediaPlayer" )
 
-local function GetServiceIDs( mp )
-	-- Send list of supported services to the request page for filtering out
-	-- service icons
-	local serviceIDs = mp:GetSupportedServiceIDs()
-	serviceIDs = table.concat( serviceIDs, "," )
-
-	return serviceIDs
-end
-
 function PANEL:Init()
 
 	self:SetPaintBackgroundEnabled( true )
@@ -30,6 +21,7 @@ function PANEL:Init()
 	self:SetSize( w, h )
 
 	self.CloseButton = vgui.Create( "DButton", self )
+	self.CloseButton:SetSize( 32, 32 )
 	self.CloseButton:SetZPos( 5 )
 	self.CloseButton:NoClipping( true )
 	self.CloseButton:SetText( "" )
@@ -50,8 +42,10 @@ function PANEL:Init()
 	end
 
 	self.BrowserContainer = vgui.Create( "DPanel", self )
+	self.BrowserContainer:Dock( FILL )
 
 	self.Browser = vgui.Create( "DMediaPlayerHTML", self.BrowserContainer )
+	self.Browser:Dock( FILL )
 
 	self.Browser:AddFunction( "gmod", "requestUrl", function (url)
 		MediaPlayer.MenuRequest( url )
@@ -64,18 +58,18 @@ function PANEL:Init()
 
 	self.Browser:AddFunction( "gmod", "getServices", function ()
 		local mp = self.m_MediaPlayer
-		if not mp then
-			self._sendServices = true
-			return
-		end
 
-		return GetServiceIDs( mp )
+		if mp then
+			self:SendServices( mp )
+		end
 	end )
 
 	local requestUrl = MediaPlayer.GetConfigValue( 'request.url' )
 	self.Browser:OpenURL( requestUrl )
 
 	self.Controls = vgui.Create( "MPHTMLControls", self.BrowserContainer )
+	self.Controls:Dock( TOP )
+	self.Controls:DockPadding( 0, 0, 32, 0 )
 	self.Controls:SetHTML( self.Browser )
 	self.Controls.BorderSize = 0
 
@@ -84,16 +78,26 @@ function PANEL:Init()
 
 end
 
+local function GetServiceIDs( mp )
+	-- Send list of supported services to the request page for filtering out
+	-- service icons
+	local serviceIDs = mp:GetSupportedServiceIDs()
+	serviceIDs = table.concat( serviceIDs, "," )
+
+	return serviceIDs
+end
+
+function PANEL:SendServices( mp )
+	local js = "if (typeof window.setServices === 'function') { setServices('%s'); }"
+	js = js:format( GetServiceIDs(mp) )
+
+	self.Browser:QueueJavascript( js )
+end
+
 function PANEL:SetMediaPlayer( mp )
 	self.m_MediaPlayer = mp
 
-	if self._sendServices then
-		local js = "if (gmod.setServices) { gmod.setServices('%s'); }"
-		js = js:format( GetServiceIDs(mp) )
-
-		self.Browser:RunJavascript( js )
-		self._sendServices = nil
-	end
+	self:SendServices( mp )
 end
 
 function PANEL:Paint( w, h )
@@ -139,15 +143,7 @@ function PANEL:PerformLayout()
 
 	local w, h = self:GetSize()
 
-	self.CloseButton:SetSize( 32, 32 )
 	self.CloseButton:SetPos( w - 34, 2 )
-
-	self.BrowserContainer:Dock( FILL )
-
-	self.Browser:Dock( FILL )
-
-	self.Controls:Dock( TOP )
-	self.Controls:DockPadding( 0, 0, 32, 0 )
 
 end
 

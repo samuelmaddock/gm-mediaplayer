@@ -54,10 +54,7 @@ function selectService(elem) {
 (function(gmod) {
     if (gmod === undefined) { return; }
 
-    var serviceIds =
-    if (!serviceIds) { return; }
-
-    gmod.setServices = function (serviceIds) {
+    window.setServices = function (serviceIds) {
         serviceIds = serviceIds.split(',');
 
         var elem, sid;
@@ -79,7 +76,5 @@ function selectService(elem) {
         }
     };
 
-    if (typeof gmod.getServices === 'function') {
-        gmod.getServices();
-    }
+    gmod.getServices();
 }(window.gmod));
