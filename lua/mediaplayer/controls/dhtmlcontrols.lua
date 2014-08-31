@@ -273,7 +273,7 @@ end
 
 function RequestButton:SetDisabled( disabled )
 	if disabled then
-		self:SetText( "FIND A VIDEO" )
+		self:SetText( "SEARCH FOR MEDIA" )
 	else
 		self:SetText( "REQUEST URL" )
 	end
