@@ -1,0 +1,52 @@
+<!DOCTYPE html><html><head><meta charset=utf-8><title>Media Player - Request</title><meta name=description content="Garry's Mod Media Player request page."><meta name=keywords content=garrysmod,media,player,request,search,youtube,vimeo,twitch,livestream,blip,reddit><meta name=author content="pixelTail Games"><link href=styles/request.css rel=stylesheet type=text/css><body><div style=position:absolute;top:24px;left:0;right:0;bottom:0><section class=content-container><h1>Share media from one of the selected services</h1><div class=services><span class=media-service data-href="http://www.youtube.com/" data-name=YouTube data-service=yt style=background-image:url(images/logos/youtube.png) onclick=selectService(this) onmouseover=hoverService()>&nbsp;</span> <span class="media-service subtext" data-href="http://www.twitch.tv/" data-name=Twitch data-service="twv twl" style=background-image:url(images/logos/twitch.png) onclick=selectService(this) onmouseover=hoverService()>&nbsp;</span> <span class="media-service subtext" data-href="http://www.gmtower.org/apps/radio/" data-name=SHOUTcast data-service=shc style=background-image:url(images/logos/shoutcast.png) onclick=selectService(this) onmouseover=hoverService()>SHOUTcast</span><br><span class="media-service subtext" data-href=http://soundcloud.com/search data-name=SoundCloud data-overlay=true data-service=sc style=background-image:url(images/logos/soundcloud.png) onclick=selectService(this) onmouseover=hoverService()>&nbsp;</span> <span class="media-service subtext" data-href="http://www.reddit.com/r/videos/" data-name=/r/videos data-service=yt style=background-image:url(images/logos/reddit.png) onclick=selectService(this) onmouseover=hoverService()>Videos</span> <span class="media-service subtext" data-href="http://www.reddit.com/r/fullmoviesonyoutube/" data-name=/r/fullmoviesonyoutube data-service=yt style=background-image:url(images/logos/reddit.png) onclick=selectService(this) onmouseover=hoverService()>FullMoviesOnYouTube</span></div><div class=url-container><h1 class=url-notice>Or request a supported URL</h1><input id=urlinput class=url-input placeholder="mp3, wav, ogg, jpg, png, webm" autofocus onkeydown=onUrlKeyDown(event)><a href=javascript:requestUrl(); class=url-submit>Request</a></div></section></div><link href="https://fonts.googleapis.com/css?family=Oswald" rel=stylesheet><script>/**
+     * Called when the user presses a key while focused on the URL input
+     * text box.
+     *
+     * @param  {KeyboardEvent} event Keyboard event.
+     */
+    function onUrlKeyDown(event) {
+        var key = event.keyCode || event.which;
+
+        // submit request when the enter key is pressed
+        if (key === 13) {
+            requestUrl();
+        }
+    }
+
+    /**
+     * Called when the user either clicks the URL request button or presses
+     * enter on it.
+     */
+    function requestUrl() {
+        var elem = document.getElementById('urlinput'),
+            url = elem.value;
+
+        if (url.length === 0) { return; }
+
+        gmod.requestUrl(url);
+    }
+
+    /**
+     * Called when a user hovers over a service icon.
+     */
+    function hoverService() {
+        console.log( "PLAY: garrysmod/ui_hover.wav" );
+    }
+
+    /**
+     * Called when a user selects a service to navigate to.
+     *
+     * @param  {HTMLElement} elem DOM element.
+     */
+    function selectService(elem) {
+        console.log( "PLAY: garrysmod/ui_click.wav" );
+
+        var href = elem.dataset.href,
+            overlay = (elem.dataset.overlay !== undefined);
+
+        if (overlay) {
+            gmod.openUrl(href);
+        } else {
+            window.location.href = href;
+        }
+    }</script>
