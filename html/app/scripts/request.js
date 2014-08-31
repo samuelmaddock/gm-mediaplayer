@@ -54,26 +54,32 @@ function selectService(elem) {
 (function(gmod) {
     if (gmod === undefined) { return; }
 
-    var serviceIds = (typeof gmod.getServices === 'function') && gmod.getServices();
+    var serviceIds =
     if (!serviceIds) { return; }
 
-    serviceIds = serviceIds.split(',');
+    gmod.setServices = function (serviceIds) {
+        serviceIds = serviceIds.split(',');
 
-    var elem, sid;
-    var serviceElems = document.querySelectorAll('.media-service');
+        var elem, sid;
+        var serviceElems = document.querySelectorAll('.media-service');
 
-    for (var i = 0; i < serviceElems.length; i++) {
-        elem = serviceElems[i];
-        sid = elem.dataset.service;
-        if (!sid) { continue; }
+        for (var i = 0; i < serviceElems.length; i++) {
+            elem = serviceElems[i];
+            sid = elem.dataset.service;
+            if (!sid) { continue; }
 
-        sid = sid.split(' ');
+            sid = sid.split(' ');
 
-        // hide all service icons which aren't supported
-        for (var j = 0; j < sid.length; j++) {
-            if (serviceIds.indexOf(sid[j]) === -1) {
-                elem.style.display = 'none';
+            // hide all service icons which aren't supported
+            for (var j = 0; j < sid.length; j++) {
+                if (serviceIds.indexOf(sid[j]) === -1) {
+                    elem.style.display = 'none';
+                }
             }
         }
+    };
+
+    if (typeof gmod.getServices === 'function') {
+        gmod.getServices();
     }
 }(window.gmod));

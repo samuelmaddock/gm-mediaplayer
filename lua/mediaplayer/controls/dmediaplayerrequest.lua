@@ -6,6 +6,15 @@ local CloseTexture = Material( "theater/close.png" )
 
 AccessorFunc( PANEL, "m_MediaPlayer", "MediaPlayer" )
 
+local function GetServiceIDs( mp )
+	-- Send list of supported services to the request page for filtering out
+	-- service icons
+	local serviceIDs = mp:GetSupportedServiceIDs()
+	serviceIDs = table.concat( serviceIDs, "," )
+
+	return serviceIDs
+end
+
 function PANEL:Init()
 
 	self:SetPaintBackgroundEnabled( true )
@@ -55,13 +64,12 @@ function PANEL:Init()
 
 	self.Browser:AddFunction( "gmod", "getServices", function ()
 		local mp = self.m_MediaPlayer
+		if not mp then
+			self._sendServices = true
+			return
+		end
 
-		-- Send list of supported services to the request page for filtering out
-		-- service icons
-		local serviceIDs = mp:GetSupportedServiceIDs()
-		serviceIDs = table.concat( serviceIDs, "," )
-
-		return serviceIDs
+		return GetServiceIDs( mp )
 	end )
 
 	local requestUrl = MediaPlayer.GetConfigValue( 'request.url' )
@@ -74,6 +82,18 @@ function PANEL:Init()
 	-- Listen for all mouse press events
 	hook.Add( "GUIMousePressed", self, self.OnGUIMousePressed )
 
+end
+
+function PANEL:SetMediaPlayer( mp )
+	self.m_MediaPlayer = mp
+
+	if self._sendServices then
+		local js = "if (gmod.setServices) { gmod.setServices('%s'); }"
+		js = js:format( GetServiceIDs(mp) )
+
+		self.Browser:RunJavascript( js )
+		self._sendServices = nil
+	end
 end
 
 function PANEL:Paint( w, h )
