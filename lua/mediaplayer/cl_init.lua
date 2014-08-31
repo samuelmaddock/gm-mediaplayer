@@ -269,6 +269,8 @@ function MediaPlayer.OpenRequestMenu( mp )
 		return
 	end
 
+	mp = MediaPlayer.GetByObject( mp )
+
 	local req = vgui.Create( "MPRequestFrame" )
 	req:SetMediaPlayer( mp )
 	req:MakePopup()

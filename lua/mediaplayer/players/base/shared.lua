@@ -403,7 +403,7 @@ function MEDIAPLAYER:GetSupportedServiceIDs()
 		local tbl = {}
 
 		for _, id in ipairs(serviceIDs) do
-			if not table.HasValue( self.ServiceWhitelist, id ) then
+			if table.HasValue( self.ServiceWhitelist, id ) then
 				table.insert( tbl, id )
 			end
 		end
