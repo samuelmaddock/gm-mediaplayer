@@ -1,0 +1,151 @@
+@import "lib/normalize";
+
+html, body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+* {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+
+	&::selection {
+		background: rgba(255,255,255,0.11);
+	}
+}
+
+body {
+	background: -webkit-radial-gradient(center, ellipse cover, #242F3A 0%,#161616 100%);
+	color: white;
+	font-family: "Oswald", sans-serif;
+}
+
+.content-container {
+	width: 100%;
+	height: 100%;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-box-align: center;
+	-webkit-box-pack: center;
+	overflow: auto;
+}
+
+h1 {
+	font-size: 20pt;
+	text-shadow: 0px 0px 8px rgba(0,0,0,0.88);
+}
+
+.services {
+	text-align: center;
+	font-size: 0;
+
+	> .media-service {
+		display: inline-block;
+		width: 120px;
+		height: 120px;
+		margin: 30px;
+
+		background-color: #EEE;
+		background-repeat: no-repeat;
+		background-position: center center;
+		border-radius: 8pt;
+
+		font-size: 8pt;
+		line-height: 194px;
+
+		cursor: pointer;
+		color: transparent;
+
+		&:hover {
+			box-shadow: 0px 10px 33px rgba(0,0,0,0.66);
+		}
+
+		&.subtext {
+			color: #666;
+		}
+	}
+}
+
+.notice {
+	text-align: center;
+	color: rgba(255,255,255,0.44);
+	line-height: 16pt;
+}
+
+.notice a, .notice a:visited, .notice a:hover {
+	color: rgba(0,139,253,0.88);
+}
+
+.notice a:hover {
+	text-decoration: none;
+}
+
+.url-notice {
+	margin: 30px 0 20px 0;
+}
+
+.url-container {
+	width: 480px;
+	text-align: center;
+}
+
+.url-input {
+	color: #000;
+
+	left: 0;
+	padding: 5px;
+	height: 30px;
+	width: 400px;
+	float: left;
+	z-index: 2;
+
+	border: none;
+	border-radius: 2px 0 0 2px;
+}
+
+.url-submit {
+	display: inline-block;
+	float: left;
+	width: 80px;
+	height: 30px;
+
+	padding: 5px;
+	background: #e74c3c;
+	color: white;
+
+	line-height: 18px;
+	text-decoration: none;
+	text-align: center;
+	font-size: 12px;
+
+	border: none;
+	border-radius: 0 2px 2px 0;
+}
+
+.url-submit:hover {
+	background: #c0392b;
+}
+
+.url-submit:active {
+	background: #e74c3c;
+}
+
+@media all and (max-width: 730px) {
+	.media-service {
+		margin: 10px;
+	}
+}
+
+@media all and (max-width: 570px) {
+	h1 {
+		font-size: 14pt;
+	}
+
+	.media-service {
+		margin: 2px;
+		width: 110px;
+		height: 110px;
+	}
+}
