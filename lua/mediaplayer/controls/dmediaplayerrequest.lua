@@ -43,9 +43,14 @@ function PANEL:Init()
 	self.BrowserContainer = vgui.Create( "DPanel", self )
 
 	self.Browser = vgui.Create( "DMediaPlayerHTML", self.BrowserContainer )
+
 	self.Browser:AddFunction( "gmod", "requestUrl", function (url)
 		MediaPlayer.MenuRequest( url )
 		self:Close()
+	end )
+
+	self.Browser:AddFunction( "gmod", "openUrl", function (url)
+		gui.OpenURL( url )
 	end )
 
 	local requestUrl = MediaPlayer.GetConfigValue( 'request.url' )
