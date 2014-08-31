@@ -6,6 +6,8 @@ DEFINE_BASECLASS( "mp_service_base" )
 
 SERVICE.StreamOptions = { "noplay", "noblock" }
 
+local MAX_LOAD_ATTEMPTS = 3
+
 function SERVICE:Volume( volume )
 
 	volume = BaseClass.Volume( self, volume )
@@ -31,6 +33,13 @@ end
 function SERVICE:Play()
 
 	BaseClass.Play( self )
+
+	if self.LoadAttempts and self.LoadAttempts >= MAX_LOAD_ATTEMPTS then
+		-- TODO: display failure message to player
+		MsgN( "Failed to load media after " .. MAX_LOAD_ATTEMPTS ..
+			" attempts: " .. tostring(self.url) )
+		return
+	end
 
 	if IsValid(self.Channel) then
 		self.Channel:Play()
@@ -58,8 +67,18 @@ function SERVICE:Play()
 				end
 
 				self:emit('channelReady', channel)
+				self.LoadAttempts = nil
 			else
-				ErrorNoHalt( "There was a problem playing the audio file: " .. self.url .. "\n" )
+				self.LoadAttempts = (self.LoadAttempts or 0) + 1
+
+				MsgN( "Failed to load media, trying again... " .. tostring(self.url) )
+
+				-- Let's try again...
+				timer.Simple( 2 ^ self.LoadAttempts, function()
+					if self:IsPlaying() then
+						self:Play()
+					end
+				end )
 			end
 		end )
 	end

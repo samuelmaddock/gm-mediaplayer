@@ -91,6 +91,7 @@ function PANEL:SendServices( mp )
 	local js = "if (typeof window.setServices === 'function') { setServices('%s'); }"
 	js = js:format( GetServiceIDs(mp) )
 
+	self.Browser:RunJavascript( js )
 	self.Browser:QueueJavascript( js )
 end
 
