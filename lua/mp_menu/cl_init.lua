@@ -9,6 +9,7 @@ MP.EVENTS.UI = {
 
 	SETUP_SIDEBAR = "mp.events.ui.sidebarChanged",
 	SETUP_PLAYBACK_PANEL = "mp.events.ui.setupPlaybackPanel",
+	SETUP_MEDIA_PANEL = "mp.events.ui.setupMediaPanel",
 
 	MEDIA_PLAYER_CHANGED = "mp.events.ui.mediaPlayerChanged",
 

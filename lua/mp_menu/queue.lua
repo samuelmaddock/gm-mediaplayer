@@ -139,6 +139,7 @@ MEDIA_ITEM.Height = 64
 MEDIA_ITEM.BgColor = Color( 13, 41, 62 )
 MEDIA_ITEM.HPadding = 12
 MEDIA_ITEM.VPadding = 8
+MEDIA_ITEM.BtnSpacing = 4
 
 MEDIA_ITEM.TrackbarProgressColor = Color( 28, 100, 157 )
 MEDIA_ITEM.TrackbarHeight = 2
@@ -154,6 +155,9 @@ function MEDIA_ITEM:Init()
 	self.FavBtn = vgui.Create( "MP.FavoriteButton", self )
 	self.AddedByLbl = vgui.Create( "MP.AddedBy", self )
 
+	self.BtnList = vgui.Create( "DHorizontalList", self )
+	self.BtnList:SetSpacing( self.BtnSpacing )
+
 end
 
 function MEDIA_ITEM:SetMedia( media )
@@ -164,13 +168,20 @@ function MEDIA_ITEM:SetMedia( media )
 
 	self.FavBtn:SetMedia( media )
 
+	hook.Run( MP.EVENTS.UI.SETUP_MEDIA_PANEL, self, media )
+
 	-- Detect if player has privileges to remove media from queue
 	local privileged = hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER )
 	if privileged or media:IsOwner( LocalPlayer() ) then
-		self.RemoveBtn = vgui.Create( "MP.RemoveButton", self )
+		self.RemoveBtn = vgui.Create( "MP.RemoveButton" )
 		self.RemoveBtn:SetMedia( media )
+		self:AddButton( self.RemoveBtn )
 	end
 
+end
+
+function MEDIA_ITEM:AddButton( panel )
+	self.BtnList:AddItem( panel )
 end
 
 function MEDIA_ITEM:Paint( w, h )
@@ -197,28 +208,16 @@ function MEDIA_ITEM:PerformLayout()
 	self.FavBtn:AlignTop( self.VPadding )
 	self.FavBtn:AlignRight( self.HPadding )
 
+	self.BtnList:InvalidateLayout()
+	self.BtnList:AlignBottom( self.VPadding )
+	self.BtnList:AlignRight( self.HPadding )
 
-	local maxAddedByWidth
-
-	if self.RemoveBtn then
-		self.RemoveBtn:AlignBottom( self.VPadding )
-		self.RemoveBtn:AlignRight( self.HPadding )
-
-		maxAddedByWidth = ( self.RemoveBtn:GetPos() - 4 ) -
+	local maxAddedByWidth = ( self.BtnList:GetPos() - self.BtnSpacing ) -
 			( self.MediaTime:GetPos() + self.MediaTime:GetWide() + self.HPadding )
-	else
-		maxAddedByWidth = ( w - self.HPadding ) -
-			( self.MediaTime:GetPos() + self.MediaTime:GetWide() + self.HPadding )
-	end
 
 	self.AddedByLbl:SetMaxWidth( maxAddedByWidth )
 	self.AddedByLbl:AlignBottom( self.VPadding )
-
-	if self.RemoveBtn then
-		self.AddedByLbl:MoveLeftOf( self.RemoveBtn, 4 )
-	else
-		self.AddedByLbl:AlignRight( self.HPadding )
-	end
+	self.AddedByLbl:MoveLeftOf( self.BtnList, self.BtnSpacing )
 
 	local maxTitleWidth = self.FavBtn:GetPos() -
 		( self.MediaTitle:GetPos() + 5 )
