@@ -195,6 +195,9 @@ function MEDIAPLAYER:SendMedia( media, ply )
 
 end
 
+function MEDIAPLAYER:SortQueue()
+	-- by default, the queue is sorted by their add time, no sorting needed
+end
 
 --[[---------------------------------------------------------
 	Media requests

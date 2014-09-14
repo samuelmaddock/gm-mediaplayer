@@ -284,6 +284,10 @@ end
 -- Called when the queue is updated; emits a change event.
 --
 function MEDIAPLAYER:QueueUpdated()
+	if SERVER then
+		self:SortQueue()
+	end
+
 	self:emit( MP.EVENTS.QUEUE_CHANGED, self._Queue )
 end
 
