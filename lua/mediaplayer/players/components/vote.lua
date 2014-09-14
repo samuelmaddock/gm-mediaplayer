@@ -7,20 +7,25 @@ if SERVER then AddCSLuaFile() end
 local VOTE = {}
 VOTE.__index = VOTE
 
-AccessorFunc( VOTE, "m_Player", "Player" )
-AccessorFunc( VOTE, "m_iValue", "Value" )
-
 function VOTE:New( ply, value )
-	local obj = setmetatable( {}, VOTE )
+	local obj = setmetatable( {}, self )
 
-	obj:SetPlayer(ply)
-	obj:SetValue(value or 1)
+	obj.player = ply
+	obj.value = value or 1
 
 	return obj
 end
 
 function VOTE:IsValid()
-	return IsValid(self.m_Player)
+	return IsValid(self.player)
+end
+
+function VOTE:GetPlayer()
+	return self.player
+end
+
+function VOTE:GetValue()
+	return self.value
 end
 
 MediaPlayer.VOTE = VOTE
