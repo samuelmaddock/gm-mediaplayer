@@ -182,6 +182,7 @@ function MEDIAPLAYER:SendMedia( media, ply )
 	end
 
 	local startTime = media and media:StartTime() or 0
+	local receiver = ply or self._Listeners
 
 	net.Start( "MEDIAPLAYER.Media" )
 		net.WriteString( self:GetId() )
@@ -190,7 +191,7 @@ function MEDIAPLAYER:SendMedia( media, ply )
 			self.net.WriteTime( startTime )
 			self:OnNetWriteMedia( media )
 		end
-	net.Send( ply or self._Listeners )
+	net.Send( receiver )
 
 end
 
@@ -448,18 +449,30 @@ function MEDIAPLAYER:BroadcastUpdate( ply )
 
 	self:UpdateListeners()
 
-	net.Start( "MEDIAPLAYER.Update" )
-		net.WriteString( self:GetId() )		-- unique ID
-		net.WriteString( self.Name )		-- media player type
-		net.WriteEntity( self:GetOwner() )
-		self.net.WritePlayerState( self:GetPlayerState() )
-		self:NetWriteUpdate()				-- mp type-specific info
-		net.WriteUInt( #self._Queue, math.CeilPower2(self.MaxMediaItems)/2 )
-		for _, media in pairs(self._Queue) do
-			self.net.WriteMedia(media)
-			self:OnNetWriteMedia( media )
-		end
-	net.Send( ply or self._Listeners )
+	local receivers
+
+	if ply then
+		receivers = {ply}
+	else
+		receivers = self._Listeners
+	end
+
+	-- iterate and send net message to each player since their payload may be
+	-- unique to themselves.
+	for _, pl in ipairs(receivers) do
+		net.Start( "MEDIAPLAYER.Update" )
+			net.WriteString( self:GetId() )		-- unique ID
+			net.WriteString( self.Name )		-- media player type
+			net.WriteEntity( self:GetOwner() )
+			self.net.WritePlayerState( self:GetPlayerState() )
+			self:NetWriteUpdate()				-- mp type-specific info
+			net.WriteUInt( #self._Queue, math.CeilPower2(self.MaxMediaItems)/2 )
+			for _, media in pairs(self._Queue) do
+				self.net.WriteMedia(media)
+				self:OnNetWriteMedia( media, pl )
+			end
+		net.Send( pl )
+	end
 
 end
 
@@ -467,7 +480,7 @@ function MEDIAPLAYER:NetWriteUpdate()
 	-- Allows for another media player type to extend update net messages
 end
 
-function MEDIAPLAYER:OnNetWriteMedia()
+function MEDIAPLAYER:OnNetWriteMedia( media, ply )
 	-- Allows for another media player type to extend media net messages
 end
 

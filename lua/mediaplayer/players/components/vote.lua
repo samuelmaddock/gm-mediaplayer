@@ -156,6 +156,21 @@ function VoteManager:GetVoteCountForMedia( media, forceCalc )
 	return votes.count
 end
 
+function VoteManager:GetVoteByPlayer( media, ply )
+	local uid = media:UniqueID()
+
+	local votes = self._votes[uid]
+	if not votes then return 0 end
+
+	for _, vote in ipairs(votes) do
+		if vote:GetPlayer() == ply then
+			return vote
+		end
+	end
+
+	return nil
+end
+
 ---
 -- Get the top voted media unique ID. VoteManager:Invalidate() should be called
 -- prior to this in case any players may have disconnected.
