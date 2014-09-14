@@ -1,6 +1,10 @@
 local ceil = math.ceil
 local clamp = math.Clamp
 
+--[[--------------------------------------------
+	Sidebar fonts
+----------------------------------------------]]
+
 local FontTbl = {
 	font = "Roboto Medium",
 	size = 21,
@@ -19,16 +23,25 @@ FontTbl.size = 18
 surface.CreateFont( "MP.QueueHeader", FontTbl )
 
 FontTbl.font = "Roboto Light"
+FontTbl.size = 18
 surface.CreateFont( "MP.MediaDuration", FontTbl )
 
 FontTbl.font = "Roboto Light"
 FontTbl.size = 13
 surface.CreateFont( "MP.Prefix", FontTbl )
 
+FontTbl.font = "Roboto Light"
+FontTbl.size = 13
+surface.CreateFont( "MP.VoteCount", FontTbl )
+
 FontTbl.font = "Roboto Bold"
 FontTbl.size = 16
 surface.CreateFont( "MP.AddedByName", FontTbl )
 
+
+--[[--------------------------------------------
+	Common media player panels
+----------------------------------------------]]
 
 local MEDIA_TITLE = {}
 
@@ -240,272 +253,6 @@ end
 
 derma.DefineControl( "MP.AddedBy", "", ADDED_BY, "Panel" )
 
-
---[[--------------------------------------------
-	Icons spritesheet
-----------------------------------------------]]
-
-local mpSpritesheetMat = Material( "mediaplayer/ui/spritesheet.png" )
-local blockSize = 24
-
-local function mpIcon( name, i, j, w, h )
-	return {
-		name = name,
-		mat = mpSpritesheetMat,
-		w = w,
-		h = h,
-		xoffset = i * blockSize,
-		yoffset = j * blockSize
-	}
-end
-
-spritesheet.Register {
-	mpIcon( "mp-thumbs-up",			0, 0, 21, 21 ),
-	mpIcon( "mp-thumbs-down",		1, 0, 21, 21 ),
-	mpIcon( "mp-delete",			2, 0, 15, 20 ),
-	mpIcon( "mp-favorite",			3, 0, 21, 21 ),
-	mpIcon( "mp-favorite-outline", 	4, 0, 21, 21 ),
-	mpIcon( "mp-volume-mute", 		0, 1, 18, 17 ),
-	mpIcon( "mp-volume", 			1, 1, 18, 17 ),
-	mpIcon( "mp-back", 				2, 1, 21, 21 ),
-	mpIcon( "mp-forward", 			3, 1, 21, 21 ),
-	mpIcon( "mp-home", 				4, 1, 21, 21 ),
-	mpIcon( "mp-close", 			0, 2, 21, 21 ),
-	mpIcon( "mp-skip", 				1, 2, 16, 16 ),
-	mpIcon( "mp-refresh", 			2, 2, 21, 21 ),
-	mpIcon( "mp-plus", 				3, 2, 14, 14 ),
-
-	mpIcon( "mp-play", 				3, 4, 19, 25 ),
-	mpIcon( "mp-pause",				4, 4, 22, 24 ),
-}
-
-
---[[--------------------------------------------
-	DIcon
-----------------------------------------------]]
-
-local spritesheet = spritesheet
-
-local DICON = {}
-
-AccessorFunc( DICON, "m_strIcon", 				"Icon" )
-AccessorFunc( DICON, "m_Color", 				"IconColor" )
-AccessorFunc( DICON, "m_bKeepAspect", 			"KeepAspect" )
-
-function DICON:Init()
-
-	self:SetIconColor( color_white )
-	self:SetMouseInputEnabled( false )
-	self:SetKeyboardInputEnabled( false )
-
-	self:SetKeepAspect( false )
-
-	self.IconWidth = 10
-	self.IconHeight = 10
-
-end
-
-function DICON:SetIcon( icon )
-
-	self.m_strIcon = icon
-
-	self.IconWidth, self.IconHeight = spritesheet.GetIconSize( icon )
-
-end
-
-function DICON:SizeToContents( strImage )
-
-	self:SetSize( self.IconWidth, self.IconHeight )
-
-end
-
-function DICON:Paint( w, h )
-	self:PaintAt( 0, 0, w, h )
-end
-
-function DICON:PaintAt( x, y, dw, dh )
-
-	if not self.m_strIcon then return end
-
-	if ( self.m_bKeepAspect ) then
-
-		local w = self.IconWidth
-		local h = self.IconHeight
-
-		-- Image is bigger than panel, shrink to suitable size
-		if ( w > dw and h > dh ) then
-
-			if ( w > dw ) then
-
-				local diff = dw / w
-				w = w * diff
-				h = h * diff
-
-			end
-
-			if ( h > dh ) then
-
-				local diff = dh / h
-				w = w * diff
-				h = h * diff
-
-			end
-
-		end
-
-		if ( w < dw ) then
-
-			local diff = dw / w
-			w = w * diff
-			h = h * diff
-
-		end
-
-		if ( h < dh ) then
-
-			local diff = dh / h
-			w = w * diff
-			h = h * diff
-
-		end
-
-		local OffX = ceil((dw - w) * 0.5)
-		local OffY = ceil((dh - h) * 0.5)
-
-		spritesheet.DrawIcon( self.m_strIcon, OffX+y, OffY+y, w, h, self.m_Color )
-		return true
-
-	end
-
-	spritesheet.DrawIcon( self.m_strIcon, x, y, dw, dh, self.m_Color )
-	return true
-
-end
-
-derma.DefineControl( "DIcon", "", DICON, "DPanel" )
-
-
---[[--------------------------------------------
-	DIconButton
-----------------------------------------------]]
-
-local DICONBTN = {}
-
-AccessorFunc( DICONBTN, "m_strIcon", "Icon" )
-AccessorFunc( DICONBTN, "m_bStretchToFit", 			"StretchToFit" )
-
-function DICONBTN:Init()
-
-	self:SetDrawBackground( false )
-	self:SetDrawBorder( false )
-	self:SetStretchToFit( false )
-
-	self:SetCursor( "hand" )
-	self.m_Icon = vgui.Create( "DIcon", self )
-
-	self:SetText( "" )
-
-	self:SetColor( Color( 255, 255, 255, 255 ) )
-
-end
-
-function DICONBTN:SetIconVisible( bBool )
-
-	self.m_Icon:SetVisible( bBool )
-
-end
-
-function DICONBTN:SetIcon( strIcon )
-
-	self.m_Icon:SetIcon( strIcon )
-
-end
-
-function DICONBTN:SetColor( col )
-
-	self.m_Icon:SetIconColor( col )
-
-end
-
-function DICONBTN:GetIcon()
-
-	return self.m_Icon:GetIcon()
-
-end
-
-function DICONBTN:SetKeepAspect( bKeep )
-
-	self.m_Icon:SetKeepAspect( bKeep )
-
-end
-
-function DICONBTN:SizeToContents( )
-
-	self.m_Icon:SizeToContents()
-	self:SetSize( self.m_Icon:GetWide(), self.m_Icon:GetTall() )
-
-end
-
-function DICONBTN:PerformLayout()
-
-	if ( self.m_bStretchToFit ) then
-
-		self.m_Icon:SetPos( 0, 0 )
-		self.m_Icon:SetSize( self:GetSize() )
-
-	else
-
-		self.m_Icon:SizeToContents()
-		self.m_Icon:Center()
-
-	end
-
-end
-
-derma.DefineControl( "DIconButton", "", DICONBTN, "DButton" )
-
-
---[[--------------------------------------------
-	DIconButton
-----------------------------------------------]]
-
-local DICONLBLBTN = {}
-
-AccessorFunc( DICONLBLBTN, "m_LabelSpacing", "LabelSpacing" )
-AccessorFunc( DICONLBLBTN, "m_Padding", "Padding" )
-
-function DICONLBLBTN:Init()
-
-	self.BaseClass.Init( self )
-
-	self.BtnLbl = vgui.Create( "DLabel", self )
-	self.BtnLbl:SetText( "" )
-
-	self:SetLabelSpacing( 4 )
-	self:SetPadding( 4 )
-
-end
-
-function DICONLBLBTN:PerformLayout()
-
-	self.m_Icon:SizeToContents()
-	self.m_Icon:AlignLeft( self.m_Padding )
-
-	self.BtnLbl:SizeToContents()
-	self.BtnLbl:MoveRightOf( self.m_Icon, self.m_LabelSpacing )
-
-	local w = self.BtnLbl:GetPos() + self.BtnLbl:GetWide() + self.m_Padding
-	local h = math.max( self.m_Icon:GetTall(), self.BtnLbl:GetTall() )
-	self:SetWide( w, h )
-
-	self.m_Icon:CenterVertical()
-	self.BtnLbl:CenterVertical()
-
-end
-
-derma.DefineControl( "DIconLabeledButton", "", DICONLBLBTN, "DIconButton" )
-
-
 --[[--------------------------------------------
 	Sidebar buttons
 ----------------------------------------------]]
@@ -515,9 +262,7 @@ local SIDEBAR_BTN = {}
 AccessorFunc( SIDEBAR_BTN, "m_Media", "Media" )
 
 function SIDEBAR_BTN:Init()
-
 	self:SetSize( 21, 21 )
-
 end
 
 -- function SIDEBAR_BTN:Paint(w,h)
@@ -533,13 +278,11 @@ local FAVORITE_BTN = {}
 AccessorFunc( FAVORITE_BTN, "Favorited", "Favorited" )
 
 function FAVORITE_BTN:Init()
-
 	self.BaseClass.Init( self )
 
 	self:SetIcon( "mp-favorite-outline" )
 	self:SetFavorited( false )
 	self.Outlined = true
-
 end
 
 function FAVORITE_BTN:Think()
@@ -563,9 +306,7 @@ function FAVORITE_BTN:Think()
 end
 
 function FAVORITE_BTN:DoClick()
-
 	hook.Run( MP.EVENTS.UI.FAVORITE_MEDIA, self.m_Media )
-
 end
 
 derma.DefineControl( "MP.FavoriteButton", "", FAVORITE_BTN, "MP.SidebarButton" )
@@ -574,17 +315,106 @@ derma.DefineControl( "MP.FavoriteButton", "", FAVORITE_BTN, "MP.SidebarButton" )
 local REMOVE_BTN = {}
 
 function REMOVE_BTN:Init()
-
 	self.BaseClass.Init( self )
-
 	self:SetIcon( "mp-delete" )
-
 end
 
 function REMOVE_BTN:DoClick()
-
 	hook.Run( MP.EVENTS.UI.REMOVE_MEDIA, self.m_Media )
-
 end
 
 derma.DefineControl( "MP.RemoveButton", "", REMOVE_BTN, "MP.SidebarButton" )
+
+
+--[[--------------------------------------------
+	Vote controls
+----------------------------------------------]]
+
+local VOTE_POSITIVE = 1
+local VOTE_NEGATIVE = -1
+
+local VOTE_CONTROLS = {}
+
+AccessorFunc( VOTE_CONTROLS, "m_iVoteCount", "VoteCount" )
+
+function VOTE_CONTROLS:Init()
+	self:SetSize( 70, 21 )
+
+	self.UpvoteBtn = vgui.Create( "MP.UpvoteButton", self )
+	self.UpvoteBtn.OnVote = function(btn) self:OnUpvote(btn) end
+
+	self.DownvoteBtn = vgui.Create( "MP.DownvoteButton", self )
+	self.UpvoteBtn.OnVote = function(btn) self:OnDownvote(btn) end
+
+	self.VoteCountLbl = vgui.Create( "DLabel", self )
+	self.VoteCountLbl:SetTextColor( color_white )
+	self.VoteCountLbl:SetFont( "MP.VoteCount" )
+
+	-- TODO: setup event handlers for voting and set the vote count
+
+	-- TODO: listen for global media vote events and update count
+
+	self:SetVoteCount( 0 )
+end
+
+function VOTE_CONTROLS:SetVoteCount( count )
+	self.m_iVoteCount = count
+	self.VoteCountLbl:SetText( count )
+end
+
+function VOTE_CONTROLS:OnUpvote()
+	self:SetVoteCount( self:GetVoteCount() + 1 )
+end
+
+function VOTE_CONTROLS:OnUpvote()
+	self:SetVoteCount( self:GetVoteCount() - 1 )
+end
+
+function VOTE_CONTROLS:PerformLayout()
+	self.UpvoteBtn:AlignLeft()
+	self.UpvoteBtn:CenterVertical()
+
+	self.DownvoteBtn:AlignRight()
+	self.DownvoteBtn:CenterVertical()
+
+	self.VoteCount:SizeToContents()
+	self.VoteCount:Center()
+end
+
+derma.DefineControl( "MP.VoteControls", "", VOTE_CONTROLS, "DPanel" )
+
+
+local UPVOTE_BTN = {}
+
+function UPVOTE_BTN:Init()
+	self.BaseClass.Init( self )
+	self:SetIcon( "mp-thumbs-up" )
+end
+
+function UPVOTE_BTN:DoClick()
+	hook.Run( MP.EVENTS.UI.VOTE_MEDIA, self.m_Media, VOTE_POSITIVE )
+	self:OnVote( VOTE_POSITIVE )
+end
+
+function UPVOTE_BTN:OnVote( value )
+end
+
+derma.DefineControl( "MP.UpvoteButton", "", UPVOTE_BTN, "MP.SidebarButton" )
+
+
+local DOWNVOTE_BTN = {}
+
+function DOWNVOTE_BTN:Init()
+	self.BaseClass.Init( self )
+	self:SetIcon( "mp-thumbs-down" )
+end
+
+function DOWNVOTE_BTN:DoClick()
+	hook.Run( MP.EVENTS.UI.VOTE_MEDIA, self.m_Media, VOTE_NEGATIVE )
+	self:OnVote( VOTE_NEGATIVE )
+end
+
+function DOWNVOTE_BTN:OnVote( value )
+end
+
+derma.DefineControl( "MP.DownvoteButton", "", DOWNVOTE_BTN, "MP.SidebarButton" )

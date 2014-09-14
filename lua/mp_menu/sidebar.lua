@@ -1,3 +1,4 @@
+include "icons.lua"
 include "common.lua"
 include "sidebar_tabs.lua"
 include "volume_control.lua"

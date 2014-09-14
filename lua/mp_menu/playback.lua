@@ -103,9 +103,11 @@ function PANEL:OnMediaChanged( media )
 		self.Seekbar:Hide()
 	end
 
-	-- TODO: iterate over items in BtnList and check if item has 'SetMedia' function
-	if self.RemoveBtn then
-		self.RemoveBtn:SetMedia( media )
+	-- apply media for all buttons
+	for _, btn in pairs( self.BtnList:GetItems() ) do
+		if ValidPanel(btn) and isfunction(btn.SetMedia) then
+			btn:SetMedia( media )
+		end
 	end
 
 	self:InvalidateLayout()

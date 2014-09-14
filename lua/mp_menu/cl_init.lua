@@ -16,6 +16,7 @@ MP.EVENTS.UI = {
 	OPEN_REQUEST_MENU = "mp.events.ui.openRequestMenu",
 	FAVORITE_MEDIA = "mp.events.ui.favoriteMedia",
 	REMOVE_MEDIA = "mp.events.ui.removeMedia",
+	VOTE_MEDIA = "mp.events.ui.voteMedia",
 	TOGGLE_PAUSE = "mp.events.ui.togglePause",
 	SEEK = "mp.events.ui.seek",
 
