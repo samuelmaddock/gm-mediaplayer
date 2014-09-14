@@ -257,6 +257,9 @@ derma.DefineControl( "MP.AddedBy", "", ADDED_BY, "Panel" )
 	Sidebar buttons
 ----------------------------------------------]]
 
+local BTN_COLOR_HIGHLIGHTED = color_white
+local BTN_COLOR_NORMAL = Color(255, 255, 255, 200)
+
 local SIDEBAR_BTN = {}
 
 AccessorFunc( SIDEBAR_BTN, "m_Media", "Media" )
@@ -336,6 +339,7 @@ local VOTE_NEGATIVE = -1
 local VOTE_CONTROLS = {}
 
 AccessorFunc( VOTE_CONTROLS, "m_iVoteCount", "VoteCount" )
+AccessorFunc( VOTE_CONTROLS, "m_iVoteValue", "VoteValue" )
 
 function VOTE_CONTROLS:Init()
 	self:SetSize( 60, 21 )
@@ -355,11 +359,15 @@ function VOTE_CONTROLS:Init()
 	-- TODO: listen for global media vote events and update count
 
 	self:SetVoteCount( 0 )
+	self:SetVoteValue( 0 )
 end
 
 function VOTE_CONTROLS:SetMedia( media )
 	local voteCount = media:GetMetadataValue("votes") or 0
 	self:SetVoteCount(voteCount)
+
+	local localVote = media:GetMetadataValue("localVote") or 0
+	self:SetVoteValue( localVote )
 
 	self.UpvoteBtn:SetMedia( media )
 	self.DownvoteBtn:SetMedia( media )
@@ -370,12 +378,48 @@ function VOTE_CONTROLS:SetVoteCount( count )
 	self.VoteCountLbl:SetText( count )
 end
 
+function VOTE_CONTROLS:SetVoteValue( value )
+	self.m_iVoteValue = value
+
+	if value > 0 then
+		-- highlight upvote button
+		self.UpvoteBtn:SetIconColor( BTN_COLOR_HIGHLIGHTED )
+		self.DownvoteBtn:SetIconColor( BTN_COLOR_NORMAL )
+	elseif value < 0 then
+		-- highlight downvote button
+		self.UpvoteBtn:SetIconColor( BTN_COLOR_NORMAL )
+		self.DownvoteBtn:SetIconColor( BTN_COLOR_HIGHLIGHTED )
+	else
+		-- don't highlight either button
+		self.UpvoteBtn:SetIconColor( BTN_COLOR_NORMAL )
+		self.DownvoteBtn:SetIconColor( BTN_COLOR_NORMAL )
+	end
+end
+
 function VOTE_CONTROLS:OnUpvote()
-	self:SetVoteCount( self:GetVoteCount() + 1 )
+	local value = self:GetVoteValue()
+
+	if value > 0 then
+		value = 0 -- remove vote
+	else
+		value = 1 -- set vote
+	end
+
+	self:SetVoteCount( self:GetVoteCount() + vote )
+	self:SetVoteValue( value )
 end
 
 function VOTE_CONTROLS:OnDownvote()
-	self:SetVoteCount( self:GetVoteCount() - 1 )
+	local value = self:GetVoteValue()
+
+	if value < 0 then
+		value = 0 -- remove vote
+	else
+		value = -1 -- set vote
+	end
+
+	self:SetVoteCount( self:GetVoteCount() + value )
+	self:SetVoteValue( value )
 end
 
 function VOTE_CONTROLS:PerformLayout()
