@@ -70,7 +70,7 @@ function VoteManager:AddVote( media, ply, value )
 	end
 
 	local vote = VOTE:New(ply, value)
-	table.insert( self._votes, vote )
+	table.insert( votes, vote )
 end
 
 ---
