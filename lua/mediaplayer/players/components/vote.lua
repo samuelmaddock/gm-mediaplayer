@@ -68,31 +68,37 @@ function VoteManager:AddVote( media, ply, value )
 	if not IsValid(ply) then return end
 
 	local uid = media:UniqueID()
-	if self:HasVoted(media, ply) then return end
 
-	local votes
+	local vote = self:GetVoteByPlayer(media, ply)
 
-	if self._votes[uid] then
-		votes = self._votes[uid]
+	-- Update vote if player has already voted
+	if vote then
+		vote.value = value
 	else
-		votes = {
-			media = media,
-			count = 0
-		}
-		self._votes[uid] = votes
-	end
+		local votes
 
-	-- player is retracting their vote
-	if value == 0 then
-		for k, vote in ipairs(votes) do
-			if vote:GetPlayer() == ply then
-				table.remove( votes, k )
-				break
-			end
+		if self._votes[uid] then
+			votes = self._votes[uid]
+		else
+			votes = {
+				media = media,
+				count = 0
+			}
+			self._votes[uid] = votes
 		end
-	else
-		local vote = VOTE:New(ply, value)
-		table.insert( votes, vote )
+
+		-- player is retracting their vote
+		if value == 0 then
+			for k, v in ipairs(votes) do
+				if v:GetPlayer() == ply then
+					table.remove( votes, k )
+					break
+				end
+			end
+		else
+			vote = VOTE:New(ply, value)
+			table.insert( votes, vote )
+		end
 	end
 
 	-- recalculate vote count
