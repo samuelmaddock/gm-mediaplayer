@@ -300,8 +300,11 @@ function MEDIAPLAYER:AddMedia( media )
 	if not media then return end
 
 	if SERVER then
-		-- Add an extra second for client buffering time
+		-- add an extra second for client buffering time
 		media:Duration( media:Duration() + 1 )
+
+		-- cache the time the media has been queued for sorting purposes
+		media:SetMetadataValue("queueTime", RealTime())
 	end
 
 	table.insert( self._Queue, media )
