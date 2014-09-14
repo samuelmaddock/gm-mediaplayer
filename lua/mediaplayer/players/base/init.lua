@@ -186,7 +186,10 @@ function MEDIAPLAYER:SendMedia( media, ply )
 	net.Start( "MEDIAPLAYER.Media" )
 		net.WriteString( self:GetId() )
 		self.net.WriteMedia( media )
-		self.net.WriteTime( startTime )
+		if media then
+			self.net.WriteTime( startTime )
+			self:OnNetWriteMedia( media )
+		end
 	net.Send( ply or self._Listeners )
 
 end
@@ -454,6 +457,7 @@ function MEDIAPLAYER:BroadcastUpdate( ply )
 		net.WriteUInt( #self._Queue, math.CeilPower2(self.MaxMediaItems)/2 )
 		for _, media in pairs(self._Queue) do
 			self.net.WriteMedia(media)
+			self:OnNetWriteMedia( media )
 		end
 	net.Send( ply or self._Listeners )
 
@@ -461,6 +465,10 @@ end
 
 function MEDIAPLAYER:NetWriteUpdate()
 	-- Allows for another media player type to extend update net messages
+end
+
+function MEDIAPLAYER:OnNetWriteMedia()
+	-- Allows for another media player type to extend media net messages
 end
 
 function MEDIAPLAYER:NotifyPlayer( ply, msg )

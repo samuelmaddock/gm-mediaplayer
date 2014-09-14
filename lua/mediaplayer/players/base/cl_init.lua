@@ -7,9 +7,18 @@ function MEDIAPLAYER:NetReadUpdate()
 	-- Allows for another media player type to extend update net messages
 end
 
+function MEDIAPLAYER:OnNetReadMedia( media )
+	-- Allows for another media player type to extend media net messages
+end
+
 function MEDIAPLAYER:OnQueueKeyPressed( down, held )
 	self._LastMediaUpdate = RealTime()
 end
+
+
+--[[---------------------------------------------------------
+	Networking
+-----------------------------------------------------------]]
 
 local function OnMediaUpdate( len )
 
@@ -41,6 +50,7 @@ local function OnMediaUpdate( len )
 	local count = net.ReadUInt( math.CeilPower2(mp.MaxMediaItems)/2 )
 	for i = 1, count do
 		local media = mp.net.ReadMedia()
+		mp:OnNetReadMedia(media)
 		mp:AddMedia(media)
 	end
 
@@ -81,6 +91,8 @@ local function OnMediaSet( len )
 	if media then
 		local startTime = mp.net.ReadTime()
 		media:StartTime( startTime )
+
+		mp:OnNetReadMedia(media)
 
 		local state = mp:GetPlayerState()
 
