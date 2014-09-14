@@ -91,7 +91,7 @@ function VoteManager:HasVoted( media, ply )
 	local votes = self._votes[uid]
 	if not votes then return false end
 
-	for k, vote in pairs(votes) do
+	for k, vote in ipairs(votes) do
 		if vote:GetPlayer() == ply then
 			return true
 		end
@@ -115,7 +115,7 @@ function VoteManager:GetVoteCountForMedia( media )
 	if not votes.count then
 		local count = 0
 
-		for k, vote in pairs(votes) do
+		for k, vote in ipairs(votes) do
 			count = count + vote:GetValue()
 		end
 
@@ -133,12 +133,12 @@ end
 -- @return Top voted media UID.
 --
 function VoteManager:GetTopVote( removeMedia )
-	local media, topVotes = nil, -1
+	local media, topVotes = nil, nil
 
 	for uid, _ in pairs(self._votes) do
 		local votes = self:GetVoteCountForMedia( uid )
 
-		if topVotes < 0 or votes > topVotes then
+		if not topVotes or votes > topVotes then
 			media = self._votes[uid].media
 			topVotes = votes
 		end
@@ -163,7 +163,7 @@ function VoteManager:Invalidate()
 	for uid, votes in pairs(self._votes) do
 		local numVotes = 0
 
-		for k, vote in pairs(votes) do
+		for k, vote in ipairs(votes) do
 			-- check for valid player in case they may have disconnected
 			if not (IsValid(vote) and self._mp:HasListener(vote:GetPlayer())) then
 				table.remove( votes, k )
