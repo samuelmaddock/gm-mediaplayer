@@ -1,9 +1,9 @@
 AddCSLuaFile "shared.lua"
 AddCSLuaFile "cl_draw.lua"
 AddCSLuaFile "cl_fullscreen.lua"
-AddCSLuaFile "cl_net.lua"
+AddCSLuaFile "net.lua"
 include "shared.lua"
-include "sv_net.lua"
+include "net.lua"
 
 -- Additional transmit states
 TRANSMIT_LOCATION = 4

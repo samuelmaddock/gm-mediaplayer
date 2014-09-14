@@ -9,6 +9,10 @@ function mpnet.ReadDuration()
 	return net.ReadUInt(16)
 end
 
+function mpnet.WriteDuration( seconds )
+	net.WriteUInt( seconds, 16 )
+end
+
 function mpnet.ReadMedia()
 	local uid = net.ReadString()
 
@@ -40,9 +44,27 @@ function mpnet.ReadMedia()
 	return media
 end
 
+function mpnet.WriteMedia( media )
+	if media then
+		net.WriteString( media:UniqueID() )
+		net.WriteString( media:Url() )
+		net.WriteString( media:Title() )
+		mpnet.WriteDuration( media:Duration() )
+		net.WriteString( media:OwnerName() )
+		net.WriteString( media:OwnerSteamID() )
+	else
+		net.WriteString( EOT )
+	end
+end
+
 local StateBits = math.CeilPower2(NUM_MP_STATE) / 2
+
 function mpnet.ReadPlayerState()
 	return net.ReadUInt(StateBits)
+end
+
+function mpnet.WritePlayerState( state )
+	net.WriteUInt(state, StateBits)
 end
 
 ---
@@ -77,8 +99,35 @@ function mpnet.ReadTime()
 end
 
 ---
+-- Writes the given epoch.
+--
+-- @param time Epoch.
+-- @param sync Whether the time should be synced on the client (default: true).
+--
+function mpnet.WriteTime( time, sync )
+	if sync == nil then sync = true end
+	sync = tobool(sync)
+
+	net.WriteInt( time, 32 )
+	net.WriteBit( sync )
+
+	if sync then
+		-- We must send the current time in case either the server or the
+		-- client's system clock is offset.
+		net.WriteInt( RealTime(), 32 )
+	end
+end
+
+---
 -- Read a vote value or count.
 --
 function mpnet.ReadVote()
 	return net.ReadInt(9)
+end
+
+---
+-- Write a vote value or count.
+--
+function mpnet.WriteVote( value )
+	net.WriteInt( value, 9 )
 end

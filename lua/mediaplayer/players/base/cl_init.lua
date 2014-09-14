@@ -1,7 +1,7 @@
 include "shared.lua"
 include "cl_draw.lua"
 include "cl_fullscreen.lua"
-include "cl_net.lua"
+include "net.lua"
 
 function MEDIAPLAYER:NetReadUpdate()
 	-- Allows for another media player type to extend update net messages
