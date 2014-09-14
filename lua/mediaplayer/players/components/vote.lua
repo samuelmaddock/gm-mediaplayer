@@ -87,18 +87,19 @@ function VoteManager:AddVote( media, ply, value )
 			self._votes[uid] = votes
 		end
 
-		-- player is retracting their vote
-		if value == 0 then
-			for k, v in ipairs(votes) do
-				if v:GetPlayer() == ply then
-					table.remove( votes, k )
-					break
-				end
+		vote = VOTE:New(ply, value)
+	end
+
+	-- player is retracting their vote
+	if value == 0 then
+		for k, v in ipairs(votes) do
+			if v:GetPlayer() == ply then
+				table.remove( votes, k )
+				break
 			end
-		else
-			vote = VOTE:New(ply, value)
-			table.insert( votes, vote )
 		end
+	else
+		table.insert( votes, vote )
 	end
 
 	-- recalculate vote count
