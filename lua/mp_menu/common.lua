@@ -358,6 +358,9 @@ function VOTE_CONTROLS:Init()
 end
 
 function VOTE_CONTROLS:SetMedia( media )
+	local voteCount = media:GetMetadataValue("votes") or 0
+	self:SetVoteCount(voteCount)
+
 	self.UpvoteBtn:SetMedia( media )
 	self.DownvoteBtn:SetMedia( media )
 end
