@@ -174,8 +174,14 @@ function MEDIA_ITEM:SetMedia( media )
 	local privileged = hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER )
 	if privileged or media:IsOwner( LocalPlayer() ) then
 		self.RemoveBtn = vgui.Create( "MP.RemoveButton" )
-		self.RemoveBtn:SetMedia( media )
 		self:AddButton( self.RemoveBtn )
+	end
+
+	-- apply media for all buttons
+	for _, btn in pairs( self.BtnList:GetItems() ) do
+		if ValidPanel(btn) and isfunction(btn.SetMedia) then
+			btn:SetMedia( media )
+		end
 	end
 
 end
@@ -212,12 +218,12 @@ function MEDIA_ITEM:PerformLayout()
 	self.BtnList:AlignBottom( self.VPadding )
 	self.BtnList:AlignRight( self.HPadding )
 
-	local maxAddedByWidth = ( self.BtnList:GetPos() - self.BtnSpacing ) -
+	local maxAddedByWidth = ( self.BtnList:GetPos() - 8 ) -
 			( self.MediaTime:GetPos() + self.MediaTime:GetWide() + self.HPadding )
 
 	self.AddedByLbl:SetMaxWidth( maxAddedByWidth )
 	self.AddedByLbl:AlignBottom( self.VPadding )
-	self.AddedByLbl:MoveLeftOf( self.BtnList, self.BtnSpacing )
+	self.AddedByLbl:MoveLeftOf( self.BtnList, 8 )
 
 	local maxTitleWidth = self.FavBtn:GetPos() -
 		( self.MediaTitle:GetPos() + 5 )

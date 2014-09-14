@@ -338,7 +338,7 @@ local VOTE_CONTROLS = {}
 AccessorFunc( VOTE_CONTROLS, "m_iVoteCount", "VoteCount" )
 
 function VOTE_CONTROLS:Init()
-	self:SetSize( 70, 21 )
+	self:SetSize( 60, 21 )
 
 	self.UpvoteBtn = vgui.Create( "MP.UpvoteButton", self )
 	self.UpvoteBtn.OnVote = function(btn) self:OnUpvote(btn) end
@@ -355,6 +355,11 @@ function VOTE_CONTROLS:Init()
 	-- TODO: listen for global media vote events and update count
 
 	self:SetVoteCount( 0 )
+end
+
+function VOTE_CONTROLS:SetMedia( media )
+	self.UpvoteBtn:SetMedia( media )
+	self.DownvoteBtn:SetMedia( media )
 end
 
 function VOTE_CONTROLS:SetVoteCount( count )
@@ -377,8 +382,8 @@ function VOTE_CONTROLS:PerformLayout()
 	self.DownvoteBtn:AlignRight()
 	self.DownvoteBtn:CenterVertical()
 
-	self.VoteCount:SizeToContents()
-	self.VoteCount:Center()
+	self.VoteCountLbl:SizeToContents()
+	self.VoteCountLbl:Center()
 end
 
 derma.DefineControl( "MP.VoteControls", "", VOTE_CONTROLS, "DPanel" )
