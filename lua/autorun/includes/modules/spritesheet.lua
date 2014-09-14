@@ -13,8 +13,8 @@ local icons = {}
 		mat 	= Material( "path/spritesheet.png" ), -- material for spritesheet
 		w 		= 32, 	-- icon width
 		h 		= 32, 	-- icon height
-		xoffset = 64, 	-- x-axis offset relative to the texture
-		yoffset = 128 	-- y-axis offset relative to the texture
+		xoffset = 64, 	-- x-axis offset relative to the texture (optional)
+		yoffset = 128 	-- y-axis offset relative to the texture (optional)
 	}
 ]]
 
@@ -31,12 +31,23 @@ local function registerIcon( icon )
 		return false
 	end
 
-	icon.matWidth = mat:Width()
-	icon.matHeight = mat:Height()
+	-- calculate texture UV min/max coordinates
+	local mw, mh = mat:Width(), mat:Height()
+	local xoffset, yoffset = icon.xoffset or 0, icon.yoffset or 0
+	local umin, vmin = xoffset / mw, yoffset / mh
+	local umax, vmax = umin + (icon.w / mw), vmin + (icon.h / mh)
+
+	icon.umin = umin
+	icon.umax = umax
+	icon.vmin = vmin
+	icon.vmax = vmax
+
+	-- remove unneeded properties
+	icon.xoffset = nil
+	icon.yoffset = nil
 
 	return true
 end
-
 
 ---
 -- Registers a single or list of icons.
@@ -60,7 +71,6 @@ function spritesheet.Register( iconTbl )
 	return true
 end
 
-
 ---
 -- Gets the icon's width and height
 --
@@ -74,10 +84,6 @@ function spritesheet.GetIconSize( name )
 	return icon.w, icon.h
 end
 
-
-local verts = {{},{},{},{}}
-local otw, oth, tw, th, uoffset, voffset, umax, vmax
-
 function spritesheet.DrawIcon( name, x, y, w, h, color )
 	local icon = icons[name]
 	if not icon then
@@ -85,31 +91,8 @@ function spritesheet.DrawIcon( name, x, y, w, h, color )
 		return
 	end
 
-	otw, oth = icon.matWidth, icon.matHeight
-	uoffset, voffset = icon.xoffset / otw, icon.yoffset / oth
-	umax, vmax = uoffset + (icon.w / otw), voffset + (icon.h / oth)
-
-	verts[1].x = x
-	verts[1].y = y
-	verts[1].u = uoffset
-	verts[1].v = voffset
-
-	verts[2].x = x + w
-	verts[2].y = y
-	verts[2].u = umax
-	verts[2].v = voffset
-
-	verts[3].x = x + w
-	verts[3].y = y + h
-	verts[3].u = umax
-	verts[3].v = vmax
-
-	verts[4].x = x
-	verts[4].y = y + h
-	verts[4].u = uoffset
-	verts[4].v = vmax
-
 	if color then surface.SetDrawColor(color) end
 	surface.SetMaterial(icon.mat)
-	surface.DrawPoly(verts)
+	surface.DrawTexturedRectUV( x, y, w, h,
+		icon.umin, icon.vmin, icon.umax, icon.vmax )
 end
