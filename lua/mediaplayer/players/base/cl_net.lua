@@ -46,7 +46,7 @@ function mpnet.ReadPlayerState()
 end
 
 ---
--- Treshold for determining if server and client system time differ.
+-- Threshold for determining if server and client system time differ.
 --
 local TIME_OFFSET_THRESHOLD = 2
 
@@ -74,4 +74,12 @@ function mpnet.ReadTime()
 	else
 		return time
 	end
+end
+
+---
+-- Read a vote value; uses [-8,8] as the limit in case someone wants to have
+-- a vote value count more than once.
+--
+function mpnet.ReadVote()
+	return net.ReadInt(3)
 end

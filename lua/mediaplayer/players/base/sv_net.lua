@@ -28,8 +28,7 @@ function mpnet.WritePlayerState( state )
 end
 
 ---
--- Writes the given epoch;
--- Unix epoch is a 32-bit signed integer.
+-- Writes the given epoch.
 --
 -- @param time Epoch.
 -- @param sync Whether the time should be synced on the client (default: true).
@@ -46,4 +45,12 @@ function mpnet.WriteTime( time, sync )
 		-- client's system clock is offset.
 		net.WriteInt( RealTime(), 32 )
 	end
+end
+
+---
+-- Write a vote value; uses [-8,8] as the limit in case someone wants to have
+-- a vote value count more than once.
+--
+function mpnet.WriteVote( value )
+	net.WriteInt( value, 3 )
 end
