@@ -38,18 +38,6 @@ function SERVICE:GetMetadata( callback )
 
 end
 
-function SERVICE:SetMetadataValue( key, value )
-	if not self._metadata then
-		self._metadata = {}
-	end
-
-	self._metadata[key] = value
-end
-
-function SERVICE:GetMetadataValue( key )
-	return self._metadata and self._metadata[key]
-end
-
 local HttpHeaders = {
 	["Cache-Control"] = "no-cache",
 	["Connection"] = "keep-alive",

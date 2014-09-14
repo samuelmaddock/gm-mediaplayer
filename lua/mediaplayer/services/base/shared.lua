@@ -121,6 +121,18 @@ end
 
 SERVICE.URL = SERVICE.Url
 
+function SERVICE:SetMetadataValue( key, value )
+	if not self._metadata then
+		self._metadata = {}
+	end
+
+	self._metadata[key] = value
+end
+
+function SERVICE:GetMetadataValue( key )
+	return self._metadata and self._metadata[key]
+end
+
 function SERVICE:UniqueID()
 	if not self._id then
 		local data = self:Data()
