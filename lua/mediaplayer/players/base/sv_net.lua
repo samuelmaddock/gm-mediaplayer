@@ -48,9 +48,8 @@ function mpnet.WriteTime( time, sync )
 end
 
 ---
--- Write a vote value; uses [-8,8] as the limit in case someone wants to have
--- a vote value count more than once.
+-- Write a vote value or count.
 --
 function mpnet.WriteVote( value )
-	net.WriteInt( value, 3 )
+	net.WriteInt( value, 9 )
 end
