@@ -160,7 +160,7 @@ function VoteManager:GetVoteByPlayer( media, ply )
 	local uid = media:UniqueID()
 
 	local votes = self._votes[uid]
-	if not votes then return 0 end
+	if not votes then return nil end
 
 	for _, vote in ipairs(votes) do
 		if vote:GetPlayer() == ply then
