@@ -383,16 +383,16 @@ function VOTE_CONTROLS:SetVoteValue( value )
 
 	if value > 0 then
 		-- highlight upvote button
-		self.UpvoteBtn:SetIconColor( BTN_COLOR_HIGHLIGHTED )
-		self.DownvoteBtn:SetIconColor( BTN_COLOR_NORMAL )
+		self.UpvoteBtn:SetColor( BTN_COLOR_HIGHLIGHTED )
+		self.DownvoteBtn:SetColor( BTN_COLOR_NORMAL )
 	elseif value < 0 then
 		-- highlight downvote button
-		self.UpvoteBtn:SetIconColor( BTN_COLOR_NORMAL )
-		self.DownvoteBtn:SetIconColor( BTN_COLOR_HIGHLIGHTED )
+		self.UpvoteBtn:SetColor( BTN_COLOR_NORMAL )
+		self.DownvoteBtn:SetColor( BTN_COLOR_HIGHLIGHTED )
 	else
 		-- don't highlight either button
-		self.UpvoteBtn:SetIconColor( BTN_COLOR_NORMAL )
-		self.DownvoteBtn:SetIconColor( BTN_COLOR_NORMAL )
+		self.UpvoteBtn:SetColor( BTN_COLOR_NORMAL )
+		self.DownvoteBtn:SetColor( BTN_COLOR_NORMAL )
 	end
 end
 
