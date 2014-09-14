@@ -61,7 +61,10 @@ function VoteManager:AddVote( media, ply, value )
 	if self._votes[uid] then
 		votes = self._votes[uid]
 	else
-		votes = {}
+		votes = {
+			media = media,
+			count = 0
+		}
 		self._votes[uid] = votes
 	end
 
@@ -124,22 +127,22 @@ end
 -- @return Top voted media UID.
 --
 function VoteManager:GetTopVote( removeMedia )
-	local topUid, topVotes = nil, -1
+	local media, topVotes = nil, -1
 
 	for uid, _ in pairs(self._votes) do
 		local votes = self:GetVoteCountForMedia( uid )
 
 		if topVotes < 0 or votes > topVotes then
-			topUid = uid
+			media = self._votes[uid].media
 			topVotes = votes
 		end
 	end
 
 	if removeMedia then
-		self._votes[topUid] = nil
+		self._votes[media:UniqueID()] = nil
 	end
 
-	return topUid, topVotes
+	return media, topVotes
 end
 
 ---
