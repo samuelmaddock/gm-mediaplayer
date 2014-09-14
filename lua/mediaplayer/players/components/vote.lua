@@ -55,6 +55,7 @@ end
 --
 -- @param media	Media object.
 -- @param ply	Player.
+-- @param value	Vote value.
 --
 function VoteManager:AddVote( media, ply, value )
 	if not IsValid(ply) then return end
@@ -74,8 +75,31 @@ function VoteManager:AddVote( media, ply, value )
 		self._votes[uid] = votes
 	end
 
-	local vote = VOTE:New(ply, value)
-	table.insert( votes, vote )
+	-- player is retracting their vote
+	if value == 0 then
+		for k, vote in ipairs(votes) do
+			if vote:GetPlayer() == ply then
+				table.remove( votes, k )
+				break
+			end
+		end
+	else
+		local vote = VOTE:New(ply, value)
+		table.insert( votes, vote )
+	end
+
+	-- recalculate vote count
+	self:GetVoteCountForMedia( media, true )
+end
+
+---
+-- Remove the player's vote for a media item.
+--
+-- @param media	Media object.
+-- @param ply	Player.
+--
+function VoteManager:RemoveVote( media, ply )
+	self:AddVote( media, ply, 0 )
 end
 
 ---
@@ -106,13 +130,13 @@ end
 -- @param media	Media object or UID.
 -- @return Vote count for media.
 --
-function VoteManager:GetVoteCountForMedia( media )
+function VoteManager:GetVoteCountForMedia( media, forceCalc )
 	local uid = isstring(media) and media or media:UniqueID()
 
 	local votes = self._votes[uid]
 	if not votes then return 0 end
 
-	if not votes.count then
+	if not votes.count or forceCalc then
 		local count = 0
 
 		for k, vote in ipairs(votes) do
