@@ -31,6 +31,7 @@ MediaPlayer.VOTE = VOTE
 ----------------------------------------------]]
 
 local VoteManager = {}
+VoteManager.__index = VoteManager
 
 --
 -- Initialize the media player object.
@@ -38,7 +39,7 @@ local VoteManager = {}
 -- @param mp Media player object.
 --
 function VoteManager:New( mp )
-	local obj = setmetatable({}, VoteManager)
+	local obj = setmetatable({}, self)
 	obj._mp = mp
 	obj._votes = {}
 	return obj
@@ -138,7 +139,7 @@ function VoteManager:GetTopVote( removeMedia )
 		end
 	end
 
-	if removeMedia then
+	if removeMedia and media then
 		self._votes[media:UniqueID()] = nil
 	end
 

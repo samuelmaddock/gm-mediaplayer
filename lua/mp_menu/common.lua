@@ -366,7 +366,7 @@ function VOTE_CONTROLS:OnUpvote()
 	self:SetVoteCount( self:GetVoteCount() + 1 )
 end
 
-function VOTE_CONTROLS:OnUpvote()
+function VOTE_CONTROLS:OnDownvote()
 	self:SetVoteCount( self:GetVoteCount() - 1 )
 end
 
