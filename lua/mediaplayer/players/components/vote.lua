@@ -51,6 +51,13 @@ function VoteManager:New( mp )
 end
 
 ---
+-- Clears all votes.
+--
+function VoteManager:Clear()
+	self._votes = {}
+end
+
+---
 -- Add vote for a player and media
 --
 -- @param media	Media object.
