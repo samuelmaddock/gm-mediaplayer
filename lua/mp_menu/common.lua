@@ -257,8 +257,8 @@ derma.DefineControl( "MP.AddedBy", "", ADDED_BY, "Panel" )
 	Sidebar buttons
 ----------------------------------------------]]
 
-local BTN_COLOR_HIGHLIGHTED = color_white
-local BTN_COLOR_NORMAL = Color(255, 255, 255, 200)
+local BTN_ALPHA_HIGHLIGHTED = 255
+local BTN_ALPHA_NORMAL = 200
 
 local SIDEBAR_BTN = {}
 
@@ -383,16 +383,16 @@ function VOTE_CONTROLS:SetVoteValue( value )
 
 	if value > 0 then
 		-- highlight upvote button
-		self.UpvoteBtn:SetColor( BTN_COLOR_HIGHLIGHTED )
-		self.DownvoteBtn:SetColor( BTN_COLOR_NORMAL )
+		self.UpvoteBtn:SetAlpha( BTN_ALPHA_HIGHLIGHTED )
+		self.DownvoteBtn:SetAlpha( BTN_ALPHA_NORMAL )
 	elseif value < 0 then
 		-- highlight downvote button
-		self.UpvoteBtn:SetColor( BTN_COLOR_NORMAL )
-		self.DownvoteBtn:SetColor( BTN_COLOR_HIGHLIGHTED )
+		self.UpvoteBtn:SetAlpha( BTN_ALPHA_NORMAL )
+		self.DownvoteBtn:SetAlpha( BTN_ALPHA_HIGHLIGHTED )
 	else
 		-- don't highlight either button
-		self.UpvoteBtn:SetColor( BTN_COLOR_NORMAL )
-		self.DownvoteBtn:SetColor( BTN_COLOR_NORMAL )
+		self.UpvoteBtn:SetAlpha( BTN_ALPHA_NORMAL )
+		self.DownvoteBtn:SetAlpha( BTN_ALPHA_NORMAL )
 	end
 end
 
