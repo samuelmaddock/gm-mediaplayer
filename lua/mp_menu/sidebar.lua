@@ -6,6 +6,11 @@ include "playback.lua"
 include "queue.lua"
 include "horizontal_list.lua"
 
+
+--[[--------------------------------------------
+	Sidebar root panel
+----------------------------------------------]]
+
 local PANEL = {}
 
 function PANEL:Init()
@@ -51,6 +56,10 @@ end
 
 local MP_SIDEBAR = vgui.RegisterTable( PANEL, "EditablePanel" )
 
+
+--[[--------------------------------------------
+	Sidebar presenter
+----------------------------------------------]]
 
 local SidebarPresenter = {
 	hooks = {}
@@ -152,6 +161,11 @@ function SidebarPresenter:HideSidebar()
 
 end
 
+
+--[[--------------------------------------------
+	MediaPlayer library sidebar helpers
+----------------------------------------------]]
+
 function MediaPlayer.ShowSidebar( mp )
 
 	--
@@ -187,6 +201,11 @@ end
 -- TODO: figure out a better way to bind showing the sidebar menu
 control.AddKeyPress( KEY_PAGEDOWN, "MP.ShowSidebar", function() MediaPlayer.ShowSidebar() end )
 control.AddKeyRelease( KEY_PAGEDOWN, "MP.HideSidebar", function() MediaPlayer.HideSidebar() end )
+
+
+--[[--------------------------------------------
+	Sidebar UI test - remove this eventually
+----------------------------------------------]]
 
 control.AddKeyPress( KEY_PAGEUP, "MP.ShowSidebarTest", function()
 	-- Create test fixture
