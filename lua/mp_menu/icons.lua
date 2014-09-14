@@ -17,8 +17,8 @@ local function mpIcon( name, i, j, w, h )
 end
 
 spritesheet.Register {
-	mpIcon( "mp-thumbs-up",			0, 0, 21, 21 ),
-	mpIcon( "mp-thumbs-down",		1, 0, 21, 21 ),
+	mpIcon( "mp-thumbs-up",			0, 0, 18, 21 ),
+	mpIcon( "mp-thumbs-down",		1, 0, 18, 21 ),
 	mpIcon( "mp-delete",			2, 0, 15, 20 ),
 	mpIcon( "mp-favorite",			3, 0, 21, 21 ),
 	mpIcon( "mp-favorite-outline", 	4, 0, 21, 21 ),
