@@ -470,7 +470,7 @@ function MEDIAPLAYER:BroadcastUpdate( ply )
 			self.net.WritePlayerState( self:GetPlayerState() )
 			self:NetWriteUpdate()				-- mp type-specific info
 			net.WriteUInt( #self._Queue, math.CeilPower2(self.MaxMediaItems)/2 )
-			for _, media in pairs(self._Queue) do
+			for _, media in ipairs(self._Queue) do
 				self.net.WriteMedia(media)
 				self:OnNetWriteMedia( media, pl )
 			end
