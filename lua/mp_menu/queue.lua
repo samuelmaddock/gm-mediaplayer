@@ -214,7 +214,7 @@ function MEDIA_ITEM:PerformLayout()
 	self.FavBtn:AlignTop( self.VPadding )
 	self.FavBtn:AlignRight( self.HPadding )
 
-	self.BtnList:InvalidateLayout()
+	self.BtnList:InvalidateLayout(true)
 	self.BtnList:AlignBottom( self.VPadding )
 	self.BtnList:AlignRight( self.HPadding )
 

@@ -156,7 +156,7 @@ function MEDIA_TIME:Think()
 		-- TODO: hide info?
 	end
 
-	self:InvalidateLayout()
+	self:InvalidateLayout(true)
 
 	self.NextThink = rt + 0.1
 
@@ -213,7 +213,7 @@ end
 
 function ADDED_BY:SetMaxWidth( width )
 	self.maxWidth = width
-	self:InvalidateLayout()
+	self:InvalidateLayout(true)
 end
 
 function ADDED_BY:PerformLayout()
@@ -390,6 +390,7 @@ end
 function VOTE_CONTROLS:SetVoteCount( count )
 	self.m_iVoteCount = count
 	self.VoteCountLbl:SetText( count )
+	self.VoteCountLbl:InvalidateLayout(true)
 end
 
 function VOTE_CONTROLS:SetVoteValue( value )

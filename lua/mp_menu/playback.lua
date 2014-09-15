@@ -152,7 +152,7 @@ function PANEL:PerformLayout()
 	self.FavBtn:AlignTop( self.Padding )
 	self.FavBtn:AlignRight( self.Padding )
 
-	self.BtnList:InvalidateLayout()
+	self.BtnList:InvalidateLayout(true)
 	self.BtnList:AlignBottom( self.Padding )
 	self.BtnList:AlignRight( self.Padding )
 

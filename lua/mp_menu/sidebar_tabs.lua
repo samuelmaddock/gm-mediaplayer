@@ -183,7 +183,11 @@ function CURRENTLY_PLAYING_TAB:OnMediaPlayerChanged( mp )
 		self.PlaybackPanel:OnMediaChanged( mp:GetMedia() )
 
 		-- listen for any future media changes
-		self.MediaChangedHandle = function(...) self.PlaybackPanel:OnMediaChanged(...) end
+		self.MediaChangedHandle = function(...)
+			if ValidPanel(self.PlaybackPanel) then
+				self.PlaybackPanel:OnMediaChanged(...)
+			end
+		end
 		mp:on( MP.EVENTS.MEDIA_CHANGED, self.MediaChangedHandle )
 	end
 
@@ -192,7 +196,11 @@ function CURRENTLY_PLAYING_TAB:OnMediaPlayerChanged( mp )
 		self.QueuePanel:OnQueueChanged( mp:GetMediaQueue() )
 
 		-- listen for any future media changes
-		self.QueueChangedHandle = function(...) self.QueuePanel:OnQueueChanged(...) end
+		self.QueueChangedHandle = function(...)
+			if ValidPanel(self.QueuePanel) then
+				self.QueuePanel:OnQueueChanged(...)
+			end
+		end
 		mp:on( MP.EVENTS.QUEUE_CHANGED, self.QueueChangedHandle )
 	end
 
@@ -202,7 +210,9 @@ function CURRENTLY_PLAYING_TAB:OnMediaPlayerChanged( mp )
 
 		-- listen for any future player state changes
 		self.PlayerStateChangeHandle = function(...)
-			self.PlaybackPanel:OnPlayerStateChanged(...)
+			if ValidPanel(self.PlaybackPanel) then
+				self.PlaybackPanel:OnPlayerStateChanged(...)
+			end
 		end
 		mp:on( MP.EVENTS.PLAYER_STATE_CHANGED, self.PlayerStateChangeHandle )
 	end
