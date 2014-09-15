@@ -258,15 +258,17 @@ derma.DefineControl( "MP.AddedBy", "", ADDED_BY, "Panel" )
 ----------------------------------------------]]
 
 local BTN_ALPHA_HIGHLIGHTED = 255
-local BTN_ALPHA_NORMAL = 100
+local BTN_ALPHA_NORMAL = 84 -- 33% opacity
 
-local SIDEBAR_BTN = {}
+local SIDEBAR_BTN = {
+	Width = 21
+}
 
 AccessorFunc( SIDEBAR_BTN, "m_Media", "Media" )
 AccessorFunc( SIDEBAR_BTN, "m_bHighlighted", "Highlighted" )
 
 function SIDEBAR_BTN:Init()
-	self:SetSize( 21, 21 )
+	self:SetSize( self.Width, self.Width )
 	self:SetAlpha( BTN_ALPHA_NORMAL )
 end
 
@@ -348,13 +350,20 @@ derma.DefineControl( "MP.RemoveButton", "", REMOVE_BTN, "MP.SidebarButton" )
 local VOTE_POSITIVE = 1
 local VOTE_NEGATIVE = -1
 
-local VOTE_CONTROLS = {}
+local VOTE_CONTROLS = {
+	Width = 60,
+	Height = 21,
+	VoteCountPadding = 5
+}
 
 AccessorFunc( VOTE_CONTROLS, "m_iVoteCount", "VoteCount" )
 AccessorFunc( VOTE_CONTROLS, "m_iVoteValue", "VoteValue" )
 
+AccessorFunc( VOTE_CONTROLS, "m_bUpvoteEnabled", "UpvoteEnabled" )
+AccessorFunc( VOTE_CONTROLS, "m_bDownvoteEnabled", "DownvoteEnabled" )
+
 function VOTE_CONTROLS:Init()
-	self:SetSize( 60, 21 )
+	self:SetSize( self.Width, self.Height )
 
 	self.UpvoteBtn = vgui.Create( "MP.UpvoteButton", self )
 	self.UpvoteBtn.OnVote = function(btn) self:OnUpvote(btn) end
@@ -372,6 +381,9 @@ function VOTE_CONTROLS:Init()
 
 	self:SetVoteCount( 0 )
 	self:SetVoteValue( 0 )
+
+	self:SetUpvoteEnabled( true )
+	self:SetDownvoteEnabled( true )
 end
 
 function VOTE_CONTROLS:SetMedia( media )
@@ -442,14 +454,55 @@ function VOTE_CONTROLS:OnDownvote()
 end
 
 function VOTE_CONTROLS:PerformLayout()
-	self.UpvoteBtn:AlignLeft()
-	self.UpvoteBtn:CenterVertical()
+	local align
+	local w = self.Width
 
-	self.DownvoteBtn:AlignRight()
-	self.DownvoteBtn:CenterVertical()
+	local upvoteEnabled = self:GetUpvoteEnabled()
+	local downvoteEnabled = self:GetDownvoteEnabled()
+
+	if upvoteEnabled and downvoteEnabled then
+		align = TEXT_ALIGN_CENTER
+		w = w - SIDEBAR_BTN.Width * 2
+	elseif upvoteEnabled then
+		align = TEXT_ALIGN_RIGHT
+		w = w - SIDEBAR_BTN.Width
+	else
+		align = TEXT_ALIGN_LEFT
+		w = w - SIDEBAR_BTN.Width
+	end
+
+	self:SetSize( w, self.Height )
+
+	if upvoteEnabled then
+		self.UpvoteBtn:Show()
+		self.UpvoteBtn:AlignLeft()
+		self.UpvoteBtn:CenterVertical()
+	else
+		self.UpvoteBtn:Hide()
+	end
+
+	if downvoteEnabled then
+		self.DownvoteBtn:Show()
+		self.DownvoteBtn:AlignRight()
+		self.DownvoteBtn:CenterVertical()
+	else
+		self.DownvoteBtn:Hide()
+	end
 
 	self.VoteCountLbl:SizeToContents()
-	self.VoteCountLbl:Center()
+	self.VoteCountLbl:CenterVertical()
+
+	if align == TEXT_ALIGN_LEFT then
+		self.VoteCountLbl:SetContentAlignment(4)
+		self.VoteCountLbl:AlignLeft( self.VoteCountPadding )
+	elseif align == TEXT_ALIGN_RIGHT then
+		self.VoteCountLbl:SetContentAlignment(6)
+		self.VoteCountLbl:AlignRight( self.VoteCountPadding )
+	else -- TEXT_ALIGN_CENTER
+		self.VoteCountLbl:SetContentAlignment(5)
+		self.VoteCountLbl:CenterHorizontal()
+	end
+
 end
 
 derma.DefineControl( "MP.VoteControls", "", VOTE_CONTROLS, "DPanel" )
