@@ -15,7 +15,7 @@ EventEmitter:new(MEDIAPLAYER)
 
 MEDIAPLAYER.Name = "base"
 MEDIAPLAYER.IsMediaPlayer = true
-MEDIAPLAYER.MaxMediaItems = 64
+MEDIAPLAYER.MaxMediaItems = 32
 MEDIAPLAYER.NoMedia = "\4" -- end of transmission character
 
 -- Media Player states
