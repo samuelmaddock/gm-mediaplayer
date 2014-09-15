@@ -390,7 +390,7 @@ end
 function VOTE_CONTROLS:SetVoteCount( count )
 	self.m_iVoteCount = count
 	self.VoteCountLbl:SetText( count )
-	self.VoteCountLbl:InvalidateLayout(true)
+	self:InvalidateLayout(true)
 end
 
 function VOTE_CONTROLS:SetVoteValue( value )
