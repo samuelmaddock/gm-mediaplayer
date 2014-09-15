@@ -57,6 +57,10 @@ function VoteManager:Clear()
 	self._votes = {}
 end
 
+function VoteManager:ClearVotesForMedia( media )
+	self._votes[media:UniqueID()] = nil
+end
+
 ---
 -- Add vote for a player and media
 --
@@ -69,25 +73,26 @@ function VoteManager:AddVote( media, ply, value )
 
 	local uid = media:UniqueID()
 
+	local votes
+
+	if self._votes[uid] then
+		votes = self._votes[uid]
+	else
+		votes = {
+			media = media,
+			count = 0
+		}
+		self._votes[uid] = votes
+	end
+
 	local vote = self:GetVoteByPlayer(media, ply)
 
 	-- Update vote if player has already voted
 	if vote then
 		vote.value = value
 	else
-		local votes
-
-		if self._votes[uid] then
-			votes = self._votes[uid]
-		else
-			votes = {
-				media = media,
-				count = 0
-			}
-			self._votes[uid] = votes
-		end
-
 		vote = VOTE:New(ply, value)
+		table.insert( votes, vote )
 	end
 
 	-- player is retracting their vote
@@ -98,8 +103,6 @@ function VoteManager:AddVote( media, ply, value )
 				break
 			end
 		end
-	else
-		table.insert( votes, vote )
 	end
 
 	-- recalculate vote count
