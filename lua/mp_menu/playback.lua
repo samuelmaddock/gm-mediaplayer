@@ -191,11 +191,10 @@ local PLAYPAUSE_BTN = {
 }
 
 function PLAYPAUSE_BTN:Init()
-
 	self.BaseClass.Init( self )
 
 	self:SetSize( 22, 25 )
-
+	self:SetHighlighted( true )
 end
 
 function PLAYPAUSE_BTN:SetPlayerState( playerState )

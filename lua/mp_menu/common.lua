@@ -258,14 +258,24 @@ derma.DefineControl( "MP.AddedBy", "", ADDED_BY, "Panel" )
 ----------------------------------------------]]
 
 local BTN_ALPHA_HIGHLIGHTED = 255
-local BTN_ALPHA_NORMAL = 200
+local BTN_ALPHA_NORMAL = 100
 
 local SIDEBAR_BTN = {}
 
 AccessorFunc( SIDEBAR_BTN, "m_Media", "Media" )
+AccessorFunc( SIDEBAR_BTN, "m_bHighlighted", "Highlighted" )
 
 function SIDEBAR_BTN:Init()
 	self:SetSize( 21, 21 )
+	self:SetAlpha( BTN_ALPHA_NORMAL )
+end
+
+function SIDEBAR_BTN:Think()
+	if self.m_bHighlighted or self:IsHovered() then
+		self:SetAlpha( BTN_ALPHA_HIGHLIGHTED )
+	else
+		self:SetAlpha( BTN_ALPHA_NORMAL )
+	end
 end
 
 -- function SIDEBAR_BTN:Paint(w,h)
@@ -289,6 +299,7 @@ function FAVORITE_BTN:Init()
 end
 
 function FAVORITE_BTN:Think()
+	self.BaseClass.Think(self)
 
 	if not self.Favorited then
 		local hovered = self:IsHovered()
@@ -296,16 +307,17 @@ function FAVORITE_BTN:Think()
 		if self.Outlined then
 			if hovered then
 				self:SetIcon( "mp-favorite" )
+				self:SetHighlighted( true )
 				self.Outlined = false
 			end
 		else
 			if not hovered then
 				self:SetIcon( "mp-favorite-outline" )
+				self:SetHighlighted( false )
 				self.Outlined = true
 			end
 		end
 	end
-
 end
 
 function FAVORITE_BTN:DoClick()
@@ -348,7 +360,7 @@ function VOTE_CONTROLS:Init()
 	self.UpvoteBtn.OnVote = function(btn) self:OnUpvote(btn) end
 
 	self.DownvoteBtn = vgui.Create( "MP.DownvoteButton", self )
-	self.UpvoteBtn.OnVote = function(btn) self:OnDownvote(btn) end
+	self.DownvoteBtn.OnVote = function(btn) self:OnDownvote(btn) end
 
 	self.VoteCountLbl = vgui.Create( "DLabel", self )
 	self.VoteCountLbl:SetTextColor( color_white )
@@ -363,6 +375,8 @@ function VOTE_CONTROLS:Init()
 end
 
 function VOTE_CONTROLS:SetMedia( media )
+	self.m_Media = media
+
 	local voteCount = media:GetMetadataValue("votes") or 0
 	self:SetVoteCount(voteCount)
 
@@ -383,16 +397,16 @@ function VOTE_CONTROLS:SetVoteValue( value )
 
 	if value > 0 then
 		-- highlight upvote button
-		self.UpvoteBtn:SetAlpha( BTN_ALPHA_HIGHLIGHTED )
-		self.DownvoteBtn:SetAlpha( BTN_ALPHA_NORMAL )
+		self.UpvoteBtn:SetHighlighted( true )
+		self.DownvoteBtn:SetHighlighted( false )
 	elseif value < 0 then
 		-- highlight downvote button
-		self.UpvoteBtn:SetAlpha( BTN_ALPHA_NORMAL )
-		self.DownvoteBtn:SetAlpha( BTN_ALPHA_HIGHLIGHTED )
+		self.UpvoteBtn:SetHighlighted( false )
+		self.DownvoteBtn:SetHighlighted( true )
 	else
 		-- don't highlight either button
-		self.UpvoteBtn:SetAlpha( BTN_ALPHA_NORMAL )
-		self.DownvoteBtn:SetAlpha( BTN_ALPHA_NORMAL )
+		self.UpvoteBtn:SetHighlighted( false )
+		self.DownvoteBtn:SetHighlighted( false )
 	end
 end
 
@@ -405,8 +419,10 @@ function VOTE_CONTROLS:OnUpvote()
 		value = 1 -- set vote
 	end
 
-	self:SetVoteCount( self:GetVoteCount() + vote )
+	self:SetVoteCount( self:GetVoteCount() + value )
 	self:SetVoteValue( value )
+
+	hook.Run( MP.EVENTS.UI.VOTE_MEDIA, self.m_Media, value )
 end
 
 function VOTE_CONTROLS:OnDownvote()
@@ -420,6 +436,8 @@ function VOTE_CONTROLS:OnDownvote()
 
 	self:SetVoteCount( self:GetVoteCount() + value )
 	self:SetVoteValue( value )
+
+	hook.Run( MP.EVENTS.UI.VOTE_MEDIA, self.m_Media, value )
 end
 
 function VOTE_CONTROLS:PerformLayout()
@@ -444,7 +462,6 @@ function UPVOTE_BTN:Init()
 end
 
 function UPVOTE_BTN:DoClick()
-	hook.Run( MP.EVENTS.UI.VOTE_MEDIA, self.m_Media, VOTE_POSITIVE )
 	self:OnVote( VOTE_POSITIVE )
 end
 
@@ -462,7 +479,6 @@ function DOWNVOTE_BTN:Init()
 end
 
 function DOWNVOTE_BTN:DoClick()
-	hook.Run( MP.EVENTS.UI.VOTE_MEDIA, self.m_Media, VOTE_NEGATIVE )
 	self:OnVote( VOTE_NEGATIVE )
 end
 
