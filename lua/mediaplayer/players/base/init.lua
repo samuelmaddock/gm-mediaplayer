@@ -148,7 +148,7 @@ end
 	Queue Management
 -----------------------------------------------------------]]
 
-function MEDIAPLAYER:NextMedia()
+function MEDIAPLAYER:NextMedia( item )
 
 	if MediaPlayer.DEBUG then
 		print( "MEDIAPLAYER.NextMedia" )
@@ -158,7 +158,7 @@ function MEDIAPLAYER:NextMedia()
 
 	-- Grab media from the queue if available
 	if not self:IsQueueEmpty() then
-		media = table.remove( self._Queue, 1 )
+		media = table.remove( self._Queue, item or 1 )
 		self:QueueUpdated()
 	end
 
