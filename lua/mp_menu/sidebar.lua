@@ -143,6 +143,8 @@ function SidebarPresenter:ShowSidebar( mp )
 	sidebar:SetKeyboardInputEnabled( false )
 	sidebar:SetMouseInputEnabled( true )
 
+	sidebar:SetZPos(-99)
+
 	hook.Run( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, mp )
 
 	self.Sidebar = sidebar
