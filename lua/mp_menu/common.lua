@@ -1,6 +1,8 @@
 local ceil = math.ceil
 local clamp = math.Clamp
 
+local FormatSeconds = MediaPlayerUtils.FormatSeconds
+
 --[[--------------------------------------------
 	Sidebar fonts
 ----------------------------------------------]]
@@ -88,7 +90,7 @@ function MEDIA_TIME:SetMedia( media )
 	self.m_Media = media
 
 	if media then
-		self.DurationLbl:SetText( string.FormatSeconds( media:Duration() ) )
+		self.DurationLbl:SetText( FormatSeconds( media:Duration() ) )
 		self:UpdateDivider()
 	end
 end
@@ -148,7 +150,7 @@ function MEDIA_TIME:Think()
 			end
 
 			mediaTime = clamp(mediaTime, 0, duration)
-			self.TimeLbl:SetText( string.FormatSeconds( mediaTime ) )
+			self.TimeLbl:SetText( FormatSeconds( mediaTime ) )
 			self:UpdateDivider()
 		end
 

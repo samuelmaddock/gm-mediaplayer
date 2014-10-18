@@ -1,4 +1,5 @@
 local net = net
+local CeilPower2 = MediaPlayerUtils.CeilPower2
 
 local EOT = "\4" -- End of transmission
 
@@ -57,7 +58,7 @@ function mpnet.WriteMedia( media )
 	end
 end
 
-local StateBits = math.CeilPower2(NUM_MP_STATE) / 2
+local StateBits = CeilPower2(NUM_MP_STATE) / 2
 
 function mpnet.ReadPlayerState()
 	return net.ReadUInt(StateBits)

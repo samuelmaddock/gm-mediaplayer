@@ -2,6 +2,8 @@ local string = string
 local urllib = url
 local os = os
 
+local FormatSeconds = MediaPlayerUtils.FormatSeconds
+
 SERVICE.Name 	= "Base Service"
 SERVICE.Id 		= "base"
 SERVICE.Abstract = true
@@ -33,7 +35,7 @@ end
 function SERVICE:__tostring()
 	return string.join( ', ',
 		self:Title(),
-		string.FormatSeconds(self:Duration()),
+		FormatSeconds(self:Duration()),
 		self:OwnerName() )
 end
 

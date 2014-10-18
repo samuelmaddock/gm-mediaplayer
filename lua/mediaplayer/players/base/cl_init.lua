@@ -3,6 +3,8 @@ include "cl_draw.lua"
 include "cl_fullscreen.lua"
 include "net.lua"
 
+local CeilPower2 = MediaPlayerUtils.CeilPower2
+
 function MEDIAPLAYER:NetReadUpdate()
 	-- Allows for another media player type to extend update net messages
 end
@@ -47,7 +49,7 @@ local function OnMediaUpdate( len )
 	mp:ClearMediaQueue()
 
 	-- Read queue information
-	local count = net.ReadUInt( math.CeilPower2(mp.MaxMediaItems)/2 )
+	local count = net.ReadUInt( CeilPower2(mp.MaxMediaItems)/2 )
 	for i = 1, count do
 		local media = mp.net.ReadMedia()
 		mp:OnNetReadMedia(media)

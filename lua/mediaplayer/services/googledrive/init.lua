@@ -1,6 +1,8 @@
 AddCSLuaFile "shared.lua"
 include "shared.lua"
 
+local TableLookup = MediaPlayerUtils.TableLookup
+
 -- TODO:
 -- https://video.google.com/get_player?wmode=opaque&ps=docs&partnerid=30&docid=0B9Kudw3An4Hnci1VZ0pwcHhJc00&enablejsapi=1
 -- http://stackoverflow.com/questions/17779197/google-drive-embed-no-iframe
@@ -21,7 +23,7 @@ local function OnReceiveMetadata( self, callback, body )
 	end
 
 	if resp.error then
-		return callback(false, table.Lookup(resp, 'error.message'))
+		return callback(false, TableLookup(resp, 'error.message'))
 	end
 
 	local ext = resp.fileExtension or ''

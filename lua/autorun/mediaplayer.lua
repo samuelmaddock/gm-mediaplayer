@@ -21,9 +21,6 @@ local function LoadMediaPlayer()
 	end
 
 	-- shared includes
-	IncludeCS "includes/extensions/sh_file.lua"
-	IncludeCS "includes/extensions/sh_math.lua"
-	IncludeCS "includes/extensions/sh_table.lua"
 	IncludeCS "includes/extensions/sh_url.lua"
 	IncludeCS "includes/modules/EventEmitter.lua"
 

@@ -1,6 +1,8 @@
 MediaPlayer = MediaPlayer or {}
 MP = MediaPlayer
 
+include "utils.lua"
+
 --[[---------------------------------------------------------
 	ConVars
 -----------------------------------------------------------]]
@@ -45,7 +47,7 @@ end
 -- @param key	e.g. "json.key.fragments"
 --
 function MediaPlayer.GetConfigValue( key )
-	local value = table.Lookup( MediaPlayer.config, key )
+	local value = MediaPlayerUtils.TableLookup( MediaPlayer.config, key )
 
 	if type(value) == 'nil' then
 		ErrorNoHalt("WARNING: MediaPlayer config value not found for key `" .. tostring(key) .. "`\n")

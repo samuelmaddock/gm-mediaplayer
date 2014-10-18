@@ -5,6 +5,8 @@ AddCSLuaFile "net.lua"
 include "shared.lua"
 include "net.lua"
 
+local CeilPower2 = MediaPlayerUtils.CeilPower2
+
 -- Additional transmit states
 TRANSMIT_LOCATION = 4
 
@@ -469,7 +471,7 @@ function MEDIAPLAYER:BroadcastUpdate( ply )
 			net.WriteEntity( self:GetOwner() )
 			self.net.WritePlayerState( self:GetPlayerState() )
 			self:NetWriteUpdate()				-- mp type-specific info
-			net.WriteUInt( #self._Queue, math.CeilPower2(self.MaxMediaItems)/2 )
+			net.WriteUInt( #self._Queue, CeilPower2(self.MaxMediaItems)/2 )
 			for _, media in ipairs(self._Queue) do
 				self.net.WriteMedia(media)
 				self:OnNetWriteMedia( media, pl )

@@ -115,14 +115,14 @@ if CLIENT then
 	local ValidPanel = ValidPanel
 	local SetDrawColor = surface.SetDrawColor
 	local DrawRect = surface.DrawRect
-	local HTMLTexture = draw.HTMLTexture
+	local DrawHTMLPanel = MediaPlayerUtils.DrawHTMLPanel
 
 	function SERVICE:Draw( w, h )
 
 		if ValidPanel(self.Browser) then
 			SetDrawColor( 0, 0, 0, 255 )
 			DrawRect( 0, 0, w, h )
-			HTMLTexture( self.Browser, w, h )
+			DrawHTMLPanel( self.Browser, w, h )
 		end
 
 	end

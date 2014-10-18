@@ -9,6 +9,9 @@ local math = math
 local string = string
 local surface = surface
 
+local DrawHTMLPanel = MediaPlayerUtils.DrawHTMLPanel
+local FormatSeconds = MediaPlayerUtils.FormatSeconds
+
 local TEXT_ALIGN_CENTER	= draw.TEXT_ALIGN_CENTER
 local TEXT_ALIGN_TOP	= draw.TEXT_ALIGN_TOP
 local TEXT_ALIGN_BOTTOM	= draw.TEXT_ALIGN_BOTTOM
@@ -98,7 +101,7 @@ end
 function MEDIAPLAYER:DrawHTML( browser, w, h )
 	surface.SetDrawColor( 0, 0, 0, 255 )
 	surface.DrawRect( 0, 0, w, h )
-	draw.HTMLTexture( browser, w, h )
+	DrawHTMLPanel( browser, w, h )
 end
 
 function MEDIAPLAYER:DrawMediaInfo( media, w, h )
@@ -141,7 +144,7 @@ function MEDIAPLAYER:DrawMediaInfo( media, w, h )
 		local timeY = h - bh - TextPaddingY * 2
 
 		-- Current time
-		local curTimeStr = string.FormatSeconds(math.Clamp(math.Round(curTime), 0, duration))
+		local curTimeStr = FormatSeconds(math.Clamp(math.Round(curTime), 0, duration))
 
 		DrawTextBox( curTimeStr, "MediaTitle", TextPaddingX, timeY,
 			TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM )
@@ -149,7 +152,7 @@ function MEDIAPLAYER:DrawMediaInfo( media, w, h )
 			TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM )
 
 		-- Duration
-		local durationStr = string.FormatSeconds( duration )
+		local durationStr = FormatSeconds( duration )
 
 		DrawTextBox( durationStr, "MediaTitle", w - TextPaddingX * 2, timeY,
 			TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM )

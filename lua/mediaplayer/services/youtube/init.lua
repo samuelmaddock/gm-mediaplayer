@@ -1,6 +1,8 @@
 AddCSLuaFile "shared.lua"
 include "shared.lua"
 
+local TableLookup = MediaPlayerUtils.TableLookup
+
 -- https://developers.google.com/youtube/v3/
 local APIKey = MediaPlayer.GetConfigValue('google.api_key')
 local MetadataUrl = "https://www.googleapis.com/youtube/v3/videos?id=%s&key=%s&type=video&part=contentDetails,snippet,status&videoEmbeddable=true&videoSyndicated=true"
@@ -62,11 +64,11 @@ local function OnReceiveMetadata( self, callback, body )
 
 	-- If 'error' key is present, the query failed.
 	if resp.error then
-		return callback(false, table.Lookup(resp, 'error.message'))
+		return callback(false, TableLookup(resp, 'error.message'))
 	end
 
 	-- We need at least one result
-	local results = table.Lookup(resp, 'pageInfo.totalResults')
+	local results = TableLookup(resp, 'pageInfo.totalResults')
 	if not ( results and results > 0 ) then
 		return callback(false, "Requested video wasn't found")
 	end
@@ -74,24 +76,24 @@ local function OnReceiveMetadata( self, callback, body )
 	local item = resp.items[1]
 
 	-- Video must be embeddable
-	if not table.Lookup(item, 'status.embeddable') then
+	if not TableLookup(item, 'status.embeddable') then
 		return callback( false, "Requested video was embed disabled" )
 	end
 
-	metadata.title = table.Lookup(item, 'snippet.title')
+	metadata.title = TableLookup(item, 'snippet.title')
 
 	-- Check for live broadcast
-	local liveBroadcast = table.Lookup(item, 'snippet.liveBroadcastContent')
+	local liveBroadcast = TableLookup(item, 'snippet.liveBroadcastContent')
 	if liveBroadcast == 'none' then
 		-- Duration is an ISO 8601 string
-		local durationStr = table.Lookup(item, 'contentDetails.duration')
+		local durationStr = TableLookup(item, 'contentDetails.duration')
 		metadata.duration = math.max(1, convertISO8601Time(durationStr))
 	else
 		metadata.duration = 0 -- mark as live video
 	end
 
 	-- 'medium' size thumbnail doesn't have letterboxing
-	metadata.thumbnail = table.Lookup(item, 'snippet.thumbnails.medium.url')
+	metadata.thumbnail = TableLookup(item, 'snippet.thumbnails.medium.url')
 
 	self:SetMetadata(metadata, true)
 
