@@ -33,7 +33,7 @@ function SERVICE:New( url )
 end
 
 function SERVICE:__tostring()
-	return string.join( ', ',
+	return string.format( '%s, %s, %s',
 		self:Title(),
 		FormatSeconds(self:Duration()),
 		self:OwnerName() )

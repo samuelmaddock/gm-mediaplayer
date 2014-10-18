@@ -68,8 +68,7 @@ end
 -- @return String	Media player string representation
 --
 function MEDIAPLAYER:__tostring()
-	return string.join( ', ',
-		self:GetId() )
+	return self:GetId()
 end
 
 --
