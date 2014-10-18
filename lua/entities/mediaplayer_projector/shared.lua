@@ -10,7 +10,7 @@ ENT.Type = "anim"
 ENT.Base = "mediaplayer_base"
 ENT.RenderGroup = RENDERGROUP_BOTH
 
-ENT.Spawnable = true
+ENT.Spawnable = false -- WIP
 
 ENT.Model = Model( "models/props/cs_office/projector.mdl" )
 
