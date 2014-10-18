@@ -257,7 +257,7 @@ function MEDIAPLAYER:RequestMedia( media, ply )
 	end
 
 	-- Make sure the media isn't already in the queue
-	for _, s in pairs(self._Queue) do
+	for _, s in ipairs(self._Queue) do
 		if s.Id == media.Id and s:UniqueID() == media:UniqueID() then
 			if MediaPlayer.DEBUG then
 				print("MediaPlayer.RequestMedia: Duplicate request", s.Id, media.Id)
