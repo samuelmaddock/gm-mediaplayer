@@ -44,8 +44,8 @@ function MEDIAPLAYER:Init(params)
 	else
 
 		self._LastMediaUpdate = 0
-		control.Add( KEY_Q, self, self.OnQueueKeyPressed )
-		control.Add( KEY_C, self, self.OnQueueKeyPressed )
+		inputhook.Add( KEY_Q, self, self.OnQueueKeyPressed )
+		inputhook.Add( KEY_C, self, self.OnQueueKeyPressed )
 
 	end
 

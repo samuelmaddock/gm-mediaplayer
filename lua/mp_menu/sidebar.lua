@@ -201,15 +201,15 @@ function MediaPlayer.HideSidebar()
 end
 
 -- TODO: figure out a better way to bind showing the sidebar menu
--- control.AddKeyPress( KEY_PAGEDOWN, "MP.ShowSidebar", function() MediaPlayer.ShowSidebar() end )
--- control.AddKeyRelease( KEY_PAGEDOWN, "MP.HideSidebar", function() MediaPlayer.HideSidebar() end )
+-- inputhook.AddKeyPress( KEY_PAGEDOWN, "MP.ShowSidebar", function() MediaPlayer.ShowSidebar() end )
+-- inputhook.AddKeyRelease( KEY_PAGEDOWN, "MP.HideSidebar", function() MediaPlayer.HideSidebar() end )
 
 
 --[[--------------------------------------------
 	Sidebar UI test - remove this eventually
 ----------------------------------------------]]
 
---[[control.AddKeyPress( KEY_PAGEUP, "MP.ShowSidebarTest", function()
+--[[inputhook.AddKeyPress( KEY_PAGEUP, "MP.ShowSidebarTest", function()
 	-- Create test fixture
 	local mp = MediaPlayer.Create( 'ui-test-player' )
 	mp:SetPlayerState( MP_STATE_PLAYING )

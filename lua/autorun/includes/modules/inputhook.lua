@@ -6,7 +6,7 @@ local IsKeyDown = input.IsKeyDown
 local IsGameUIVisible = gui.IsGameUIVisible
 local IsConsoleVisible = gui.IsConsoleVisible
 
-_G.control = {}
+_G.inputhook = {}
 
 local HoldTime = 0.3
 
@@ -91,7 +91,7 @@ hook.Add( "Think", "InputManagerThink", InputThink )
 -- @param name		Unique identifier or a valid object.
 -- @param onToggle	Callback function.
 --
-function control.Add( key, name, onToggle )
+function inputhook.Add( key, name, onToggle )
 
 	if not (key and onToggle) then return end
 
@@ -107,9 +107,9 @@ function control.Add( key, name, onToggle )
 
 end
 
-function control.AddKeyPress( key, name, onToggle )
+function inputhook.AddKeyPress( key, name, onToggle )
 
-	control.Add( key, name, function( a, b, c )
+	inputhook.Add( key, name, function( a, b, c )
 		local down, held = getEventArgs(a, b, c)
 
 		-- ignore if key down, but held OR key is not down
@@ -124,9 +124,9 @@ function control.AddKeyPress( key, name, onToggle )
 
 end
 
-function control.AddKeyRelease( key, name, onToggle )
+function inputhook.AddKeyRelease( key, name, onToggle )
 
-	control.Add( key, name, function( a, b, c )
+	inputhook.Add( key, name, function( a, b, c )
 		local down, held = getEventArgs(a, b, c)
 
 		-- ignore if key is down
@@ -143,7 +143,7 @@ end
 -- @param key	`KEY_` enum.
 -- @param name	Unique identifier or a valid object.
 --
-function control.Remove( key, name )
+function inputhook.Remove( key, name )
 
 	if not KeyControls[ key ] then return end
 

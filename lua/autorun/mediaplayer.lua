@@ -27,7 +27,7 @@ local function LoadMediaPlayer()
 	if SERVER then
 		-- download clientside includes
 		AddCSLuaFile "includes/modules/browserpool.lua"
-		AddCSLuaFile "includes/modules/control.lua"
+		AddCSLuaFile "includes/modules/inputhook.lua"
 		AddCSLuaFile "includes/modules/htmlmaterial.lua"
 		AddCSLuaFile "includes/modules/spritesheet.lua"
 
@@ -36,7 +36,7 @@ local function LoadMediaPlayer()
 	else
 		-- clientside includes
 		include "includes/modules/browserpool.lua"
-		include "includes/modules/control.lua"
+		include "includes/modules/inputhook.lua"
 		include "includes/modules/htmlmaterial.lua"
 		include "includes/modules/spritesheet.lua"
 
