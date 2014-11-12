@@ -98,6 +98,27 @@ if CLIENT then
 		DrawTexturedRect( 0, 0, w * pw, h * ph )
 	end
 
+	function utils.ParseHHMMSS( time )
+	    local tbl = {}
+
+		-- insert fragments in reverse
+		for fragment, _ in string.gmatch(time, ":?(%d+)") do
+			table.insert(tbl, 1, tonumber(fragment) or 0)
+		end
+
+		if #tbl == 0 then
+			return nil
+		end
+
+		local seconds = 0
+
+		for i = 1, #tbl do
+			seconds = seconds + tbl[i] * math.max(60 ^ (i-1), 1)
+		end
+
+		return seconds
+	end
+
 end
 
 _G.MediaPlayerUtils = utils
