@@ -210,6 +210,7 @@ end
 -- custom behavior.
 --
 -- @return boolean
+-- @return string   Error message.
 --
 function MEDIAPLAYER:CanPlayerRequestMedia( ply, media )
 	-- Check service whitelist if it exists on the mediaplayer
@@ -222,9 +223,7 @@ function MEDIAPLAYER:CanPlayerRequestMedia( ply, media )
 		local msg = "The requested media isn't supported; accepted services are as followed:\n"
 		msg = msg .. table.concat( names, ", " )
 
-		self:NotifyPlayer( ply, msg )
-
-		return false
+		return false, msg
 	end
 
 	return true
@@ -243,8 +242,14 @@ end
 function MEDIAPLAYER:RequestMedia( media, ply )
 
 	-- Player must be valid and also a listener
-	if not ( IsValid(ply) and self:HasListener(ply) and
-			self:CanPlayerRequestMedia(ply, media) ) then
+	if not ( IsValid(ply) and self:HasListener(ply) ) then
+		return
+	end
+
+	local allowed, msg = self:CanPlayerRequestMedia(ply, media)
+
+	if not allowed then
+		self:NotifyPlayer( ply, msg and msg or "Your media request has been denied." )
 		return
 	end
 
