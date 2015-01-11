@@ -221,7 +221,13 @@ MediaPlayer.ThinkInterval = 0.2 -- seconds
 
 local function MediaPlayerThink()
 	for id, mp in pairs( MediaPlayer.List ) do
-		mp:Think()
+		local succ, err = pcall(mp.Think, mp)
+		if not succ then
+			ErrorNoHalt(err .. "\n")
+
+			-- TODO: recreate mediaplayer object instead
+			mp:Remove()
+		end
 	end
 end
 
