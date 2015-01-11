@@ -317,6 +317,7 @@ function MEDIAPLAYER:RequestPause( ply )
 
 	-- Check player priviledges
 	if not self:IsPlayerPrivileged(ply) then
+		self:NotifyPlayer(ply, "You don't have permission to do that.")
 		return
 	end
 
@@ -349,6 +350,7 @@ function MEDIAPLAYER:RequestSkip( ply )
 
 	-- Check player priviledges
 	if not self:IsPlayerPrivileged(ply) then
+		self:NotifyPlayer(ply, "You don't have permission to do that.")
 		return
 	end
 
@@ -371,6 +373,7 @@ function MEDIAPLAYER:RequestSeek( ply, seekTime )
 
 	-- Check player priviledges
 	if not self:IsPlayerPrivileged(ply) then
+		self:NotifyPlayer(ply, "You don't have permission to do that.")
 		return
 	end
 
@@ -387,7 +390,7 @@ function MEDIAPLAYER:RequestSeek( ply, seekTime )
 
 	-- Ignore request if time is past the end of the video
 	if seekTime > media:Duration() then
-		self:NotifyPlayer( ply, "Request seek time was past the end of the media duration" )
+		self:NotifyPlayer( ply, "Request seek time was past the end of the media duration." )
 		return
 	end
 
@@ -422,6 +425,8 @@ function MEDIAPLAYER:RequestRemove( ply, mediaUID )
 	if currentMedia:UniqueID() == mediaUID then
 		if privileged then
 			self:NextMedia()
+		else
+			self:NotifyPlayer(ply, "You don't have permission to do that.")
 		end
 	else
 		local idx, media
