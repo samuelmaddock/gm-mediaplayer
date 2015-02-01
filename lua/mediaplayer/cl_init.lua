@@ -26,7 +26,7 @@ function MediaPlayer.Volume( volume )
 		RunConsoleCommand( "mediaplayer_volume", volume )
 
 		-- Apply volume to all media players
-		for _, mp in pairs(MediaPlayer.GetAll()) do
+		for _, mp in pairs( MediaPlayer.List ) do
 			if mp:IsPlaying() then
 				local media = mp:CurrentMedia()
 				if media then

@@ -190,7 +190,13 @@ end
 -- @return table	Array of all active media players.
 --
 function MediaPlayer.GetAll()
-	return MediaPlayer.List
+	local tbl = {}
+
+	for _, mp in pairs( MediaPlayer.List ) do
+		table.insert( tbl, mp )
+	end
+
+	return tbl
 end
 
 ---
