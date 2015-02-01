@@ -43,7 +43,7 @@ cvars.AddChangeCallback( FullscreenCvar:GetName(), OnFullscreenConVarChanged )
 	Client controls for toggling fullscreen
 -----------------------------------------------------------]]
 
-inputhook.Add( KEY_F11, "Toggle MediaPlayer Fullscreen", function()
+inputhook.AddKeyPress( KEY_F11, "Toggle MediaPlayer Fullscreen", function()
 
 	local isFullscreen = FullscreenCvar:GetBool()
 	local numMp = #MediaPlayer.GetAll()
@@ -53,7 +53,8 @@ inputhook.Add( KEY_F11, "Toggle MediaPlayer Fullscreen", function()
 		return
 	end
 
-	RunConsoleCommand( "mediaplayer_fullscreen", not isFullscreen )
+	local value = isFullscreen and 0 or 1
+	RunConsoleCommand( "mediaplayer_fullscreen", value )
 
 end )
 
