@@ -19,6 +19,9 @@ local FullscreenCvar = MediaPlayer.Cvars.Fullscreen
 
 local function OnFullscreenConVarChanged( name, old, new )
 
+	new = (new == "1.00")
+	old = (old == "1.00")
+
 	local media
 
 	for _, mp in pairs(MediaPlayer.List) do
