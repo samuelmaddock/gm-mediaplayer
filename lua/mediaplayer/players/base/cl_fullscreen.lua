@@ -35,6 +35,8 @@ local function OnFullscreenConVarChanged( name, old, new )
 
 	MediaPlayer.SetBrowserSize( MediaPlayer.GetIdlescreen() )
 
+	hook.Run( "MediaPlayerFullscreenToggled", new, old )
+
 end
 cvars.AddChangeCallback( FullscreenCvar:GetName(), OnFullscreenConVarChanged )
 
