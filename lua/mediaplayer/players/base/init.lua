@@ -233,10 +233,11 @@ end
 -- Determine whether the media should be added to the queue.
 -- This should be overwritten if only certain media should be allowed.
 --
--- @return boolean
+-- @return boolean  Whether the media should be queued.
+-- @return string   Denied reason.
 --
-function MEDIAPLAYER:ShouldAddMedia( media )
-	return true
+function MEDIAPLAYER:ShouldQueueMedia( media )
+	return true, nil
 end
 
 function MEDIAPLAYER:RequestMedia( media, ply )
@@ -292,7 +293,11 @@ function MEDIAPLAYER:RequestMedia( media, ply )
 
 		media:SetOwner( ply )
 
-		if not self:ShouldAddMedia(media) then
+		local queueMedia, msg = self:ShouldQueueMedia( media )
+
+		if not queueMedia then
+			self:NotifyPlayer( ply,
+				msg and msg or "The requested media couldn't be queued." )
 			return
 		end
 
