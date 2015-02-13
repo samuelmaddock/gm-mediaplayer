@@ -485,7 +485,7 @@ function MEDIAPLAYER:BroadcastUpdate( ply )
 			net.WriteString( self.Name )		-- media player type
 			net.WriteEntity( self:GetOwner() )
 			self.net.WritePlayerState( self:GetPlayerState() )
-			self:NetWriteUpdate()				-- mp type-specific info
+			self:NetWriteUpdate( pl )				-- mp type-specific info
 			net.WriteUInt( #self._Queue, CeilPower2(self.MaxMediaItems)/2 )
 			for _, media in ipairs(self._Queue) do
 				self.net.WriteMedia(media)
@@ -496,7 +496,7 @@ function MEDIAPLAYER:BroadcastUpdate( ply )
 
 end
 
-function MEDIAPLAYER:NetWriteUpdate()
+function MEDIAPLAYER:NetWriteUpdate( ply )
 	-- Allows for another media player type to extend update net messages
 end
 
