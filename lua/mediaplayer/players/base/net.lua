@@ -28,7 +28,7 @@ function mpnet.ReadMedia()
 	local ownerSteamId = net.ReadString()
 
 	-- Create media object
-	local media = MediaPlayer.GetMediaForUrl( url )
+	local media = MediaPlayer.GetMediaForUrl( url, true )
 
 	-- Set uniqud ID to match the server
 	media._id = uid
