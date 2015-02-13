@@ -275,7 +275,7 @@ function SIDEBAR_BTN:Init()
 end
 
 function SIDEBAR_BTN:Think()
-	if self.m_bHighlighted or self:IsHovered() then
+	if self.m_bHighlighted or self:IsHovered() and not self.m_bDisabled then
 		self:SetAlpha( BTN_ALPHA_HIGHLIGHTED )
 	else
 		self:SetAlpha( BTN_ALPHA_NORMAL )
