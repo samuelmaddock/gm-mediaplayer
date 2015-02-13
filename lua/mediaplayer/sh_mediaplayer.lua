@@ -1,4 +1,7 @@
-include "players/components/vote.lua"
+if SERVER then
+	include "players/components/vote.lua"
+	include "players/components/voteskip.lua"
+end
 
 --[[---------------------------------------------------------
 	Media Player Types
