@@ -33,6 +33,10 @@ function VoteskipManager:GetNumRemainingVotes( totalPlayers )
 end
 
 function VoteskipManager:ShouldSkip( totalPlayers )
+	if totalPlayers <= 0 then
+		return false
+	end
+
 	self:Invalidate()
 
 	local reqVotes = self:GetNumRequiredVotes( totalPlayers )
