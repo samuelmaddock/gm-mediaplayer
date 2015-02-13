@@ -10,8 +10,9 @@ local VOTESKIP_REQ_VOTE_RATIO = 2/3
 ---
 -- Initialize the Voteskip Manager object.
 --
-function VoteskipManager:New( ratio )
+function VoteskipManager:New( mp, ratio )
 	local obj = setmetatable({}, self)
+	obj._mp = mp
 	obj._votes = {}
 	obj._value = 0
 	obj._ratio = VOTESKIP_REQ_VOTE_RATIO
@@ -118,13 +119,13 @@ function VoteskipManager:Invalidate()
 	local changed = false
 
 	for uid, vote in pairs(self._votes) do
-		if not IsValid( vote.player ) then
+		local ply = vote.player
+		if IsValid( ply ) and self._mp:HasListener( ply ) then
+			value = value + vote.value
+		else
 			self._votes[ uid ] = nil
 			changed = true
-			continue
 		end
-
-		value = value + vote.value
 	end
 
 	if self._value ~= value then
