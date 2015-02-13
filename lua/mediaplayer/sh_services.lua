@@ -111,6 +111,7 @@ do
 		"resource", -- base
 		"image",
 		"html5_video",
+		"webpage",
 
 		-- IGModAudioChannel
 		"audiofile",
