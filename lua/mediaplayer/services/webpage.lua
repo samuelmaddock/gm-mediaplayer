@@ -1,3 +1,5 @@
+DEFINE_BASECLASS( "mp_service_browser" )
+
 SERVICE.Name 	= "Webpage"
 SERVICE.Id 		= "www"
 SERVICE.Base 	= "res"
