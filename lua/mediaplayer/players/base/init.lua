@@ -504,6 +504,12 @@ function MEDIAPLAYER:OnNetWriteMedia( media, ply )
 	-- Allows for another media player type to extend media net messages
 end
 
+function MEDIAPLAYER:NotifyListeners( msg )
+	for _, ply in ipairs( self._Listeners ) do
+		self:NotifyPlayer( ply, msg )
+	end
+end
+
 function MEDIAPLAYER:NotifyPlayer( ply, msg )
 	ply:ChatPrint( msg )
 end
