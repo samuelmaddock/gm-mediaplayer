@@ -76,7 +76,7 @@ function VoteskipManager:AddVote( ply, value )
 			vote.value = value
 		end
 	else
-		vote = VOTE:New( ply, value )
+		vote = MediaPlayer.VOTE:New( ply, value )
 		self._votes[ uid ] = vote
 	end
 
