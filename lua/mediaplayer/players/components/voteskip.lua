@@ -24,10 +24,21 @@ function VoteskipManager:GetNumVotes()
 	return self._value
 end
 
+function VoteskipManager:GetNumRequiredVotes( totalPlayers )
+	return math.ceil( totalPlayers * self._ratio )
+end
+
+function VoteskipManager:GetNumRemainingVotes( totalPlayers )
+	local numVotes = self:GetNumVotes()
+	local reqVotes = self:GetNumRequiredVotes( totalPlayers )
+	return ( reqVotes - numVotes )
+end
+
 function VoteskipManager:ShouldSkip( totalPlayers )
 	self:Invalidate()
-	local requiredVotes = math.ceil( totalPlayers * self._ratio )
-	return ( self._value >= requiredVotes )
+
+	local reqVotes = self:GetNumRequiredVotes( totalPlayers )
+	return ( self._value >= reqVotes )
 end
 
 ---
