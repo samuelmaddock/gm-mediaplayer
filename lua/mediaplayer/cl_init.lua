@@ -249,6 +249,11 @@ function MediaPlayer.OpenRequestMenu( mp )
 
 	mp = MediaPlayer.GetByObject( mp )
 
+	if not mp then
+		Error( "MediaPlayer.OpenRequestMenu: Invalid media player.\n" )
+		return
+	end
+
 	local req = vgui.Create( "MPRequestFrame" )
 	req:SetMediaPlayer( mp )
 	req:MakePopup()
