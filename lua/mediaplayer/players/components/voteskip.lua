@@ -9,14 +9,11 @@ VoteskipManager.__index = VoteskipManager
 
 local VOTESKIP_REQ_VOTE_RATIO = 2/3
 
---
+---
 -- Initialize the Voteskip Manager object.
 --
--- @param mp Media player object.
---
-function VoteskipManager:New( mp, ratio )
+function VoteskipManager:New( ratio )
 	local obj = setmetatable({}, self)
-	obj._mp = mp
 	obj._votes = {}
 	obj._value = 0
 	obj._ratio = VOTESKIP_REQ_VOTE_RATIO
@@ -28,6 +25,7 @@ function VoteskipManager:GetNumVotes()
 end
 
 function VoteskipManager:ShouldSkip( totalPlayers )
+	self:Invalidate()
 	local requiredVotes = math.ceil( totalPlayers * self._ratio )
 	return ( self._value >= requiredVotes )
 end
@@ -88,7 +86,7 @@ end
 -- @return Whether the player has voted.
 --
 function VoteskipManager:HasVoted( ply )
-	if not IsValid( ply ) then return end
+	if not IsValid( ply ) then return false end
 
 	local uid = ply:SteamID64()
 	local vote = self._votes[ uid ]
