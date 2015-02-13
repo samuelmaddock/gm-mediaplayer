@@ -268,6 +268,7 @@ local SIDEBAR_BTN = {
 
 AccessorFunc( SIDEBAR_BTN, "m_Media", "Media" )
 AccessorFunc( SIDEBAR_BTN, "m_bHighlighted", "Highlighted" )
+AccessorFunc( SIDEBAR_BTN, "m_HighlightColor", "HighlightColor" )
 
 function SIDEBAR_BTN:Init()
 	self:SetSize( self.Width, self.Width )
@@ -276,6 +277,9 @@ end
 
 function SIDEBAR_BTN:Think()
 	if self.m_bHighlighted or self:IsHovered() and not self.m_bDisabled then
+		self:SetAlpha( BTN_ALPHA_HIGHLIGHTED )
+	elseif self.m_HighlightColor then
+		self:SetColor( self.m_HighlightColor )
 		self:SetAlpha( BTN_ALPHA_HIGHLIGHTED )
 	else
 		self:SetAlpha( BTN_ALPHA_NORMAL )
