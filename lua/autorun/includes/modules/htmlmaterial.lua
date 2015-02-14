@@ -1,3 +1,9 @@
+local ipairs = ipairs
+local table = table
+local timer = timer
+
+local tblconcat = table.concat
+
 local cache = {}
 local downloads = {}
 local styles = {}
@@ -106,6 +112,9 @@ local function enqueueUrl( url, styleName, key )
 	end)
 end
 
+-- cached for performance
+local MAT_STR_TABLE = { '', '@', '' }
+
 ---
 -- Renders a URL as a material.
 --
@@ -113,11 +122,17 @@ end
 -- @param style		HTMLMaterial style.
 --
 function HTMLMaterial( url, style )
+	if not url then
+		return DefaultMat
+	end
+
 	local key
 
 	-- Build unique key for material
 	if style then
-		key = table.concat({url, '@', style})
+		MAT_STR_TABLE[1] = url
+		MAT_STR_TABLE[3] = style
+		key = tblconcat( MAT_STR_TABLE )
 	else
 		key = url
 	end
