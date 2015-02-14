@@ -9,6 +9,11 @@ local JS_CallbackHack = [[(function(){
 	}
 })();]]
 
+local FilterCVar = CreateClientConVar( "mediaplayer_html_filter", 0, true, false )
+
+local FILTER_ALL = 0
+local FILTER_NONE = 1
+
 --[[---------------------------------------------------------
 
 -----------------------------------------------------------]]
@@ -238,11 +243,13 @@ PANEL.ConsoleColors = {
 
 function PANEL:ConsoleMessage( ... )
 
+	local filterLevel = FilterCVar:GetInt()
+
 	local args = {...}
 	local msg = args[1]
 
 	-- Three arguments are passed in if an error occured
-	if #args == 3 then
+	if #args == 3 and filterLevel > FILTER_ALL then
 
 		local script = args[2]
 		local linenum = args[3]
@@ -261,8 +268,6 @@ function PANEL:ConsoleMessage( ... )
 		MsgC( col, table.concat(out, " ") )
 
 	else
-
-		local func = args[2]
 
 		if not isstring( msg ) then
 			msg = "*js variable* (" .. type(msg) .. ": " .. tostring(msg) .. ")"
@@ -285,6 +290,10 @@ function PANEL:ConsoleMessage( ... )
 			surface.PlaySound( soundpath )
 			return
 		end
+
+		if filterLevel == FILTER_ALL then return end
+
+		local func = args[2]
 
 		-- Output console message with prefix
 		local prefixColor = self.ConsoleColors.default
