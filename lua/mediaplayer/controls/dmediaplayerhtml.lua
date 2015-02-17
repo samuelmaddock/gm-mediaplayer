@@ -2,6 +2,8 @@ local PANEL = {}
 
 DEFINE_BASECLASS( "Panel" )
 
+local DEBUG = false
+
 local JS_CallbackHack = [[(function(){
 	var funcname = '%s';
 	window[funcname] = function(){
@@ -9,7 +11,7 @@ local JS_CallbackHack = [[(function(){
 	}
 })();]]
 
-local FilterCVar = CreateClientConVar( "mediaplayer_html_filter", 0, true, false )
+local FilterCVar = CreateClientConVar( "js_console_filter", 0, true, false )
 
 local FILTER_ALL = 0
 local FILTER_NONE = 1
@@ -151,7 +153,7 @@ end
 
 function PANEL:OpenURL( url )
 
-	if MediaPlayer.DEBUG then
+	if DEBUG then
 		print("DMediaPlayerHTML.OpenURL", url)
 	end
 
@@ -163,7 +165,7 @@ end
 
 function PANEL:SetHTML( html )
 
-	if MediaPlayer.DEBUG then
+	if DEBUG then
 		print("DMediaPlayerHTML.SetHTML")
 		print(html)
 	end
@@ -171,16 +173,6 @@ function PANEL:SetHTML( html )
 	BaseClass.SetHTML( self, html )
 
 end
-
---[[function PANEL:RunJavascript( js )
-
-	if MediaPlayer.DEBUG then
-		print("DMediaPlayerHTML.RunJavascript", js)
-	end
-
-	BaseClass.RunJavascript( self, js )
-
-end]]
 
 
 --[[---------------------------------------------------------
@@ -375,9 +367,6 @@ end
 --[[---------------------------------------------------------
 	Remove Scrollbars
 -----------------------------------------------------------]]
-
--- TODO: Change to appending CSS style?
--- ::-webkit-scrollbar { visibility: hidden; }
 
 local JS_RemoveScrollbars = "document.body.style.overflow = 'hidden';"
 
