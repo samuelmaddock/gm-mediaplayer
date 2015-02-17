@@ -156,7 +156,6 @@ function AddHTMLMaterialStyle(name, params)
 	styles[name] = params
 end
 
--- TODO
 HTMLMAT_STYLE_BLUR       = 'htmlmat.style.blur'
 HTMLMAT_STYLE_GRAYSCALE  = 'htmlmat.style.grayscale'
 HTMLMAT_STYLE_SEPIA      = 'htmlmat.style.sepia'
