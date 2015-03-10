@@ -147,7 +147,8 @@ function SIDEBAR_TAB:ApplySchemeSettings()
 
 	self:SetTextInset( 0, 0 )
 
-	DLabel.ApplySchemeSettings( self )
+	-- TODO: this errors as of version 2015.03.09
+	-- DLabel.ApplySchemeSettings( self )
 
 end
 
