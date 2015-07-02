@@ -1,0 +1,105 @@
+<!DOCTYPE html><html><head><style>html, body {
+        width: 100%;
+        height: 100%;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        overflow: hidden;
+    }
+    #player {
+        width: 100%;
+        height: 100%;
+    }</style><body><div id=player></div><script>function getQueryParams(qs) {
+        qs = qs.split('+').join(' ');
+
+        var params = {},
+            tokens,
+            re = /[?&]?([^=]+)=([^&]*)/g;
+
+        while (tokens = re.exec(qs)) {
+            params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+        }
+
+        return params;
+    }
+
+    var query = getQueryParams(document.location.search);
+
+    var MEDIAPLAYER_VIDEO_ID = query.v || '5fSH8shWo_U',
+        MEDIAPLAYER_IS_TIMED = (query.timed === '0') ? false : true;
+
+    var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    function onYouTubeIframeAPIReady() {
+        var player = new YT.Player('player', {
+            videoId: MEDIAPLAYER_VIDEO_ID,
+            playerVars: {
+                autoplay: 1,
+                controls: 0,
+                cc_load_policy: 1,
+                disablekb: 1,
+                modestbranding: 1,
+                rel: 0,
+                showinfo: 0
+            },
+            events: {
+                'onReady': onPlayerReady
+            }
+        });
+        MediaPlayer.player = player;
+    }
+
+    function onPlayerReady() {
+        MediaPlayer.ytReady = true;
+    }
+
+    window.MediaPlayer = window.MediaPlayer || {
+        isPlayerReady: function () {
+            return (typeof this.player === 'object');
+        },
+
+        setVolume: function ( volume ) {
+            if (!this.isPlayerReady()) return;
+            this.player.setVolume(volume);
+        },
+
+        play: function () {
+            if (!this.isPlayerReady()) return;
+            this.player.playVideo();
+        },
+
+        pause: function () {
+            if (!this.isPlayerReady()) return;
+            this.player.pauseVideo();
+        },
+
+        seek: function ( seekTime ) {
+            if (!this.isPlayerReady()) return;
+            if (!MEDIAPLAYER_IS_TIMED) return;
+
+            var state, curTime, duration, diffTime;
+
+            state = this.player.getPlayerState();
+
+            /*if (state < YT.PlayerState.ENDED) {
+                this.player.playVideo();
+            }*/
+
+            if (state === YT.PlayerState.BUFFERING) return;
+
+            duration = this.player.getDuration();
+            if (seekTime > duration) return;
+
+            curTime = this.player.getCurrentTime();
+            diffTime = Math.abs(curTime - seekTime);
+            if (diffTime < 5) return;
+
+            this.player.seekTo(seekTime, true);
+        }
+    };</script>
