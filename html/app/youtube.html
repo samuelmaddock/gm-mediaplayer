@@ -74,7 +74,8 @@
 
     window.MediaPlayer = window.MediaPlayer || {
         isPlayerReady: function () {
-            return (typeof this.player === 'object');
+            return (typeof this.player === 'object') &&
+                (typeof this.player.getPlayerState === 'function');
         },
 
         setVolume: function ( volume ) {
