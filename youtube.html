@@ -28,7 +28,8 @@
     var query = getQueryParams(document.location.search);
 
     var MEDIAPLAYER_VIDEO_ID = query.v || '5fSH8shWo_U',
-        MEDIAPLAYER_IS_TIMED = (query.timed === '0') ? false : true;
+        MEDIAPLAYER_IS_TIMED = (query.timed === '0') ? false : true,
+        MEDIAPLAYER_START_SEC = query.start ? parseInt(query.start, 10) : undefined;
 
     var tag = document.createElement('script');
 
@@ -39,6 +40,7 @@
     function onYouTubeIframeAPIReady() {
         var player = new YT.Player('player', {
             videoId: MEDIAPLAYER_VIDEO_ID,
+            startSeconds: MEDIAPLAYER_START_SEC,
             playerVars: {
                 autoplay: 1,
                 controls: 0,
