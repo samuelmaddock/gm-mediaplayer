@@ -1,12 +1,6 @@
 // Generated on 2014-06-15 using generator-webapp 0.4.9
 'use strict';
 
-// # Globbing
-// for performance reasons we're only matching one level down:
-// 'test/spec/{,*/}*.js'
-// use this if you want to recursively match all subfolders:
-// 'test/spec/**/*.js'
-
 module.exports = function (grunt) {
 
     // Load grunt tasks automatically
@@ -40,10 +34,6 @@ module.exports = function (grunt) {
                 options: {
                     livereload: true
                 }
-            },
-            jstest: {
-                files: ['test/spec/{,*/}*.js'],
-                tasks: ['test:watch']
             },
             gruntfile: {
                 files: ['Gruntfile.js']
@@ -88,20 +78,6 @@ module.exports = function (grunt) {
                     }
                 }
             },
-            test: {
-                options: {
-                    open: false,
-                    port: 9001,
-                    middleware: function(connect) {
-                        return [
-                            connect.static('.tmp'),
-                            connect.static('test'),
-                            connect().use('/bower_components', connect.static('./bower_components')),
-                            connect.static(config.app)
-                        ];
-                    }
-                }
-            },
             dist: {
                 options: {
                     base: '<%= config.dist %>',
@@ -134,19 +110,8 @@ module.exports = function (grunt) {
             all: [
                 'Gruntfile.js',
                 '<%= config.app %>/scripts/{,*/}*.js',
-                '!<%= config.app %>/scripts/vendor/*',
-                'test/spec/{,*/}*.js'
+                '!<%= config.app %>/scripts/vendor/*'
             ]
-        },
-
-        // Mocha testing framework configuration options
-        mocha: {
-            all: {
-                options: {
-                    run: true,
-                    urls: ['http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/*.html']
-                }
-            }
         },
 
         // Compiles Sass to CSS and generates necessary files if requested
@@ -221,17 +186,6 @@ module.exports = function (grunt) {
             css: ['<%= config.dist %>/styles/{,*/}*.css']
         },
 
-        svgmin: {
-            dist: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= config.app %>/images',
-                    src: '{,*/}*.svg',
-                    dest: '<%= config.dist %>/images'
-                }]
-            }
-        },
-
         htmlmin: {
             dist: {
                 options: {
@@ -253,32 +207,6 @@ module.exports = function (grunt) {
             }
         },
 
-        // By default, your `index.html`'s <!-- Usemin block --> will take care of
-        // minification. These next options are pre-configured if you do not wish
-        // to use the Usemin blocks.
-        // cssmin: {
-        //     dist: {
-        //         files: {
-        //             '<%= config.dist %>/styles/main.css': [
-        //                 '.tmp/styles/{,*/}*.css',
-        //                 '<%= config.app %>/styles/{,*/}*.css'
-        //             ]
-        //         }
-        //     }
-        // },
-        // uglify: {
-        //     dist: {
-        //         files: {
-        //             '<%= config.dist %>/scripts/scripts.js': [
-        //                 '<%= config.dist %>/scripts/scripts.js'
-        //             ]
-        //         }
-        //     }
-        // },
-        // concat: {
-        //     dist: {}
-        // },
-
         // Copies remaining files to places other tasks can use
         copy: {
             dist: {
@@ -292,7 +220,8 @@ module.exports = function (grunt) {
                         '.htaccess',
                         'images/{,*/}*.{gif,jpeg,jpg,png,webp}',
                         '{,*/}*.html',
-                        'styles/fonts/{,*/}*.*'
+                        'styles/fonts/{,*/}*.*',
+                        'scripts/services/**/*.js'
                     ]
                 }]
             },
@@ -311,13 +240,9 @@ module.exports = function (grunt) {
                 'sass:server',
                 'copy:styles'
             ],
-            test: [
-                'copy:styles'
-            ],
             dist: [
                 'sass',
-                'copy:styles',
-                'svgmin'
+                'copy:styles'
             ]
         },
 
@@ -357,20 +282,6 @@ module.exports = function (grunt) {
         grunt.task.run([target ? ('serve:' + target) : 'serve']);
     });
 
-    grunt.registerTask('test', function (target) {
-        if (target !== 'watch') {
-            grunt.task.run([
-                'clean:server',
-                'concurrent:test'
-            ]);
-        }
-
-        grunt.task.run([
-            'connect:test',
-            'mocha'
-        ]);
-    });
-
     grunt.registerTask('build', [
         'clean:dist',
         'useminPrepare',
@@ -379,7 +290,7 @@ module.exports = function (grunt) {
         'cssmin',
         'uglify',
         'copy:dist',
-        'rev',
+        // 'rev',
         'usemin',
         'htmlmin'
     ]);
@@ -391,7 +302,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', [
         'newer:jshint',
-        'test',
         'build'
     ]);
 };

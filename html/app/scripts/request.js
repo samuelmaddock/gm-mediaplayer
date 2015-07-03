@@ -1,3 +1,18 @@
+'use strict';
+
+/**
+ * Called when the user either clicks the URL request button or presses
+ * enter on it.
+ */
+function requestUrl() {
+    var elem = document.getElementById('urlinput'),
+        url = elem.value;
+
+    if (url.length === 0) { return; }
+
+    gmod.requestUrl(url);
+}
+
 /**
  * Called when the user presses a key while focused on the URL input
  * text box.
@@ -14,23 +29,10 @@ function onUrlKeyDown(event) {
 }
 
 /**
- * Called when the user either clicks the URL request button or presses
- * enter on it.
- */
-function requestUrl() {
-    var elem = document.getElementById('urlinput'),
-        url = elem.value;
-
-    if (url.length === 0) { return; }
-
-    gmod.requestUrl(url);
-}
-
-/**
  * Called when a user hovers over a service icon.
  */
 function hoverService() {
-    console.log( "PLAY: garrysmod/ui_hover.wav" );
+    console.log( 'PLAY: garrysmod/ui_hover.wav' );
 }
 
 /**
@@ -39,7 +41,7 @@ function hoverService() {
  * @param  {HTMLElement} elem DOM element.
  */
 function selectService(elem) {
-    console.log( "PLAY: garrysmod/ui_click.wav" );
+    console.log( 'PLAY: garrysmod/ui_click.wav' );
 
     var href = elem.dataset.href,
         overlay = (elem.dataset.overlay !== undefined);
