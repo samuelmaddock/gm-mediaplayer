@@ -3,6 +3,7 @@ AddCSLuaFile()
 if SERVER then
 	resource.AddFile( "models/gmod_tower/suitetv_large.mdl" )
 	resource.AddFile( "materials/models/gmod_tower/suitetv_large.vmt" )
+	resource.AddSingleFile( "materials/entities/mediaplayer_tv.png" )
 end
 
 ENT.PrintName 		= "Media Player TV"
