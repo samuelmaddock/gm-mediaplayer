@@ -108,6 +108,18 @@ if CLIENT then
 		return table.concat({ StartHtml, html, EndHtml })
 	end
 
+	local JS_InjectScript = [[
+(function () {
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.src = '%s';
+	document.getElementsByTagName('head')[0].appendChild(script);
+}());]]
+
+	function SERVICE:InjectScript( uri )
+		self.Browser:QueueJavascript( JS_InjectScript:format( uri ) )
+	end
+
 	--[[---------------------------------------------------------
 		Draw 3D2D
 	-----------------------------------------------------------]]
