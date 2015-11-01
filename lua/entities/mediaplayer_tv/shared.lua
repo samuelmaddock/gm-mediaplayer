@@ -1,6 +1,6 @@
 AddCSLuaFile()
 
-ENT.PrintName 		= "Media Player Example"
+ENT.PrintName 		= "Media Player TV"
 ENT.Author 			= "Samuel Maddock"
 ENT.Instructions 	= "Right click on the TV to see available Media Player options. Alternatively, press E on the TV to turn it on."
 ENT.Category 		= "Media Player"
