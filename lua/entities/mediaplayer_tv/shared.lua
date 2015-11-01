@@ -1,5 +1,10 @@
 AddCSLuaFile()
 
+if SERVER then
+	resource.AddFile( "models/gmod_tower/suitetv_large.mdl" )
+	resource.AddFile( "materials/models/gmod_tower/suitetv_large.vmt" )
+end
+
 ENT.PrintName 		= "Media Player TV"
 ENT.Author 			= "Samuel Maddock"
 ENT.Instructions 	= "Right click on the TV to see available Media Player options. Alternatively, press E on the TV to turn it on."
