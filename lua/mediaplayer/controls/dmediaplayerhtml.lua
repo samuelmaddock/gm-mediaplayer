@@ -57,7 +57,7 @@ function PANEL:Think()
 		if not self._loading then
 
 			-- Get the page URL
-			self:RunJavascript("gmod.getUrl(window.location.href, false);")
+			self:FetchPageURL()
 
 			self._loading = true
 			self:OnStartLoading()
@@ -70,7 +70,7 @@ function PANEL:Think()
 		if self._loading then
 
 			-- Get the page URL
-			self:RunJavascript("gmod.getUrl(window.location.href, true);")
+			self:FetchPageURL()
 
 			-- Hack to add window object callbacks
 			if self.Callbacks.window then
@@ -94,6 +94,17 @@ function PANEL:Think()
 
 	end
 
+	-- HACK: Poll page for URL change
+	if not self._nextUrlPoll or self._nextUrlPoll < RealTime() then
+		self:FetchPageURL()
+		self._nextUrlPoll = RealTime() + 1
+	end
+
+end
+
+function PANEL:FetchPageURL()
+	local js = "gmod.getUrl(window.location.href);"
+	self:RunJavascript(js)
 end
 
 function PANEL:GetURL()
