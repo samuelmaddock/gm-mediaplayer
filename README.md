@@ -10,4 +10,5 @@ Media Player is an addon for Garry's Mod which features several media streaming 
 Place the contents of this GitHub repository into a new addon folder within your `garrysmod/addons/` directory. For those unfamiliar with Git, press the `Download ZIP` button in the right-hand sidebar.
 
 If you'd only like to use the addon and not modify the source code, you can subscribe to the item on Steam Workshop:
+
 [![Steam Workshop](http://www.pixeltailgames.com/elevator/images/workshop_button.png)](http://steamcommunity.com/sharedfiles/filedetails/?id=546392647)
