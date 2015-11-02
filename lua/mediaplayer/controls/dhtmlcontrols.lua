@@ -112,36 +112,34 @@ function PANEL:SetHTML( html )
 	self.AddressBar:SetText( self:GetHomeURL() )
 	self:UpdateHistory( self:GetHomeURL() )
 
-	local OldFunc = self.HTML.OpeningURL
-	self.HTML.OpeningURL = function( panel, url, target, postdata, bredirect )
+	local OnFinishLoading = self.HTML.OnFinishLoading
+	self.HTML.OnFinishLoading = function( panel )
 
-		self.NavStack = self.NavStack + 1
-		self.AddressBar:SetText( url )
-		self:StartedLoading()
-
-		if ( OldFunc ) then
-			OldFunc( panel, url, target, postdata, bredirect )
-		end
-
-		self:UpdateHistory( url )
-
-	end
-
-	local OldFunc = self.HTML.FinishedURL
-	self.HTML.FinishedURL = function( panel, url )
+		local url = self.HTML:GetURL()
 
 		self.AddressBar:SetText( url )
 		self:FinishedLoading()
 
-		-- Check for valid URL
-		if MediaPlayer.ValidUrl( url ) then
-			self.RequestButton:SetDisabled( false )
-		else
-			self.RequestButton:SetDisabled( true )
+		if OnFinishLoading then
+			OnFinishLoading( panel )
 		end
 
-		if ( OldFunc ) then
-			OldFunc( panel, url )
+	end
+
+	local OnURLChanged = self.HTML.OnURLChanged
+	self.HTML.OnURLChanged = function ( panel, url )
+
+		self.AddressBar:SetText( url )
+		self.NavStack = self.NavStack + 1
+		self:StartedLoading()
+		self:UpdateHistory( url )
+
+		-- Check for valid URL
+		local isValidUrl = MediaPlayer.ValidUrl( url )
+		self.RequestButton:SetDisabled( not isValidUrl )
+
+		if ( OnURLChanged ) then
+			OnURLChanged( panel, url )
 		end
 
 	end

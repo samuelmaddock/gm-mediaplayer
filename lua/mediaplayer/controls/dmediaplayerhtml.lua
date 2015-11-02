@@ -37,14 +37,8 @@ function PANEL:Init()
 		end )
 	end
 
-	self:AddFunction( "gmod", "getUrl", function( url, finished )
-		self.URL = url
-
-		if finished then
-			self:FinishedURL( url )
-		else
-			self:OpeningURL( url )
-		end
+	self:AddFunction( "gmod", "getUrl", function( url )
+		self:SetURL( url )
 	end )
 
 end
