@@ -7,6 +7,7 @@ DEFINE_BASECLASS( "mp_service_base" )
 SERVICE.StreamOptions = { "noplay", "noblock" }
 
 local MAX_LOAD_ATTEMPTS = 3
+local Audio3DCvar = MediaPlayer.Cvars.Audio3D
 
 function SERVICE:Volume( volume )
 
@@ -47,7 +48,8 @@ function SERVICE:Play()
 		local settings = table.Copy(self.StreamOptions)
 
 		-- .ogg files can't seem to use 3d?
-		if IsValid(self.Entity) and not self.url:match(".ogg") then
+		if Audio3DCvar:GetBool() and IsValid(self.Entity) and
+				not self.url:match(".ogg") then
 			table.insert(settings, "3d")
 		end
 
