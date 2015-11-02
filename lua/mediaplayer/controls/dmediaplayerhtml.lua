@@ -126,6 +126,9 @@ end
 
 function PANEL:SetSize( w, h, fullscreen )
 
+	local keyboardEnabled = self:IsKeyboardInputEnabled()
+	local mouseEnabled = self:IsMouseInputEnabled()
+
 	if fullscreen then
 
 		-- Cache fullscreen size
@@ -149,6 +152,9 @@ function PANEL:SetSize( w, h, fullscreen )
 	else
 		self._OrigSize = nil
 	end
+
+	self:SetKeyBoardInputEnabled( keyboardEnabled )
+	self:SetMouseInputEnabled( mouseEnabled )
 
 	if not (w and h) then return end
 
