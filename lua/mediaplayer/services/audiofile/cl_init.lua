@@ -195,78 +195,11 @@ local surface = surface
 
 local VisualizerBgColor = Color(44, 62, 80, 255)
 local VisualizerBarColor = Color(52, 152, 219)
-
-local BandGridHeight = 16
-local BandGridWidth = math.ceil( BandGridHeight * 16/9 )
-
-local NumBands = 256
-local BandStepSize = math.floor(NumBands / BandGridWidth)
-
-local BarPadding = 1
-
--- local BandGrid = {}
-
--- for x = 1, BandGridWidth do
--- 	BandGrid[x] = {}
--- 	for y = 1, BandGridHeight do
--- 		BandGrid[x][y] =
--- 	end
--- end
-
--- http://inchoatethoughts.com/a-wpf-spectrum-analyzer-for-audio-visualization
--- http://wpfsvl.codeplex.com/SourceControl/latest#WPFSoundVisualizationLib/Main/Source/WPFSoundVisualizationLibrary/Spectrum Analyzer/SpectrumAnalyzer.cs
-
---[[function MEDIAPLAYER:DrawSpectrumAnalyzer( media, w, h )
-
-	local channel = media.Channel
-
-	if channel:GetState() ~= GMOD_CHANNEL_PLAYING then
-		return
-	end
-
-	local fft = {}
-	channel:FFT( fft, FFT_512 )
-
-	surface.SetDrawColor(VisualizerBarColor)
-
-	local BarWidth = math.floor(w / BandGridWidth)
-	local b0 = 1
-
-	for x = 0, BandGridWidth do
-		local sum = 0
-		local sc = 0
-		local b1 = math.pow(2, x * 10.0 / BandGridWidth)
-
-		if (b1 > NumBands) then b1 = NumBands end
-		if (b1<=b0) then b1 = b0 end
-
-		sc=10+b1-b0
-
-		while b0 < b1 do
-			sum = sum + fft[b0]
-			b0 = b0 + 1
-		end
-
-		local BarHeight = math.floor(math.sqrt(sum/math.log10(sc)) * 1.7 * h)
-		BarHeight = math.Clamp(BarHeight, 0, h)
-
-		surface.DrawRect(
-			(x * BarWidth) + BarPadding,
-			h - BarHeight,
-			BarWidth - (BarPadding * 2),
-			BarHeight
-		)
-	end
-
-end]]
+local VisualizerBarAlpha = 180
 
 local BANDS	= 28
 
 function DrawSpectrumAnalyzer( channel, w, h )
-
-	-- Background
-	surface.SetDrawColor( VisualizerBgColor )
-	surface.DrawRect( 0, 0, w, h )
 
 	if channel:GetState() ~= GMOD_CHANNEL_PLAYING then
 		return
@@ -297,6 +230,7 @@ function DrawSpectrumAnalyzer( channel, w, h )
 		y = math.Clamp(y, 0, h)
 
 		local col = HSVToColor( 120 - (120 * y/h), 1, 1 )
+		col.a = VisualizerBarAlpha
 		surface.SetDrawColor(col)
 
 		surface.DrawRect(
@@ -309,7 +243,58 @@ function DrawSpectrumAnalyzer( channel, w, h )
 end
 
 
+local HTMLMaterial = HTMLMaterial
+local color_white = color_white
+
+local HTMLMAT_STYLE_ARTWORK = 'htmlmat.style.artwork'
+AddHTMLMaterialStyle( HTMLMAT_STYLE_ARTWORK, {
+	width = 720,
+	height = 480,
+	html = [[
+<style type="text/css">
+html, body {
+	width: 100%%;
+	height: 100%%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+#mat {
+	background: no-repeat 50%% 50%%;
+	background-size: cover;
+	width: 100%%;
+	height: 100%%;
+}
+</style>
+
+<div id="mat"></div>
+
+<script type="application/javascript">
+var src = '%s';
+var img = new Image();
+img.onload = function() {
+	setTimeout(function() {
+		gmod.imageLoaded();
+	}, 100);
+};
+img.src = src;
+
+var mat = document.getElementById('mat');
+mat.style.backgroundImage = 'url('+src+')';
+</script>
+]]
+})
+
 function SERVICE:Draw( w, h )
+
+	surface.SetDrawColor( VisualizerBgColor )
+	surface.DrawRect( 0, 0, w, h )
+
+	local thumbnail = self:Thumbnail()
+	if thumbnail then
+		DrawHTMLMaterial( thumbnail, HTMLMAT_STYLE_ARTWORK, w, h )
+	end
 
 	if IsValid(self.Channel) then
 		DrawSpectrumAnalyzer( self.Channel, w, h )
