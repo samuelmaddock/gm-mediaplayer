@@ -22,9 +22,10 @@ function mpnet.ReadMedia()
 	end
 
 	local url = net.ReadString()
-	local title = net.ReadString()
-	local duration = mpnet.ReadDuration()
-	local thumbnail = net.ReadString()
+	local metadata = net.ReadTable()
+	-- local title = net.ReadString()
+	-- local duration = mpnet.ReadDuration()
+	-- local thumbnail = net.ReadString()
 	local ownerName = net.ReadString()
 	local ownerSteamId = net.ReadString()
 
@@ -34,13 +35,7 @@ function mpnet.ReadMedia()
 	-- Set uniqud ID to match the server
 	media._id = uid
 
-	-- Set metadata
-	media._metadata = {
-		title = title,
-		duration = duration,
-		thumbnail = thumbnail
-	}
-
+	media:SetMetadata( metadata, true )
 	media._OwnerName = ownerName
 	media._OwnerSteamID = ownerSteamId
 
@@ -51,9 +46,7 @@ function mpnet.WriteMedia( media )
 	if media then
 		net.WriteString( media:UniqueID() )
 		net.WriteString( media:Url() )
-		net.WriteString( media:Title() )
-		mpnet.WriteDuration( media:Duration() )
-		net.WriteString( media:Thumbnail() )
+		net.WriteTable( media._metadata or {} )
 		net.WriteString( media:OwnerName() )
 		net.WriteString( media:OwnerSteamID() )
 	else

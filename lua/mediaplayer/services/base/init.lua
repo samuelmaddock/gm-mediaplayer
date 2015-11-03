@@ -9,20 +9,6 @@ function SERVICE:SetOwner( ply )
 	self._OwnerSteamID = ply:SteamID()
 end
 
-function SERVICE:SetMetadata( metadata, new )
-	self._metadata = metadata
-
-	if new then
-		local title = self._metadata.title or "Unknown"
-		title = title:sub(1, MaxTitleLength)
-
-		-- Escape any '%' char with a letter following it
-		title = title:gsub('%%%a', '%%%%')
-
-		self._metadata.title = title
-	end
-end
-
 function SERVICE:GetMetadata( callback )
 
 	if not self._metadata then
