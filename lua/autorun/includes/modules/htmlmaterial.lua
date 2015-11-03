@@ -67,8 +67,11 @@ local function onImageLoaded(key, browser)
 	end
 
 	if idx > 0 then
+		-- html materials are unique to each browser; re-using a browser will
+		-- result in previous materials being updated. Therefore, used browsers
+		-- must be destroyed rather than pooled.
 		local download = downloads[idx]
-		browserpool.release(browser)
+		browserpool.release(browser, true)
 		table.remove(downloads, idx)
 	end
 

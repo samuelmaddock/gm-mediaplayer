@@ -39,7 +39,7 @@ local numMin = 2
 -- Maximum number of active browsers to be pooled.
 -- @type Number
 --
-local numMax = 5
+local numMax = 4
 
 ---
 -- Number of currently active browsers.
@@ -219,7 +219,7 @@ end
 -- @param panel		Browser panel to be released.
 -- @return boolean	Whether the panel was successfully removed.
 --
-function browserpool.release( panel )
+function browserpool.release( panel, destroy )
 
 	if not panel then return end
 
@@ -239,7 +239,7 @@ function browserpool.release( panel )
 	end
 
 	-- Resolve an open promise if one exists
-	if numPending > 0 then
+	if numPending > 0 and not destroy then
 
 		-- Get the earliest request first
 		-- TODO: this seems to grab nil valued keys?
@@ -278,7 +278,7 @@ function browserpool.release( panel )
 				print( "browserpool: Destroyed browser [Active: "..numActive.."]" )
 			end
 
-		else
+		elseif not destroy then
 
 			-- Cleanup panel
 			setupPanel( panel )
