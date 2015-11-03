@@ -1,6 +1,9 @@
 local ipairs = ipairs
 local table = table
 local timer = timer
+local ceil = math.ceil
+local log = math.log
+local pow = math.pow
 
 local tblconcat = table.concat
 
@@ -77,12 +80,13 @@ end
 
 local DefaultMat = Material("vgui/white")
 local DefaultWidth = 128
+local DefaultStyle = {}
 
 local function enqueueUrl( url, styleName, key )
 	cache[key] = DefaultMat
 
 	browserpool.get(function(browser)
-		local style = styles[styleName] or {}
+		local style = styles[styleName] or DefaultStyle
 		local w = style.width or DefaultWidth
 		local h = style.height or w
 
@@ -107,7 +111,7 @@ local function enqueueUrl( url, styleName, key )
 			TimerRunning = true
 		end
 
-		local html = embedHtml:format(url, style.css or '')
+		local html = (style.html or embedHtml):format(url, style.css or '')
 		browser:SetHTML( html )
 	end)
 end
@@ -144,6 +148,35 @@ function HTMLMaterial( url, style )
 
 	-- Return cached URL
 	return cache[key]
+end
+
+local SetDrawColor = surface.SetDrawColor
+local SetMaterial = surface.SetMaterial
+local DrawTexturedRect = surface.DrawTexturedRect
+
+function CeilPower2(n)
+	return pow(2, ceil(log(n) / log(2)))
+end
+
+function DrawHTMLMaterial( url, styleName, w, h )
+	local mat = HTMLMaterial( url, styleName )
+	local style = styles[styleName] or DefaultStyle
+
+	-- Desired dimensions
+	local width = style.width or DefaultWidth
+	local height = style.height or w
+
+	-- Convert to scalar
+	w = w / width
+	h = h / height
+
+	-- Fix for non-power-of-two html panel size
+	width = CeilPower2(width)
+	height = CeilPower2(height)
+
+	SetDrawColor( color_white )
+	SetMaterial( mat )
+	DrawTexturedRect( 0, 0, w * width, h * height )
 end
 
 ---
