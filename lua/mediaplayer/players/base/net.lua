@@ -24,6 +24,7 @@ function mpnet.ReadMedia()
 	local url = net.ReadString()
 	local title = net.ReadString()
 	local duration = mpnet.ReadDuration()
+	local thumbnail = net.ReadString()
 	local ownerName = net.ReadString()
 	local ownerSteamId = net.ReadString()
 
@@ -36,7 +37,8 @@ function mpnet.ReadMedia()
 	-- Set metadata
 	media._metadata = {
 		title = title,
-		duration = duration
+		duration = duration,
+		thumbnail = thumbnail
 	}
 
 	media._OwnerName = ownerName
@@ -51,6 +53,7 @@ function mpnet.WriteMedia( media )
 		net.WriteString( media:Url() )
 		net.WriteString( media:Title() )
 		mpnet.WriteDuration( media:Duration() )
+		net.WriteString( media:Thumbnail() )
 		net.WriteString( media:OwnerName() )
 		net.WriteString( media:OwnerSteamID() )
 	else
