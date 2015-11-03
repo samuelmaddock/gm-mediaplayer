@@ -65,6 +65,7 @@ if CLIENT then
 
 		if self._promise then
 			self._promise:Cancel('Service has been stopped')
+			self._promise = nil
 		end
 
 		if self.Browser then

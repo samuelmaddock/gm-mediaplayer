@@ -122,12 +122,15 @@ end
 local function removePromise( promise )
 	local id = promise:GetId()
 
-	if not table.remove( pending, id ) then
+	if not pending[id] then
 		ErrorNoHalt( "browserpool: Failed to remove promise.\n" )
 		print( promise, id )
 		debug.Trace()
 		return false
 	end
+
+	pending[id] = nil
+	numPending = numPending - 1
 
 	return true
 end
@@ -242,17 +245,14 @@ function browserpool.release( panel, destroy )
 	if numPending > 0 and not destroy then
 
 		-- Get the earliest request first
-		-- TODO: this seems to grab nil valued keys?
 		local id = table.GetFirstKey( pending )
-
 		local promise = pending[id]
-		pending[id] = nil
 
 		-- Cleanup panel
 		setupPanel( panel )
 
 		promise:Resolve( panel )
-		numPending = numPending - 1
+		removePromise( promise )
 
 	else
 
