@@ -31,11 +31,16 @@ local function OnReceiveMetadata( self, callback, body )
 		return
 	end
 
+	local thumbnail = resp.artwork_url
+	if thumbnail then
+		thumbnail = string.Replace( thumbnail, 'large', 't500x500' )
+	end
+
 	-- http://developers.soundcloud.com/docs/api/reference#tracks
 	local metadata = {}
 	metadata.title		= (resp.title or "[Unknown title]") .. " - " .. artist
 	metadata.duration	= math.ceil(tonumber(resp.duration) / 1000) -- responds in ms
-	metadata.thumbnail	= resp.artwork_url
+	metadata.thumbnail	= thumbnail
 
 	metadata.extra = {
 		stream = stream
