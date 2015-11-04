@@ -15,6 +15,8 @@ local PANEL = {}
 
 function PANEL:Init()
 
+	self:SetName( "MediaPlayerSidebar" )
+
 	self:SetPaintBackgroundEnabled( true )
 	self:SetPaintBorderEnabled( false )
 
@@ -140,7 +142,7 @@ function SidebarPresenter:ShowSidebar( mp )
 	sidebar:MakePopup()
 	sidebar:ParentToHUD()
 
-	sidebar:SetKeyboardInputEnabled( false )
+	-- sidebar:SetKeyboardInputEnabled( false )
 	sidebar:SetMouseInputEnabled( true )
 
 	sidebar:SetZPos(-99)
@@ -152,6 +154,8 @@ function SidebarPresenter:ShowSidebar( mp )
 end
 
 function SidebarPresenter:HideSidebar()
+
+	if not self.Sidebar then return end
 
 	self:ClearEvents()
 
@@ -200,10 +204,14 @@ function MediaPlayer.HideSidebar()
 
 end
 
--- TODO: figure out a better way to bind showing the sidebar menu
--- inputhook.AddKeyPress( KEY_PAGEDOWN, "MP.ShowSidebar", function() MediaPlayer.ShowSidebar() end )
--- inputhook.AddKeyRelease( KEY_PAGEDOWN, "MP.HideSidebar", function() MediaPlayer.HideSidebar() end )
-
+hook.Add( "OnContextMenuOpen", "MP.ShowSidebar", function()
+	if hook.Call( "HUDShouldDraw", GAMEMODE, "MediaPlayerSidebar" ) then
+		MediaPlayer.ShowSidebar()
+	end
+end )
+hook.Add( "OnContextMenuClose", "MP.HideSidebar", function()
+	MediaPlayer.HideSidebar()
+end )
 
 --[[--------------------------------------------
 	Sidebar UI test - remove this eventually
