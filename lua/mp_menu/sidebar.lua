@@ -205,9 +205,7 @@ function MediaPlayer.HideSidebar()
 end
 
 hook.Add( "OnContextMenuOpen", "MP.ShowSidebar", function()
-	if hook.Call( "HUDShouldDraw", GAMEMODE, "MediaPlayerSidebar" ) then
-		MediaPlayer.ShowSidebar()
-	end
+	MediaPlayer.ShowSidebar()
 end )
 hook.Add( "OnContextMenuClose", "MP.HideSidebar", function()
 	MediaPlayer.HideSidebar()
