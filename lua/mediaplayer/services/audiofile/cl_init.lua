@@ -195,7 +195,7 @@ local surface = surface
 
 local VisualizerBgColor = Color(44, 62, 80, 255)
 local VisualizerBarColor = Color(52, 152, 219)
-local VisualizerBarAlpha = 180
+local VisualizerBarAlpha = 220
 
 local BANDS	= 28
 
