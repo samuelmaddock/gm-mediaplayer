@@ -211,6 +211,7 @@ function MEDIA_ITEM:PerformLayout()
 	self.MediaTime:AlignLeft( self.HPadding )
 	self.MediaTime:AlignBottom( self.VPadding - 3 )
 
+	self.FavBtn:Hide()
 	self.FavBtn:AlignTop( self.VPadding )
 	self.FavBtn:AlignRight( self.HPadding )
 

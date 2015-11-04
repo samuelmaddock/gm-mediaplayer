@@ -79,7 +79,7 @@ function PANEL:OnMediaChanged( media )
 		self.AddedByLbl:SetPlayer( media:GetOwner(), media:OwnerName(), media:OwnerSteamID() )
 
 		self.AddedByLbl:Show()
-		self.FavBtn:Show()
+		self.FavBtn:Hide()
 		self.BtnList:Show()
 	else
 		self.MediaTitle:SetText( "No media playing" )
