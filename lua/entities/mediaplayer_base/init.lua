@@ -39,35 +39,20 @@ end
 
 function ENT:OnEntityCopyTableFinish( data )
 	local mp = self:GetMediaPlayer()
-	local queue = table.Copy( mp:GetMediaQueue() )
-
-	local media = mp:GetMedia()
-	if media then
-		table.insert( queue, 1, table.Copy( media ) )
-	end
-
-	data.MediaPlayerPersistData = {
-		queue = queue
-	}
-
+	data.MediaPlayerSnapshot = mp:GetSnapshot()
 	data._mp = nil
 end
 
 function ENT:PostEntityPaste( ply, ent, createdEnts )
-	local mpdata = self.MediaPlayerPersistData
-	if not mpdata then return end
+	local snapshot = self.MediaPlayerSnapshot
+	if not snapshot then return end
 
 	local mp = self:GetMediaPlayer()
 	self:SetMediaPlayerID( mp:GetId() )
 
-	for _, mediaData in ipairs( mpdata.queue ) do
-		local media = MediaPlayer.GetMediaForUrl( mediaData.url )
-		if not media then continue end
-		table.Merge( media, mediaData )
-		mp:AddMedia( media )
-	end
+	mp:RestoreSnapshot( snapshot )
 
-	mp:QueueUpdated()
+	self.MediaPlayerSnapshot = nil
 end
 
 function ENT:KeyValue( key, value )

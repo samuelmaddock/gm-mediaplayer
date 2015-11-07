@@ -173,6 +173,40 @@ function MEDIAPLAYER:IsPlayerPrivileged( ply )
 	return ply == self:GetOwner() or ply:IsAdmin()
 end
 
+function MEDIAPLAYER:GetSnapshot()
+	local queue = table.Copy( self:GetMediaQueue() )
+
+	local media = self:GetMedia()
+	if media then
+		table.insert( queue, 1, table.Copy( media ) )
+	end
+
+	return {
+		queue = queue,
+		queueRepeat = self:GetQueueRepeat()
+	}
+end
+
+function MEDIAPLAYER:RestoreSnapshot( snapshot )
+	self._Queue = {}
+
+	self:SetMedia( nil )
+
+	if snapshot.queue then
+		for _, mediaSnapshot in ipairs( snapshot.queue ) do
+			local media = MediaPlayer.GetMediaForUrl( mediaSnapshot.url )
+			if media then
+				table.Merge( media, mediaSnapshot )
+				self:AddMedia( media )
+			end
+		end
+
+		self:QueueUpdated()
+	end
+
+	self:SetQueueRepeat( snapshot.queueRepeat )
+end
+
 ---
 -- Media player update
 --
@@ -279,6 +313,14 @@ function MEDIAPLAYER:IsQueueEmpty()
 	return #self._Queue == 0
 end
 
+function MEDIAPLAYER:GetQueueRepeat()
+	return self._QueueRepeat
+end
+
+function MEDIAPLAYER:SetQueueRepeat( shouldRepeat )
+	self._QueueRepeat = shouldRepeat
+end
+
 ---
 -- Called when the queue is updated; emits a change event.
 --
@@ -363,13 +405,16 @@ function MEDIAPLAYER:OnMediaFinished( media )
 	self._Media = nil
 
 	if CLIENT and IsValid(media) then
-		-- TODO: Reuse browser if it was the same video type
 		media:Stop()
 	end
 
 	self:emit('mediaFinished', media)
 
 	if SERVER then
+		if media and self:GetQueueRepeat() then
+			self:AddMedia( media )
+		end
+
 		self:NextMedia()
 	end
 
