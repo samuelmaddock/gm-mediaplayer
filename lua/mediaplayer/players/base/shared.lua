@@ -2,6 +2,7 @@ local MediaPlayer = MediaPlayer
 
 local HasFocus = system.HasFocus
 local MuteUnfocused = MediaPlayer.Cvars.MuteUnfocused
+local CeilPower2 = MediaPlayerUtils.CeilPower2
 
 --[[---------------------------------------------------------
 	Base Media Player
@@ -15,7 +16,6 @@ EventEmitter:new(MEDIAPLAYER)
 
 MEDIAPLAYER.Name = "base"
 MEDIAPLAYER.IsMediaPlayer = true
-MEDIAPLAYER.MaxMediaItems = 32
 MEDIAPLAYER.NoMedia = "\4" -- end of transmission character
 
 -- Media Player states
@@ -311,6 +311,16 @@ end
 --
 function MEDIAPLAYER:IsQueueEmpty()
 	return #self._Queue == 0
+end
+
+function MEDIAPLAYER:GetQueueLimit( bNetLength )
+	local limit = MediaPlayer.Cvars.QueueLimit:GetInt()
+
+	if bNetLength then
+		limit = math.max( CeilPower2( limit ) / 2, 2 )
+	end
+
+	return limit
 end
 
 function MEDIAPLAYER:GetQueueRepeat()

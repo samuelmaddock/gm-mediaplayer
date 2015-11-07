@@ -5,8 +5,6 @@ AddCSLuaFile "net.lua"
 include "shared.lua"
 include "net.lua"
 
-local CeilPower2 = MediaPlayerUtils.CeilPower2
-
 -- Additional transmit states
 TRANSMIT_LOCATION = 4
 
@@ -259,7 +257,7 @@ function MEDIAPLAYER:RequestMedia( media, ply )
 	end
 
 	-- Queue must have space for the request
-	if #self._Queue == self.MaxMediaItems then
+	if #self._Queue == self:GetQueueLimit() then
 		self:NotifyPlayer( ply, "The media player queue is full." )
 		return
 	end
@@ -486,7 +484,7 @@ function MEDIAPLAYER:BroadcastUpdate( ply )
 			net.WriteEntity( self:GetOwner() )
 			self.net.WritePlayerState( self:GetPlayerState() )
 			self:NetWriteUpdate( pl )				-- mp type-specific info
-			net.WriteUInt( #self._Queue, CeilPower2(self.MaxMediaItems)/2 )
+			net.WriteUInt( #self._Queue, self:GetQueueLimit(true) )
 			for _, media in ipairs(self._Queue) do
 				self.net.WriteMedia(media)
 				self:OnNetWriteMedia( media, pl )

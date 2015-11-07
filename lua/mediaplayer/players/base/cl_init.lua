@@ -49,7 +49,7 @@ local function OnMediaUpdate( len )
 	mp:ClearMediaQueue()
 
 	-- Read queue information
-	local count = net.ReadUInt( CeilPower2(mp.MaxMediaItems)/2 )
+	local count = net.ReadUInt( mp:GetQueueLimit(true) )
 	for i = 1, count do
 		local media = mp.net.ReadMedia()
 		mp:OnNetReadMedia(media)
