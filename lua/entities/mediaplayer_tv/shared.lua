@@ -6,7 +6,7 @@ if SERVER then
 	resource.AddSingleFile( "materials/entities/mediaplayer_tv.png" )
 end
 
-ENT.PrintName 		= "Media Player TV"
+ENT.PrintName 		= "Big Screen TV"
 ENT.Author 			= "Samuel Maddock"
 ENT.Instructions 	= "Right click on the TV to see available Media Player options. Alternatively, press E on the TV to turn it on."
 ENT.Category 		= "Media Player"
