@@ -7,7 +7,7 @@ if MediaPlayer then
 	end
 end
 
-resource.AddFile "materials/mediaplayer/ui/spritesheet.png"
+resource.AddSingleFile "materials/mediaplayer/ui/spritesheet2015-10-7.png"
 resource.AddFile "resource/fonts/ClearSans-Medium.ttf"
 
 AddCSLuaFile "controls/dmediaplayerhtml.lua"

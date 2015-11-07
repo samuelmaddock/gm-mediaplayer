@@ -4,7 +4,7 @@ local spritesheet = spritesheet
 	Icons spritesheet
 ----------------------------------------------]]
 
-local mpSpritesheetMat = Material( "mediaplayer/ui/spritesheet.png" )
+local mpSpritesheetMat = Material( "mediaplayer/ui/spritesheet2015-10-7.png" )
 local blockSize = 24
 
 local function mpIcon( name, i, j, w, h )

@@ -14,7 +14,6 @@ MediaPlayer.Cvars.AllowWebpages = CreateConVar( "mediaplayer_allow_webpages", 0,
 }, "Allows any webpage to be requested." )
 
 MediaPlayer.Cvars.QueueLimit = CreateConVar( "mediaplayer_queue_limit", 64, {
-	FCVAR_ARCHIVE,
 	FCVAR_REPLICATED,
 	FCVAR_SERVER_CAN_EXECUTE
 }, "Maximum size of a media player queue." )
