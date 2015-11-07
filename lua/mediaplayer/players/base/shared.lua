@@ -341,6 +341,22 @@ function MEDIAPLAYER:SetQueueRepeat( shouldRepeat )
 	self._QueueRepeat = shouldRepeat
 end
 
+function MEDIAPLAYER:GetQueueShuffle()
+	return self._QueueShuffle
+end
+
+function MEDIAPLAYER:SetQueueShuffle( shouldShuffle )
+	self._QueueShuffle = shouldShuffle
+
+	if SERVER then
+		if shouldShuffle then
+			self:ShuffleQueue()
+		else
+			self:SortQueue()
+		end
+	end
+end
+
 ---
 -- Called when the queue is updated; emits a change event.
 --

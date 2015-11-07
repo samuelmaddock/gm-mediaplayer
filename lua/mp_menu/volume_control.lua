@@ -9,7 +9,7 @@ local PANEL = {}
 
 PANEL.Margin = 16
 PANEL.ButtonWidth = 18
-PANEL.ButtonSpacing = 4
+PANEL.ButtonSpacing = 8
 PANEL.BackgroundColor = Color( 28, 100, 157 )
 
 function PANEL:Init()
@@ -26,6 +26,8 @@ function PANEL:Init()
 	if hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER ) then
 		self.RepeatBtn = vgui.Create( "MP.RepeatButton" )
 		self:AddButton( self.RepeatBtn )
+		self.ShuffleBtn = vgui.Create( "MP.ShuffleButton" )
+		self:AddButton( self.ShuffleBtn )
 	end
 
 	self:OnVolumeChanged( MediaPlayer.Volume() )
@@ -49,8 +51,8 @@ end
 
 function PANEL:OnMediaPlayerChanged( mp )
 
-	print("MediaPlayerChanged", mp:GetQueueRepeat())
 	self.RepeatBtn:SetEnabled( mp:GetQueueRepeat() )
+	self.ShuffleBtn:SetEnabled( mp:GetQueueShuffle() )
 
 end
 
@@ -193,3 +195,19 @@ function REPEAT_BTN:DoClick()
 end
 
 derma.DefineControl( "MP.RepeatButton", "", REPEAT_BTN, "MP.SidebarToggleButton" )
+
+
+local SHUFFLE_BTN = {}
+
+function SHUFFLE_BTN:Init()
+	self.BaseClass.Init( self )
+	self:SetIcon( "mp-shuffle" )
+	self:SetTooltip( "Shuffle" )
+end
+
+function SHUFFLE_BTN:DoClick()
+	self.BaseClass.DoClick( self )
+	hook.Run( MP.EVENTS.UI.TOGGLE_SHUFFLE )
+end
+
+derma.DefineControl( "MP.ShuffleButton", "", SHUFFLE_BTN, "MP.SidebarToggleButton" )

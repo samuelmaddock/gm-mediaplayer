@@ -195,8 +195,23 @@ function MEDIAPLAYER:SendMedia( media, ply )
 
 end
 
+local function queueTimeSort( a, b )
+	local atime = a:GetMetadataValue( "queueTime" )
+	local btime = b:GetMetadataValue( "queueTime" )
+
+	return atime < btime
+end
+
 function MEDIAPLAYER:SortQueue()
-	-- by default, the queue is sorted by their add time, no sorting needed
+	if self:GetQueueShuffle() then
+		return -- queue has been shuffled
+	end
+
+	table.sort( self._Queue, queueTimeSort )
+end
+
+function MEDIAPLAYER:ShuffleQueue()
+	self._Queue = MediaPlayerUtils.Shuffle( self._Queue )
 end
 
 --[[---------------------------------------------------------
@@ -470,6 +485,22 @@ function MEDIAPLAYER:RequestRepeat( ply )
 
 end
 
+function MEDIAPLAYER:RequestShuffle( ply )
+
+	if not ( IsValid(ply) and self:HasListener(ply) ) then
+		return
+	end
+
+	if not self:IsPlayerPrivileged(ply) then
+		self:NotifyPlayer(ply, "You don't have permission to do that.")
+		return
+	end
+
+	self:SetQueueShuffle( not self:GetQueueShuffle() )
+	self:BroadcastUpdate()
+
+end
+
 
 --[[---------------------------------------------------------
 	Media Player Updates
@@ -500,6 +531,7 @@ function MEDIAPLAYER:BroadcastUpdate( ply )
 			net.WriteEntity( self:GetOwner() )
 			self.net.WritePlayerState( self:GetPlayerState() )
 			net.WriteBool( self:GetQueueRepeat() )
+			net.WriteBool( self:GetQueueShuffle() )
 			self:NetWriteUpdate( pl )				-- mp type-specific info
 			net.WriteUInt( #self._Queue, self:GetQueueLimit(true) )
 			for _, media in ipairs(self._Queue) do

@@ -20,6 +20,7 @@ MP.EVENTS.UI = {
 	VOTE_MEDIA = "mp.events.ui.voteMedia",
 	TOGGLE_PAUSE = "mp.events.ui.togglePause",
 	TOGGLE_REPEAT = "mp.events.ui.toggleRepeat",
+	TOGGLE_SHUFFLE = "mp.events.ui.toggleShuffle",
 	SEEK = "mp.events.ui.seek",
 
 	START_SEEKING = "mp.events.ui.startSeeking",

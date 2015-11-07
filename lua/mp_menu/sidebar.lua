@@ -114,6 +114,10 @@ function SidebarPresenter:SetupEvents()
 		MediaPlayer.RequestRepeat( mp )
 	end )
 
+	self:RegisterHook( MP.EVENTS.UI.TOGGLE_SHUFFLE, function()
+		MediaPlayer.RequestShuffle( mp )
+	end )
+
 	self:RegisterHook( MP.EVENTS.UI.SEEK, function( seekTime )
 		MediaPlayer.Seek( mp, seekTime )
 	end )

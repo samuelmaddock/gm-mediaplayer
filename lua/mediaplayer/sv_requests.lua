@@ -6,8 +6,9 @@ util.AddNetworkString( "MEDIAPLAYER.RequestSkip" )
 util.AddNetworkString( "MEDIAPLAYER.RequestSeek" )
 util.AddNetworkString( "MEDIAPLAYER.RequestRemove" )
 util.AddNetworkString( "MEDIAPLAYER.RequestRepeat" )
+util.AddNetworkString( "MEDIAPLAYER.RequestShuffle" )
 
-local REQUEST_DELAY = 1
+local REQUEST_DELAY = 0.2
 
 local function RequestWrapper( func )
 	local nextRequest
@@ -135,5 +136,15 @@ net.Receive( "MEDIAPLAYER.RequestRepeat", RequestWrapper(function(mp, ply)
 	end
 
 	mp:RequestRepeat( ply )
+
+end) )
+
+net.Receive( "MEDIAPLAYER.RequestShuffle", RequestWrapper(function(mp, ply)
+
+	if MediaPlayer.DEBUG then
+		print("MEDIAPLAYER.RequestShuffle:", mp:GetId(), ply)
+	end
+
+	mp:RequestShuffle( ply )
 
 end) )

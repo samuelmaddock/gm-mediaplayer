@@ -45,6 +45,9 @@ local function OnMediaUpdate( len )
 	local queueRepeat = net.ReadBool()
 	mp:SetQueueRepeat( queueRepeat )
 
+	local queueShuffle = net.ReadBool()
+	mp:SetQueueShuffle( queueShuffle )
+
 	-- Read extended update information
 	mp:NetReadUpdate()
 

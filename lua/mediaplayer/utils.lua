@@ -69,6 +69,33 @@ function utils.FormatSeconds(sec)
 	end
 end
 
+-- https://github.com/xfbs/PiL3/blob/master/18MathLibrary/shuffle.lua
+function utils.Shuffle(list)
+    -- make and fill array of indices
+    local indices = {}
+    for i = 1, #list do
+        indices[#indices+1] = i
+    end
+
+    -- create shuffled list
+    local shuffled = {}
+    for i = 1, #list do
+        -- get a random index
+        local index = math.random(#indices)
+
+        -- get the value
+        local value = list[indices[index]]
+
+        -- remove it from the list so it won't be used again
+        table.remove(indices, index)
+
+        -- insert into shuffled array
+        shuffled[#shuffled+1] = value
+    end
+
+    return shuffled
+end
+
 if CLIENT then
 
 	local CeilPower2 = utils.CeilPower2

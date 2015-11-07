@@ -175,3 +175,14 @@ function MediaPlayer.RequestRepeat( mp )
 	net.SendToServer()
 
 end
+
+function MediaPlayer.RequestShuffle( mp )
+
+	local mpId = GetMediaPlayerId( mp )
+	if not mpId then return end
+
+	net.Start( "MEDIAPLAYER.RequestShuffle" )
+		net.WriteString( mpId )
+	net.SendToServer()
+
+end
