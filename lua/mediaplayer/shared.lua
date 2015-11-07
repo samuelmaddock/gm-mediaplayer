@@ -8,11 +8,7 @@ include "utils.lua"
 -----------------------------------------------------------]]
 
 MediaPlayer.Cvars = {}
-MediaPlayer.Cvars.Debug = CreateConVar( "mediaplayer_debug", 0, {
-	FCVAR_DONTRECORD,
-	FCVAR_REPLICATED,
-	FCVAR_SERVER_CAN_EXECUTE
-}, "Enables media player debug mode; logs a bunch of actions into the console." )
+MediaPlayer.Cvars.Debug = CreateConVar( "mediaplayer_debug", 0, FCVAR_DONTRECORD, "Enables media player debug mode; logs a bunch of actions into the console." )
 
 MediaPlayer.DEBUG = MediaPlayer.Cvars.Debug:GetBool()
 
