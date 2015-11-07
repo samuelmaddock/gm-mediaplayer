@@ -18,9 +18,12 @@ local embedHtml = [[
 	<meta charset="utf-8">
 </head>
 <body>
-	<img id="mat" src="%s" width="100%%" height="100%%">
+	<script>
+	var src = '%s';
+	</script>
+	<img id="mat" width="100%%" height="100%%">
 
-	<style type="text/css">
+	<style>
 	html, body {
 		width: 100%%;
 		height: 100%%;
@@ -31,13 +34,17 @@ local embedHtml = [[
 	%s
 	</style>
 
-	<script type="application/javascript">
+	<script>
 	var mat = document.getElementById('mat');
 	mat.onload = function() {
 		setTimeout(function() {
 			gmod.imageLoaded();
 		}, 100);
 	};
+	mat.onerror = function() {
+		gmod.imageLoaded();
+	};
+	mat.src = src;
 	</script>
 </body>
 </html>]]
@@ -188,7 +195,13 @@ end
 -- @param name		Style name.
 -- @param params	Table of style parameters.
 --
-function AddHTMLMaterialStyle(name, params)
+function AddHTMLMaterialStyle( name, params, base )
+	params = params or {}
+
+	if base then
+		table.Merge( params, table.Copy( styles[base] or {} ) )
+	end
+
 	styles[name] = params
 end
 
@@ -197,9 +210,13 @@ HTMLMAT_STYLE_GRAYSCALE  = 'htmlmat.style.grayscale'
 HTMLMAT_STYLE_SEPIA      = 'htmlmat.style.sepia'
 HTMLMAT_STYLE_INVERT     = 'htmlmat.style.invert'
 HTMLMAT_STYLE_CIRCLE     = 'htmlmat.style.circle'
+HTMLMAT_STYLE_COVER      = 'htmlmat.style.cover'
 
 AddHTMLMaterialStyle( HTMLMAT_STYLE_BLUR, {
-	css = [[img { -webkit-filter: blur(2px); }]]
+	css = [[img {
+	-webkit-filter: blur(8px);
+	-webkit-transform: scale(1.1, 1.1);
+}]]
 })
 AddHTMLMaterialStyle( HTMLMAT_STYLE_GRAYSCALE, {
 	css = [[img { -webkit-filter: grayscale(1); }]]
@@ -212,4 +229,40 @@ AddHTMLMaterialStyle( HTMLMAT_STYLE_INVERT, {
 })
 AddHTMLMaterialStyle( HTMLMAT_STYLE_CIRCLE, {
 	css = [[img { border-radius: 50%; }]]
+})
+AddHTMLMaterialStyle( HTMLMAT_STYLE_COVER, {
+	html = [[
+<style type="text/css">
+html, body {
+	width: 100%%;
+	height: 100%%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+#mat {
+	background: no-repeat 50%% 50%%;
+	background-size: cover;
+	width: 100%%;
+	height: 100%%;
+}
+</style>
+
+<div id="mat"></div>
+
+<script type="application/javascript">
+var src = '%s';
+var img = new Image();
+img.onload = function() {
+	setTimeout(function() {
+		gmod.imageLoaded();
+	}, 100);
+};
+img.src = src;
+
+var mat = document.getElementById('mat');
+mat.style.backgroundImage = 'url('+src+')';
+</script>
+]]
 })

@@ -249,42 +249,8 @@ local color_white = color_white
 local HTMLMAT_STYLE_ARTWORK = 'htmlmat.style.artwork'
 AddHTMLMaterialStyle( HTMLMAT_STYLE_ARTWORK, {
 	width = 720,
-	height = 480,
-	html = [[
-<style type="text/css">
-html, body {
-	width: 100%%;
-	height: 100%%;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-}
-
-#mat {
-	background: no-repeat 50%% 50%%;
-	background-size: cover;
-	width: 100%%;
-	height: 100%%;
-}
-</style>
-
-<div id="mat"></div>
-
-<script type="application/javascript">
-var src = '%s';
-var img = new Image();
-img.onload = function() {
-	setTimeout(function() {
-		gmod.imageLoaded();
-	}, 100);
-};
-img.src = src;
-
-var mat = document.getElementById('mat');
-mat.style.backgroundImage = 'url('+src+')';
-</script>
-]]
-})
+	height = 480
+}, HTMLMAT_STYLE_COVER )
 
 function SERVICE:Draw( w, h )
 
