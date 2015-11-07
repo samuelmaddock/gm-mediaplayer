@@ -8,10 +8,14 @@ ENT.Model = Model( "models/props/cs_office/tv_plasma.mdl" )
 ENT.MediaPlayerType = "entity"
 ENT.IsMediaPlayerEntity = true
 
+local ErrorModel = "models/error.mdl"
+
 function ENT:Initialize()
 
 	if SERVER then
-		self:SetModel( self.Model )
+		if self:GetModel() == ErrorModel then
+			self:SetModel( self.Model )
+		end
 
 		self:SetUseType( SIMPLE_USE )
 

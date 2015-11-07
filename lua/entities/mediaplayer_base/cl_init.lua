@@ -9,7 +9,7 @@ local TEXT_ALIGN_CENTER = TEXT_ALIGN_CENTER
 local color_white = color_white
 
 local StaticMaterial = Material( "theater/STATIC" )
-local TextScale = 1/8
+local TextScale = 700
 
 function ENT:Draw()
 	self:DrawModel()
@@ -30,8 +30,9 @@ function ENT:DrawMediaPlayerOff()
 		surface.DrawTexturedRect( 0, 0, w, h )
 	End3D2D()
 
-	Start3D2D( pos, ang, TextScale )
-		local tw, th = w / TextScale, h / TextScale
+	local scale = w / TextScale
+	Start3D2D( pos, ang, scale )
+		local tw, th = w / scale, h / scale
 		draw.SimpleText( "Press E to begin watching", "MediaTitle",
 			tw/2, th/2, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 	End3D2D()
