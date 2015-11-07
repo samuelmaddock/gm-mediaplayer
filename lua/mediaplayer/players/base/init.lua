@@ -368,7 +368,7 @@ function MEDIAPLAYER:RequestSkip( ply )
 		print( "MEDIAPLAYER.RequestSkip", ply )
 	end
 
-	self:NextMedia()
+	self:OnMediaFinished()
 
 end
 

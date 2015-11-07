@@ -349,6 +349,20 @@ end
 derma.DefineControl( "MP.RemoveButton", "", REMOVE_BTN, "MP.SidebarButton" )
 
 
+local SKIP_BTN = {}
+
+function SKIP_BTN:Init()
+	self.BaseClass.Init( self )
+	self:SetIcon( "mp-skip" )
+end
+
+function SKIP_BTN:DoClick()
+	hook.Run( MP.EVENTS.UI.SKIP_MEDIA )
+end
+
+derma.DefineControl( "MP.SkipButton", "", SKIP_BTN, "MP.SidebarButton" )
+
+
 --[[--------------------------------------------
 	Vote controls
 ----------------------------------------------]]

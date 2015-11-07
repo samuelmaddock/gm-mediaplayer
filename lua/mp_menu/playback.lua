@@ -39,8 +39,8 @@ function PANEL:Init()
 	hook.Run( MP.EVENTS.UI.SETUP_PLAYBACK_PANEL, self )
 
 	if hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER ) then
-		self.RemoveBtn = vgui.Create( "MP.RemoveButton" )
-		self:AddButton( self.RemoveBtn )
+		self.SkipBtn = vgui.Create( "MP.SkipButton" )
+		self:AddButton( self.SkipBtn )
 	end
 
 	self.AddedByLbl = vgui.Create( "MP.AddedBy", self )

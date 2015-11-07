@@ -102,6 +102,10 @@ function SidebarPresenter:SetupEvents()
 		MediaPlayer.RequestRemove( mp, media:UniqueID() )
 	end )
 
+	self:RegisterHook( MP.EVENTS.UI.SKIP_MEDIA, function()
+		MediaPlayer.Skip( mp )
+	end )
+
 	self:RegisterHook( MP.EVENTS.UI.TOGGLE_PAUSE, function()
 		MediaPlayer.Pause( mp )
 	end )
