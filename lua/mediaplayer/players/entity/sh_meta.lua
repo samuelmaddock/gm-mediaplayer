@@ -33,6 +33,11 @@ function EntityMeta:InstallMediaPlayer( mp, mpId )
 	self._mp = mp
 	self._mp:SetEntity(self)
 
+	local creator = self.GetCreator and self:GetCreator()
+	if IsValid( creator ) then
+		self._mp:SetOwner( creator )
+	end
+
 	if isfunction(self.SetupMediaPlayer) then
 		self:SetupMediaPlayer(mp)
 	end

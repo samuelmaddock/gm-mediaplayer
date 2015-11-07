@@ -38,7 +38,9 @@ local function OnMediaUpdate( len )
 
 	-- Read owner; may be NULL
 	local owner = net.ReadEntity()
-	mp:SetOwner( owner )
+	if IsValid( owner ) then
+		mp:SetOwner( owner )
+	end
 
 	local state = mp.net.ReadPlayerState()
 
