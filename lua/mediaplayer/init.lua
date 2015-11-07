@@ -21,6 +21,7 @@ AddCSLuaFile "sh_mediaplayer.lua"
 AddCSLuaFile "sh_services.lua"
 AddCSLuaFile "sh_history.lua"
 AddCSLuaFile "sh_metadata.lua"
+AddCSLuaFile "sh_cvars.lua"
 
 include "shared.lua"
 
@@ -124,14 +125,16 @@ local function OnMediaRequest( len, ply )
 		print("MEDIAPLAYER.RequestMedia:", url, mp:GetId(), ply)
 	end
 
+	local allowWebpage = MediaPlayer.Cvars.AllowWebpages:GetBool()
+
 	-- Validate the URL
-	if not MediaPlayer.ValidUrl( url ) then
+	if not MediaPlayer.ValidUrl( url ) and not allowWebpage then
 		ply:ChatPrint( "The requested URL wasn't valid." )
 		return
 	end
 
 	-- Build the media object for the URL
-	local media = MediaPlayer.GetMediaForUrl( url )
+	local media = MediaPlayer.GetMediaForUrl( url, allowWebpage )
 	media:NetReadRequest()
 
 	mp:RequestMedia( media, ply )

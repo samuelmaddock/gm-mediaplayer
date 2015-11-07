@@ -2,26 +2,7 @@ MediaPlayer = MediaPlayer or {}
 MP = MediaPlayer
 
 include "utils.lua"
-
---[[---------------------------------------------------------
-	ConVars
------------------------------------------------------------]]
-
-MediaPlayer.Cvars = {}
-MediaPlayer.Cvars.Debug = CreateConVar( "mediaplayer_debug", 0, FCVAR_DONTRECORD, "Enables media player debug mode; logs a bunch of actions into the console." )
-
-MediaPlayer.DEBUG = MediaPlayer.Cvars.Debug:GetBool()
-
-cvars.AddChangeCallback( "mediaplayer_debug", function(name, old, new)
-	MediaPlayer.DEBUG = new == 1
-end)
-
-if SERVER then
-	AddCSLuaFile "cl_cvars.lua"
-else
-	include "cl_cvars.lua"
-end
-
+include "sh_cvars.lua"
 
 --[[---------------------------------------------------------
 	Config
