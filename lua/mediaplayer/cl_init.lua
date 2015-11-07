@@ -45,6 +45,18 @@ function MediaPlayer.Volume( volume )
 
 end
 
+local muted = false
+local previousVolume
+function MediaPlayer.ToggleMute()
+	if not muted then
+		previousVolume = MediaPlayer.Volume()
+	end
+
+	local vol = muted and previousVolume or 0
+	MediaPlayer.Volume( vol )
+	muted = not muted
+end
+
 function MediaPlayer.Resolution( resolution )
 
 	if resolution then

@@ -77,8 +77,7 @@ end
 
 function VOLUME_BUTTON:DoClick()
 
-	-- TODO: Toggle mute
-	print "CLICKED VOLUME BUTTON"
+	MediaPlayer.ToggleMute()
 
 end
 
