@@ -441,6 +441,7 @@ function MEDIAPLAYER:OnMediaFinished( media )
 
 	if SERVER then
 		if media and self:GetQueueRepeat() then
+			media:ResetTime()
 			self:AddMedia( media )
 		end
 

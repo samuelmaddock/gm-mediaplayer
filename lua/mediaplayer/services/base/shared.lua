@@ -196,6 +196,11 @@ function SERVICE:CurrentTime()
 	end
 end
 
+function SERVICE:ResetTime()
+	self._StartTime = nil
+	self._PauseTime = nil
+end
+
 function SERVICE:IsPlaying()
 	return self._playing
 end
