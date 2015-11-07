@@ -1,4 +1,5 @@
 AddCSLuaFile "shared.lua"
+AddCSLuaFile "sh_snapshot.lua"
 AddCSLuaFile "cl_draw.lua"
 AddCSLuaFile "cl_fullscreen.lua"
 AddCSLuaFile "net.lua"
