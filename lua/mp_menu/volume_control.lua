@@ -51,8 +51,10 @@ end
 
 function PANEL:OnMediaPlayerChanged( mp )
 
-	self.RepeatBtn:SetEnabled( mp:GetQueueRepeat() )
-	self.ShuffleBtn:SetEnabled( mp:GetQueueShuffle() )
+	if hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER ) then
+		self.RepeatBtn:SetEnabled( mp:GetQueueRepeat() )
+		self.ShuffleBtn:SetEnabled( mp:GetQueueShuffle() )
+	end
 
 end
 
