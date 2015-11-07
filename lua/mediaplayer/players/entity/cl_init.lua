@@ -113,8 +113,9 @@ function MEDIAPLAYER:Draw( bDrawingDepth, bDrawingSkybox )
 end
 
 function MEDIAPLAYER:SetMedia( media )
-	if media and self.Enable3DAudio then
-		-- Set entity on media for 3D support
+	if media then
+		-- Set entity on media for 3D audio support and setting proper
+		-- browser resolution
 		media.Entity = self:GetEntity()
 	end
 

@@ -11,9 +11,19 @@ if CLIENT then
 	end
 
 	function SERVICE:OnBrowserReady( browser )
-		-- TODO: make sure this resolution is correct
 		local resolution = MediaPlayer.Resolution()
-		MediaPlayer.SetBrowserSize( browser, resolution * 16/9, resolution )
+		local w = resolution * 16/9
+		local h = resolution
+
+		if IsValid(self.Entity) then
+			-- normalize resolution to the entity screen size
+			local config = self.Entity:GetMediaPlayerConfig()
+			local entwidth = config.width or w
+			local entheight = config.height or resolution
+			w = resolution * (entwidth / entheight)
+		end
+
+		MediaPlayer.SetBrowserSize( browser, w, h )
 
 		-- Implement this in a child service
 	end

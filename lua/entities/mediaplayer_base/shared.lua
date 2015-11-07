@@ -31,12 +31,7 @@ function ENT:Initialize()
 	end
 
 	-- Apply player config based on model
-	local model = self:GetModel()
-	local MPModelConfigs = list.Get( "MediaPlayerModelConfigs" )
-	local config = MPModelConfigs and MPModelConfigs[model]
-	if config then
-		self.PlayerConfig = config
-	end
+	self.PlayerConfig = self:GetMediaPlayerConfig()
 end
 
 function ENT:SetupDataTables()
@@ -48,4 +43,11 @@ function ENT:OnRemove()
 	if mp then
 		mp:Remove()
 	end
+end
+
+function ENT:GetMediaPlayerConfig()
+	local model = self:GetModel()
+	local MPModelConfigs = list.Get( "MediaPlayerModelConfigs" )
+	local config = MPModelConfigs and MPModelConfigs[model] or self.PlayerConfig
+	return config
 end
