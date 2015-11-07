@@ -47,8 +47,13 @@ local function LoadMediaPlayer()
 	-- Sandbox includes; these must always be included as the gamemode is still
 	-- set as 'base' when the addon is loading. Can't check if gamemode derives
 	-- Sandbox.
-	IncludeCS "menubar/mp_options.lua"
-	include "properties/mediaplayer.lua"
+	if SERVER then
+		AddCSLuaFile "menubar/mp_options.lua"
+		AddCSLuaFile "properties/mediaplayer.lua"
+	else
+		include "menubar/mp_options.lua"
+		include "properties/mediaplayer.lua"
+	end
 
 	--
 	-- Media Player menu includes; remove these if you would rather not include

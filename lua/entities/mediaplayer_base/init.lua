@@ -75,7 +75,10 @@ end
 
 function ENT:PostEntityPaste( ply, ent, createdEnts )
 	local mpdata = self.MediaPlayerPersistData
+	if not mpdata then return end
+
 	local mp = self:GetMediaPlayer()
+	self:SetMediaPlayerID( mp:GetId() )
 
 	for _, mediaData in ipairs( mpdata.queue ) do
 		local media = MediaPlayer.GetMediaForUrl( mediaData.url )

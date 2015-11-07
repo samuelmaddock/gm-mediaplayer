@@ -1,5 +1,3 @@
-AddCSLuaFile()
-
 local mporder = 3200
 
 --
@@ -110,20 +108,6 @@ AddMediaPlayerProperty( "mp-request-url", {
 
 	Action		=	function( self, ent )
 
-		--[[ Old request dialog
-		Derma_StringRequest(
-			"Media Player",					-- Title
-			"Enter a URL to request:",		-- Subtitle
-			"", -- Default text
-			function( url )
-				MediaPlayer.Request( ent, url )
-			end,
-			function() end,
-			"Request",
-			"Cancel"
-		)
-		]]
-
 		MediaPlayer.OpenRequestMenu( ent )
 
 	end
@@ -131,7 +115,6 @@ AddMediaPlayerProperty( "mp-request-url", {
 
 AddMediaPlayerProperty( "mp-copy-url", {
 	MenuLabel	=	"Copy URL to clipboard",
-	-- MenuIcon	=	"icon16/link.png",
 	MenuIcon	=	"icon16/paste_plain.png",
 
 	Filter		=	function( self, ent, ply )

@@ -1,4 +1,3 @@
-
 hook.Add( "PopulateMenuBar", "MediaPlayerOptions_MenuBar", function( menubar )
 
 	local m = menubar:AddOrGetMenu( "Media Player" )
