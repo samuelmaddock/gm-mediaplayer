@@ -7,6 +7,7 @@ cvars.AddChangeCallback( "mediaplayer_debug", function(name, old, new)
 end)
 
 MediaPlayer.Cvars.AllowWebpages = CreateConVar( "mediaplayer_allow_webpages", 0, {
+	FCVAR_ARCHIVE,
 	FCVAR_NOTIFY,
 	FCVAR_REPLICATED,
 	FCVAR_SERVER_CAN_EXECUTE
