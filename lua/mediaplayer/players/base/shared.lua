@@ -175,13 +175,11 @@ end
 
 function MEDIAPLAYER:GetSnapshot()
 	local queue = table.Copy( self:GetMediaQueue() )
-
 	local media = self:GetMedia()
-	if media then
-		table.insert( queue, 1, table.Copy( media ) )
-	end
 
 	return {
+		media = media,
+		currentTime = media and media:CurrentTime(),
 		queue = queue,
 		queueRepeat = self:GetQueueRepeat()
 	}
@@ -190,9 +188,23 @@ end
 function MEDIAPLAYER:RestoreSnapshot( snapshot )
 	self._Queue = {}
 
-	self:SetMedia( nil )
+	self:SetQueueRepeat( snapshot.queueRepeat )
+
+	if snapshot.media then
+		-- restore currently playing media from where it left off
+		local mediaSnapshot = snapshot.media
+		local media = MediaPlayer.GetMediaForUrl( mediaSnapshot.url )
+		if media then
+			table.Merge( media, mediaSnapshot )
+			media:StartTime( RealTime() - snapshot.currentTime )
+			self:SetMedia( media )
+		end
+	else
+		self:SetMedia( nil )
+	end
 
 	if snapshot.queue then
+		-- restore queue
 		for _, mediaSnapshot in ipairs( snapshot.queue ) do
 			local media = MediaPlayer.GetMediaForUrl( mediaSnapshot.url )
 			if media then
@@ -203,8 +215,6 @@ function MEDIAPLAYER:RestoreSnapshot( snapshot )
 
 		self:QueueUpdated()
 	end
-
-	self:SetQueueRepeat( snapshot.queueRepeat )
 end
 
 ---
@@ -377,7 +387,16 @@ function MEDIAPLAYER:OnMediaStarted( media )
 	if IsValid(media) then
 
 		if SERVER then
-			media:StartTime( RealTime() + 1 )
+			local startTime
+			local currentTime = media:CurrentTime()
+
+			if currentTime > 0 then
+				startTime = RealTime() - currentTime
+			else
+				startTime = RealTime()
+			end
+
+			media:StartTime( startTime + 1 )
 		else
 			self._LastMediaUpdate = RealTime()
 		end
