@@ -294,6 +294,39 @@ end
 derma.DefineControl( "MP.SidebarButton", "", SIDEBAR_BTN, "DIconButton" )
 
 
+local SIDEBAR_TOGGLE_BTN = {
+	m_EnabledColor = color_white
+}
+
+AccessorFunc( SIDEBAR_TOGGLE_BTN, "m_bEnabled", "Enabled" )
+AccessorFunc( SIDEBAR_TOGGLE_BTN, "m_EnabledColor", "EnabledColor" )
+
+function SIDEBAR_TOGGLE_BTN:Think()
+	if self.m_bEnabled then
+		self:SetColor( self.m_EnabledColor )
+		self:SetAlpha( BTN_ALPHA_HIGHLIGHTED )
+	elseif self.m_bHighlighted or self:IsHovered() and not self.m_bDisabled then
+		self:SetAlpha( BTN_ALPHA_HIGHLIGHTED )
+	elseif self.m_HighlightColor then
+		self:SetColor( self.m_HighlightColor )
+		self:SetAlpha( BTN_ALPHA_HIGHLIGHTED )
+	else
+		self:SetAlpha( BTN_ALPHA_NORMAL )
+	end
+end
+
+function SIDEBAR_TOGGLE_BTN:DoClick()
+	local enabled = not self:GetEnabled()
+	self:SetEnabled( enabled )
+
+	if not enabled then
+		self:SetColor( color_white )
+	end
+end
+
+derma.DefineControl( "MP.SidebarToggleButton", "", SIDEBAR_TOGGLE_BTN, "MP.SidebarButton" )
+
+
 local FAVORITE_BTN = {}
 
 AccessorFunc( FAVORITE_BTN, "Favorited", "Favorited" )

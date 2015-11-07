@@ -454,6 +454,22 @@ function MEDIAPLAYER:RequestRemove( ply, mediaUID )
 
 end
 
+function MEDIAPLAYER:RequestRepeat( ply )
+
+	if not ( IsValid(ply) and self:HasListener(ply) ) then
+		return
+	end
+
+	if not self:IsPlayerPrivileged(ply) then
+		self:NotifyPlayer(ply, "You don't have permission to do that.")
+		return
+	end
+
+	self:SetQueueRepeat( not self:GetQueueRepeat() )
+	self:BroadcastUpdate()
+
+end
+
 
 --[[---------------------------------------------------------
 	Media Player Updates
@@ -483,6 +499,7 @@ function MEDIAPLAYER:BroadcastUpdate( ply )
 			net.WriteString( self.Name )		-- media player type
 			net.WriteEntity( self:GetOwner() )
 			self.net.WritePlayerState( self:GetPlayerState() )
+			net.WriteBool( self:GetQueueRepeat() )
 			self:NetWriteUpdate( pl )				-- mp type-specific info
 			net.WriteUInt( #self._Queue, self:GetQueueLimit(true) )
 			for _, media in ipairs(self._Queue) do

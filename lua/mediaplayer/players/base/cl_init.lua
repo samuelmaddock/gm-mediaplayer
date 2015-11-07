@@ -42,6 +42,9 @@ local function OnMediaUpdate( len )
 
 	local state = mp.net.ReadPlayerState()
 
+	local queueRepeat = net.ReadBool()
+	mp:SetQueueRepeat( queueRepeat )
+
 	-- Read extended update information
 	mp:NetReadUpdate()
 

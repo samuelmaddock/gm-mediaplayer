@@ -110,6 +110,10 @@ function SidebarPresenter:SetupEvents()
 		MediaPlayer.Pause( mp )
 	end )
 
+	self:RegisterHook( MP.EVENTS.UI.TOGGLE_REPEAT, function()
+		MediaPlayer.RequestRepeat( mp )
+	end )
+
 	self:RegisterHook( MP.EVENTS.UI.SEEK, function( seekTime )
 		MediaPlayer.Seek( mp, seekTime )
 	end )

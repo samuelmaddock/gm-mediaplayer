@@ -23,9 +23,6 @@ function mpnet.ReadMedia()
 
 	local url = net.ReadString()
 	local metadata = net.ReadTable()
-	-- local title = net.ReadString()
-	-- local duration = mpnet.ReadDuration()
-	-- local thumbnail = net.ReadString()
 	local ownerName = net.ReadString()
 	local ownerSteamId = net.ReadString()
 

@@ -7,8 +7,9 @@ local color_white = color_white
 
 local PANEL = {}
 
-PANEL.Margin = 20
+PANEL.Margin = 16
 PANEL.ButtonWidth = 18
+PANEL.ButtonSpacing = 4
 PANEL.BackgroundColor = Color( 28, 100, 157 )
 
 function PANEL:Init()
@@ -18,28 +19,38 @@ function PANEL:Init()
 	self.VolumeButton = vgui.Create( "MP.VolumeButton", self )
 
 	self.VolumeSlider = vgui.Create( "MP.VolumeSlider", self )
-	self.VolumeSlider:Dock( FILL )
 
-	local lrMargin = self.Margin * 2 + self.ButtonWidth
-	self.VolumeSlider:DockMargin( lrMargin, 0, lrMargin, 0 )
+	self.BtnList = vgui.Create( "DHorizontalList", self )
+	self.BtnList:SetSpacing( self.ButtonSpacing )
 
-	self.VolumeLabel = vgui.Create( "DLabel", self )
-	self.VolumeLabel:SetContentAlignment( 6 ) -- center right
+	if hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER ) then
+		self.RepeatBtn = vgui.Create( "MP.RepeatButton" )
+		self:AddButton( self.RepeatBtn )
+	end
 
 	self:OnVolumeChanged( MediaPlayer.Volume() )
 
 	hook.Add( MP.EVENTS.VOLUME_CHANGED, self, self.OnVolumeChanged )
+	hook.Add( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, self, self.OnMediaPlayerChanged )
 
+end
+
+function PANEL:AddButton( panel )
+	self.BtnList:AddItem( panel )
 end
 
 function PANEL:OnVolumeChanged( volume )
 
-	local scaledVolume = math.Round(volume * 100)
-
 	self.VolumeSlider:SetSlideX( volume )
-	self.VolumeLabel:SetText( scaledVolume )
 
 	self:InvalidateChildren()
+
+end
+
+function PANEL:OnMediaPlayerChanged( mp )
+
+	print("MediaPlayerChanged", mp:GetQueueRepeat())
+	self.RepeatBtn:SetEnabled( mp:GetQueueRepeat() )
 
 end
 
@@ -50,14 +61,26 @@ function PANEL:Paint( w, h )
 
 end
 
-function PANEL:PerformLayout()
+function PANEL:PerformLayout( w, h )
+
+	self.BtnList:InvalidateLayout( true )
+	self.BtnList:CenterVertical()
+	self.BtnList:AlignRight( self.Margin )
 
 	self.VolumeButton:CenterVertical()
 	self.VolumeButton:AlignLeft( self.Margin )
 
-	self.VolumeLabel:SizeToContents()
-	self.VolumeLabel:CenterVertical()
-	self.VolumeLabel:AlignRight( self.Margin )
+	local sliderWidth = ( self.BtnList:GetPos() - 15 ) -
+			( self.VolumeButton:GetPos() + self.VolumeButton:GetWide() + 15 )
+	self.VolumeSlider:SetWide( sliderWidth )
+	self.VolumeSlider:CenterVertical()
+	self.VolumeSlider:MoveRightOf( self.VolumeButton, 15 )
+
+end
+
+function PANEL:OnRemove()
+
+	hook.Remove( MP.EVENTS.VOLUME_CHANGED, self )
 
 end
 
@@ -154,3 +177,19 @@ function VOLUME_SLIDER:OnMouseWheeled( delta )
 end
 
 derma.DefineControl( "MP.VolumeSlider", "", VOLUME_SLIDER, "DSlider" )
+
+
+local REPEAT_BTN = {}
+
+function REPEAT_BTN:Init()
+	self.BaseClass.Init( self )
+	self:SetIcon( "mp-repeat" )
+	self:SetTooltip( "Repeat" )
+end
+
+function REPEAT_BTN:DoClick()
+	self.BaseClass.DoClick( self )
+	hook.Run( MP.EVENTS.UI.TOGGLE_REPEAT )
+end
+
+derma.DefineControl( "MP.RepeatButton", "", REPEAT_BTN, "MP.SidebarToggleButton" )

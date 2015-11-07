@@ -1,3 +1,5 @@
+local spritesheet = spritesheet
+
 --[[--------------------------------------------
 	Icons spritesheet
 ----------------------------------------------]]
@@ -29,8 +31,11 @@ spritesheet.Register {
 	mpIcon( "mp-home", 				4, 1, 21, 21 ),
 	mpIcon( "mp-close", 			0, 2, 21, 21 ),
 	mpIcon( "mp-skip", 				1, 2, 16, 16 ),
-	mpIcon( "mp-refresh", 			2, 2, 21, 21 ),
+	mpIcon( "mp-refresh", 			2, 2, 16, 16 ),
 	mpIcon( "mp-plus", 				3, 2, 14, 14 ),
+	mpIcon( "mp-repeat", 			4, 2, 18, 18 ),
+	mpIcon( "mp-shuffle", 			0, 3, 16, 16 ),
+	mpIcon( "mp-replay", 			1, 3, 13, 16 ),
 
 	mpIcon( "mp-play", 				3, 4, 19, 25 ),
 	mpIcon( "mp-pause",				4, 4, 22, 24 ),
@@ -40,8 +45,6 @@ spritesheet.Register {
 --[[--------------------------------------------
 	DIcon
 ----------------------------------------------]]
-
-local spritesheet = spritesheet
 
 local DICON = {}
 
