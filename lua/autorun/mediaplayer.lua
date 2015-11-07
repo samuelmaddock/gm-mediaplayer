@@ -4,9 +4,7 @@ local function IncludeMP( filepath )
 	include( basepath .. filepath )
 end
 
-local function LoadMediaPlayer()
-	print( "Loading 'mediaplayer' addon..." )
-
+local function PreLoadMediaPlayer()
 	-- Check if MediaPlayer has already been loaded
 	if MediaPlayer then
 		MediaPlayer.__refresh = true
@@ -19,6 +17,36 @@ local function LoadMediaPlayer()
 			end
 		end
 	end
+end
+
+local function PostLoadMediaPlayer()
+	if SERVER then
+		-- Reinstall media players on Lua refresh
+		for _, mp in pairs(MediaPlayer.GetAll()) do
+			if mp:GetType() == "entity" and IsValid(mp) then
+				local ent = mp:GetEntity()
+				local snapshot = mp:GetSnapshot()
+				local listeners = table.Copy(mp:GetListeners())
+
+				-- remove media player
+				mp:Remove()
+
+				-- install new media player
+				ent:InstallMediaPlayer()
+
+				-- restore settings
+				mp = ent._mp
+				mp:RestoreSnapshot( snapshot )
+				mp:SetListeners( listeners )
+			end
+		end
+	end
+end
+
+local function LoadMediaPlayer()
+	print( "Loading 'mediaplayer' addon..." )
+
+	PreLoadMediaPlayer()
 
 	-- shared includes
 	IncludeCS "includes/extensions/sh_url.lua"
@@ -66,32 +94,7 @@ local function LoadMediaPlayer()
 		include "mp_menu/cl_init.lua"
 	end
 
-	if SERVER then
-		-- Reinstall media players on Lua refresh
-		for _, mp in pairs(MediaPlayer.GetAll()) do
-
-			if mp:GetType() == 'entity' and IsValid(mp) then
-				local ent = mp:GetEntity()
-				local listeners = table.Copy(mp:GetListeners())
-
-				-- remove media player
-				mp:Remove()
-
-				-- install new media player
-				ent:InstallMediaPlayer()
-
-				-- reinitialize settings
-				mp = ent._mp
-
-				-- TODO: implement memento pattern for reloading MP state.
-
-				-- reapply listeners
-				mp:SetListeners( listeners )
-				mp:BroadcastUpdate()
-			end
-
-		end
-	end
+	PostLoadMediaPlayer()
 end
 
 -- First time load
