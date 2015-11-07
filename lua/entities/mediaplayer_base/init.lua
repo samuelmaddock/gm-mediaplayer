@@ -8,26 +8,6 @@ include "shared.lua"
 
 ENT.UseDelay = 0.5 -- seconds
 
-function ENT:Initialize()
-	self:SetModel( self.Model )
-
-	self:SetUseType( SIMPLE_USE )
-
-	self:PhysicsInit( SOLID_VPHYSICS )
-	self:SetMoveType( MOVETYPE_VPHYSICS )
-
-	local phys = self:GetPhysicsObject()
-	if IsValid( phys ) then
-		phys:EnableMotion( false )
-	end
-
-	-- Install media player to entity
-	local mp = self:InstallMediaPlayer( self.MediaPlayerType )
-
-	-- Network media player ID
-	self:SetMediaPlayerID( mp:GetId() )
-end
-
 function ENT:Use(ply)
 	if not IsValid(ply) then return end
 
@@ -88,4 +68,10 @@ function ENT:PostEntityPaste( ply, ent, createdEnts )
 	end
 
 	mp:QueueUpdated()
+end
+
+function ENT:KeyValue( key, value )
+	if key == "model" then
+		self.Model = value
+	end
 end

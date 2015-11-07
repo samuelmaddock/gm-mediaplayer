@@ -66,7 +66,6 @@ local function LoadMediaPlayer()
 		include "mp_menu/cl_init.lua"
 	end
 
-
 	if SERVER then
 		-- Reinstall media players on Lua refresh
 		for _, mp in pairs(MediaPlayer.GetAll()) do
