@@ -3,14 +3,28 @@ local MEDIAPLAYER_SAVE = false
 local MEDIAPLAYER_THUMBNAIL = nil
 
 local HTMLMAT_STYLE_DUPE = "htmlmat.style.dupe"
+-- AddHTMLMaterialStyle( HTMLMAT_STYLE_DUPE, {
+-- 	width = 512,
+-- 	height = 512,
+-- 	css = [[
+-- img {
+-- 	width: 100%;
+-- 	position: absolute;
+-- 	top: 50%;
+-- 	left: 50%;
+-- 	-webkit-filter: blur(6px);
+-- 	-webkit-transform: translate(-50%, -50%) scale(1.1,1.1);
+-- }]]
+-- } )
 AddHTMLMaterialStyle( HTMLMAT_STYLE_DUPE, {
 	width = 512,
 	height = 512,
-	css = [[img {
-	-webkit-filter: blur(6px) brightness(0.88);
-	-webkit-transform: scale(1.1, 1.1);
+	css = [[
+img {
+	-webkit-filter: blur(6px) brightness(0.9);
+	-webkit-transform: translate(-50%, -50%) scale(1.05, 1.05);
 }]]
-} )
+}, HTMLMAT_STYLE_COVER_IMG )
 
 surface.CreateFont( "DupeMediaText", {
 	font		= "Clear Sans Medium",
@@ -149,7 +163,7 @@ local function RenderMediaPlayerDupe( Dupe )
 	--
 	-- DRAW THE BACKGROUND
 	--
-	render.SetMaterial( Material( "models/debug/debugwhite" ) )
+	render.SetMaterial( Material( "gui/dupe_bg.png" ) )
 	render.DrawScreenQuadEx( 0, 0, 512, 512 )
 
 	render.SetMaterial( MEDIAPLAYER_THUMBNAIL )

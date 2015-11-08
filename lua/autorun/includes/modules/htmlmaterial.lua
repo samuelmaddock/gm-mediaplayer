@@ -21,7 +21,7 @@ local embedHtml = [[
 	<script>
 	var src = '%s';
 	</script>
-	<img id="mat" width="100%%" height="100%%">
+	<img id="mat">
 
 	<style>
 	html, body {
@@ -217,6 +217,7 @@ HTMLMAT_STYLE_SEPIA      = 'htmlmat.style.sepia'
 HTMLMAT_STYLE_INVERT     = 'htmlmat.style.invert'
 HTMLMAT_STYLE_CIRCLE     = 'htmlmat.style.circle'
 HTMLMAT_STYLE_COVER      = 'htmlmat.style.cover'
+HTMLMAT_STYLE_COVER_IMG  = 'htmlmat.style.coverimg'
 
 AddHTMLMaterialStyle( HTMLMAT_STYLE_BLUR, {
 	css = [[img {
@@ -238,6 +239,10 @@ AddHTMLMaterialStyle( HTMLMAT_STYLE_CIRCLE, {
 })
 AddHTMLMaterialStyle( HTMLMAT_STYLE_COVER, {
 	html = [[
+<script>
+var src = '%s';
+</script>
+
 <style type="text/css">
 html, body {
 	width: 100%%;
@@ -253,22 +258,74 @@ html, body {
 	width: 100%%;
 	height: 100%%;
 }
+
+%s
 </style>
 
 <div id="mat"></div>
 
 <script type="application/javascript">
-var src = '%s';
+var mat = document.getElementById('mat');
+mat.style.backgroundImage = 'url('+src+')';
+
 var img = new Image();
 img.onload = function() {
 	setTimeout(function() {
 		gmod.imageLoaded();
 	}, 100);
 };
+img.onerror = gmod.imageLoaded.bind(gmod);
 img.src = src;
+</script>
+]]
+})
 
+-- Use this if you want to use -webkit-filter blur on the image;
+-- you'll also need to use a transform to scale it a bit. This prevents
+-- the edges from blurring as seen with background-size cover.
+AddHTMLMaterialStyle( HTMLMAT_STYLE_COVER_IMG, {
+	html = [[
+<script>
+var src = '%s';
+</script>
+
+<style type="text/css">
+html, body {
+	width: 100%%;
+	height: 100%%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+img {
+	width: auto;
+	height: auto;
+	position: absolute;
+	top: 50%%;
+	left: 50%%;
+	-webkit-transform: translate(-50%%, -50%%);
+}
+%s
+</style>
+
+<img id="mat">
+
+<script type="application/javascript">
 var mat = document.getElementById('mat');
-mat.style.backgroundImage = 'url('+src+')';
+mat.onload = function() {
+	if (mat.width > mat.height) {
+		mat.style.height = '100%%';
+	} else {
+		mat.style.width = '100%%';
+	}
+	setTimeout(function() {
+		gmod.imageLoaded();
+	}, 100);
+};
+mat.onerror = function() {
+	gmod.imageLoaded();
+};
+mat.src = src;
 </script>
 ]]
 })
