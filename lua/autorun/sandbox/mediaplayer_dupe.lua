@@ -5,15 +5,18 @@ local MEDIAPLAYER_THUMBNAIL = nil
 local HTMLMAT_STYLE_DUPE = "htmlmat.style.dupe"
 AddHTMLMaterialStyle( HTMLMAT_STYLE_DUPE, {
 	width = 512,
-	height = 512
-}, HTMLMAT_STYLE_COVER )
+	height = 512,
+	css = [[img {
+	-webkit-filter: blur(6px) brightness(0.88);
+	-webkit-transform: scale(1.1, 1.1);
+}]]
+} )
 
 surface.CreateFont( "DupeMediaText", {
 	font		= "Clear Sans Medium",
 	antialias	= true,
 	weight		= 400,
-	size        = 80,
-	outline      = true
+	size        = 80
 } )
 
 local function PreSaveMediaPlayerDupe( Dupe )
@@ -43,6 +46,27 @@ local function PreSaveMediaPlayerDupe( Dupe )
 		MEDIAPLAYER_SAVE = true
 	end
 
+end
+
+local function DrawOutlinedText(text, font, x, y, colour, xalign, yalign)
+	local outlineColor = Color(0,0,0,colour.a)
+	draw.SimpleText(text, font, x, y + 2, outlineColor, xalign, yalign)
+	draw.SimpleText(text, font, x + 1, y + 2, outlineColor, xalign, yalign)
+	draw.SimpleText(text, font, x - 1, y + 2, outlineColor, xalign, yalign)
+
+	draw.SimpleText(text, font, x, y - 2, outlineColor, xalign, yalign)
+	draw.SimpleText(text, font, x + 1, y - 2, outlineColor, xalign, yalign)
+	draw.SimpleText(text, font, x - 1, y - 2, outlineColor, xalign, yalign)
+
+	draw.SimpleText(text, font, x + 2, y + 2, outlineColor, xalign, yalign)
+	draw.SimpleText(text, font, x + 2, y + 1, outlineColor, xalign, yalign)
+	draw.SimpleText(text, font, x + 2, y - 1, outlineColor, xalign, yalign)
+
+	draw.SimpleText(text, font, x - 2, y + 2, outlineColor, xalign, yalign)
+	draw.SimpleText(text, font, x - 2, y + 1, outlineColor, xalign, yalign)
+	draw.SimpleText(text, font, x - 2, y - 1, outlineColor, xalign, yalign)
+
+	draw.SimpleText(text, font, x, y, colour, xalign, yalign)
 end
 
 local function RenderMediaPlayerDupe( Dupe )
@@ -125,6 +149,9 @@ local function RenderMediaPlayerDupe( Dupe )
 	--
 	-- DRAW THE BACKGROUND
 	--
+	render.SetMaterial( Material( "models/debug/debugwhite" ) )
+	render.DrawScreenQuadEx( 0, 0, 512, 512 )
+
 	render.SetMaterial( MEDIAPLAYER_THUMBNAIL )
 	render.DrawScreenQuadEx( 0, 0, 512, 512 )
 	render.SuppressEngineLighting( true )
@@ -280,7 +307,7 @@ local function RenderMediaPlayerDupe( Dupe )
 	-- Media Player branding
 	--
 	cam.Start2D()
-		draw.SimpleText( "MEDIA PLAYER", "DupeMediaText", 512/2, 512 - 34,
+		DrawOutlinedText( "MEDIA PLAYER", "DupeMediaText", 512/2, 512 - 34,
 			color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 	cam.End2D()
 
