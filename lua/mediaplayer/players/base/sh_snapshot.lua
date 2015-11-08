@@ -7,7 +7,8 @@ function MEDIAPLAYER:GetSnapshot()
 		currentTime = media and media:CurrentTime(),
 		queue = queue,
 		queueRepeat = self:GetQueueRepeat(),
-		queueShuffle = self:GetQueueShuffle()
+		queueShuffle = self:GetQueueShuffle(),
+		queueLocked = self:GetQueueLocked()
 	}
 end
 
@@ -16,6 +17,7 @@ function MEDIAPLAYER:RestoreSnapshot( snapshot )
 
 	self:SetQueueRepeat( snapshot.queueRepeat )
 	self:SetQueueShuffle( snapshot.queueShuffle )
+	self:SetQueueLocked( snapshot.queueLocked )
 
 	if snapshot.media then
 		-- restore currently playing media from where it left off

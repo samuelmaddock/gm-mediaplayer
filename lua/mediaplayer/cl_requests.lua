@@ -186,3 +186,14 @@ function MediaPlayer.RequestShuffle( mp )
 	net.SendToServer()
 
 end
+
+function MediaPlayer.RequestLock( mp )
+
+	local mpId = GetMediaPlayerId( mp )
+	if not mpId then return end
+
+	net.Start( "MEDIAPLAYER.RequestLock" )
+		net.WriteString( mpId )
+	net.SendToServer()
+
+end

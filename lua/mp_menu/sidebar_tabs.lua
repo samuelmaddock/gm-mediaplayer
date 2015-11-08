@@ -179,6 +179,8 @@ function CURRENTLY_PLAYING_TAB:OnMediaPlayerChanged( mp )
 
 	self:SetMediaPlayerId( mp:GetId() )
 
+	self.QueuePanel.Header.AddVidBtn:SetLocked( mp:GetQueueLocked() )
+
 	if not self.MediaChangedHandle then
 		-- set current media
 		self.PlaybackPanel:OnMediaChanged( mp:GetMedia() )

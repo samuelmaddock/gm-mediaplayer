@@ -7,6 +7,7 @@ util.AddNetworkString( "MEDIAPLAYER.RequestSeek" )
 util.AddNetworkString( "MEDIAPLAYER.RequestRemove" )
 util.AddNetworkString( "MEDIAPLAYER.RequestRepeat" )
 util.AddNetworkString( "MEDIAPLAYER.RequestShuffle" )
+util.AddNetworkString( "MEDIAPLAYER.RequestLock" )
 
 local REQUEST_DELAY = 0.2
 
@@ -146,5 +147,15 @@ net.Receive( "MEDIAPLAYER.RequestShuffle", RequestWrapper(function(mp, ply)
 	end
 
 	mp:RequestShuffle( ply )
+
+end) )
+
+net.Receive( "MEDIAPLAYER.RequestLock", RequestWrapper(function(mp, ply)
+
+	if MediaPlayer.DEBUG then
+		print("MEDIAPLAYER.RequestLock:", mp:GetId(), ply)
+	end
+
+	mp:RequestLock( ply )
 
 end) )

@@ -75,8 +75,13 @@ derma.DefineControl( "MP.QueueHeader", "", QUEUE_HEADER, "Panel" )
 
 local ADD_VIDEO_BTN = {}
 
-ADD_VIDEO_BTN.Color = Color( 232, 78, 64 )
-ADD_VIDEO_BTN.HoverColor = Color( 252, 98, 84 )
+local AddEnabledColor = Color( 232, 78, 64 )
+local AddEnabledHoverColor = Color( 252, 98, 84 )
+
+local AddDisabledColor = Color( 140, 140, 140 )
+
+ADD_VIDEO_BTN.Color = AddEnabledColor
+ADD_VIDEO_BTN.HoverColor = AddEnabledHoverColor
 
 function ADD_VIDEO_BTN:Init()
 
@@ -91,6 +96,17 @@ function ADD_VIDEO_BTN:Init()
 	self.BtnLbl:SetTextColor( color_white )
 
 	self:SetIcon( "mp-plus" )
+
+end
+
+function ADD_VIDEO_BTN:SetLocked( locked )
+
+	if locked and not hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER ) then
+		self:SetDisabled( true )
+		self.Color = AddDisabledColor
+		self.HoverColor = AddDisabledColor
+		self:SetIcon( "mp-lock" )
+	end
 
 end
 

@@ -36,6 +36,8 @@ spritesheet.Register {
 	mpIcon( "mp-repeat", 			4, 2, 18, 18 ),
 	mpIcon( "mp-shuffle", 			0, 3, 16, 16 ),
 	mpIcon( "mp-replay", 			1, 3, 13, 16 ),
+	mpIcon( "mp-lock", 			    2, 3, 12, 16 ),
+	mpIcon( "mp-lock-open", 		3, 3, 12, 16 ),
 
 	mpIcon( "mp-play", 				3, 4, 19, 25 ),
 	mpIcon( "mp-pause",				4, 4, 22, 24 ),

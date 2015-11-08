@@ -240,6 +240,10 @@ function MEDIAPLAYER:CanPlayerRequestMedia( ply, media )
 		return false, msg
 	end
 
+	if self:GetQueueLocked() and not self:IsPlayerPrivileged(ply) then
+		return false, "The requested media couldn't be added as the queue is locked."
+	end
+
 	return true
 end
 
@@ -502,6 +506,22 @@ function MEDIAPLAYER:RequestShuffle( ply )
 
 end
 
+function MEDIAPLAYER:RequestLock( ply )
+
+	if not ( IsValid(ply) and self:HasListener(ply) ) then
+		return
+	end
+
+	if not self:IsPlayerPrivileged(ply) then
+		self:NotifyPlayer(ply, "You don't have permission to do that.")
+		return
+	end
+
+	self:SetQueueLocked( not self:GetQueueLocked() )
+	self:BroadcastUpdate()
+
+end
+
 
 --[[---------------------------------------------------------
 	Media Player Updates
@@ -531,9 +551,13 @@ function MEDIAPLAYER:BroadcastUpdate( ply )
 			net.WriteString( self.Name )		-- media player type
 			net.WriteEntity( self:GetOwner() )
 			self.net.WritePlayerState( self:GetPlayerState() )
+
 			net.WriteBool( self:GetQueueRepeat() )
 			net.WriteBool( self:GetQueueShuffle() )
+			net.WriteBool( self:GetQueueLocked() )
+
 			self:NetWriteUpdate( pl )				-- mp type-specific info
+
 			net.WriteUInt( #self._Queue, self:GetQueueLimit(true) )
 			for _, media in ipairs(self._Queue) do
 				self.net.WriteMedia(media)

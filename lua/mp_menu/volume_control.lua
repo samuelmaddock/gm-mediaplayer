@@ -28,6 +28,8 @@ function PANEL:Init()
 		self:AddButton( self.RepeatBtn )
 		self.ShuffleBtn = vgui.Create( "MP.ShuffleButton" )
 		self:AddButton( self.ShuffleBtn )
+		self.LockBtn = vgui.Create( "MP.LockButton" )
+		self:AddButton( self.LockBtn )
 	end
 
 	self:OnVolumeChanged( MediaPlayer.Volume() )
@@ -54,6 +56,7 @@ function PANEL:OnMediaPlayerChanged( mp )
 	if hook.Run( MP.EVENTS.UI.PRIVILEGED_PLAYER ) then
 		self.RepeatBtn:SetEnabled( mp:GetQueueRepeat() )
 		self.ShuffleBtn:SetEnabled( mp:GetQueueShuffle() )
+		self.LockBtn:SetEnabled( mp:GetQueueLocked() )
 	end
 
 end
@@ -213,3 +216,31 @@ function SHUFFLE_BTN:DoClick()
 end
 
 derma.DefineControl( "MP.ShuffleButton", "", SHUFFLE_BTN, "MP.SidebarToggleButton" )
+
+
+local LOCK_BTN = {}
+
+function LOCK_BTN:Init()
+	self.BaseClass.Init( self )
+	self:SetIcon( "mp-lock-open" )
+	self:SetTooltip( "Toggle Queue Lock" )
+end
+
+function LOCK_BTN:DoClick()
+	self.BaseClass.DoClick( self )
+
+	hook.Run( MP.EVENTS.UI.TOGGLE_LOCK )
+	self:UpdateIcon()
+end
+
+function LOCK_BTN:SetEnabled( bEnabled )
+	self.BaseClass.SetEnabled( self, bEnabled )
+	self:UpdateIcon()
+end
+
+function LOCK_BTN:UpdateIcon()
+	local icon = self:GetEnabled() and "mp-lock" or "mp-lock-open"
+	self:SetIcon( icon )
+end
+
+derma.DefineControl( "MP.LockButton", "", LOCK_BTN, "MP.SidebarToggleButton" )

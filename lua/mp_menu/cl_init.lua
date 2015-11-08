@@ -18,6 +18,7 @@ MP.EVENTS.UI = {
 	REMOVE_MEDIA = "mp.events.ui.removeMedia",
 	SKIP_MEDIA = "mp.events.ui.skipMedia",
 	VOTE_MEDIA = "mp.events.ui.voteMedia",
+	TOGGLE_LOCK = "mp.events.ui.toggleLock",
 	TOGGLE_PAUSE = "mp.events.ui.togglePause",
 	TOGGLE_REPEAT = "mp.events.ui.toggleRepeat",
 	TOGGLE_SHUFFLE = "mp.events.ui.toggleShuffle",

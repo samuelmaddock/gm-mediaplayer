@@ -315,6 +315,14 @@ function MEDIAPLAYER:SetQueueShuffle( shouldShuffle )
 	end
 end
 
+function MEDIAPLAYER:GetQueueLocked()
+	return self._QueueLocked
+end
+
+function MEDIAPLAYER:SetQueueLocked( locked )
+	self._QueueLocked = locked
+end
+
 ---
 -- Called when the queue is updated; emits a change event.
 --

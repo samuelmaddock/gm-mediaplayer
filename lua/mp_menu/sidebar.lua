@@ -106,6 +106,10 @@ function SidebarPresenter:SetupEvents()
 		MediaPlayer.Skip( mp )
 	end )
 
+	self:RegisterHook( MP.EVENTS.UI.TOGGLE_LOCK, function()
+		MediaPlayer.RequestLock( mp )
+	end )
+
 	self:RegisterHook( MP.EVENTS.UI.TOGGLE_PAUSE, function()
 		MediaPlayer.Pause( mp )
 	end )
