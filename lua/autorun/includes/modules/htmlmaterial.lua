@@ -92,7 +92,7 @@ local DefaultMat = Material("vgui/white")
 local DefaultWidth = 128
 local DefaultStyle = {}
 
-local function enqueueUrl( url, styleName, key )
+local function enqueueUrl( url, styleName, key, callback )
 	cache[key] = DefaultMat
 
 	browserpool.get(function(browser)
@@ -113,6 +113,10 @@ local function enqueueUrl( url, styleName, key )
 		browser:AddFunction("gmod", "imageLoaded", function()
 			updateCache(download)
 			onImageLoaded(key, browser)
+
+			if type(callback) == "function" then
+				callback( cache[key] )
+			end
 		end)
 
 		if not TimerRunning then
@@ -135,7 +139,7 @@ local MAT_STR_TABLE = { '', '@', '' }
 -- @param url		URL.
 -- @param style		HTMLMaterial style.
 --
-function HTMLMaterial( url, style )
+function HTMLMaterial( url, style, callback )
 	if not url then
 		return DefaultMat
 	end
@@ -153,7 +157,9 @@ function HTMLMaterial( url, style )
 
 	-- Enqueue the URL to be downloaded if it hasn't been loaded yet.
 	if cache[key] == nil then
-		enqueueUrl( url, style, key )
+		enqueueUrl( url, style, key, callback )
+	elseif callback then
+		callback( cache[key] )
 	end
 
 	-- Return cached URL
