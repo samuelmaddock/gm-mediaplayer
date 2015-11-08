@@ -280,7 +280,7 @@ local function RenderMediaPlayerDupe( Dupe )
 	-- Media Player branding
 	--
 	cam.Start2D()
-		draw.SimpleText( "MEDIA PLAYER", "DupeMediaText", 512/2, 512 - 8,
+		draw.SimpleText( "MEDIA PLAYER", "DupeMediaText", 512/2, 512 - 34,
 			color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 	cam.End2D()
 
