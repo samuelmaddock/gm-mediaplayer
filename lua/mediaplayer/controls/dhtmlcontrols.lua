@@ -21,9 +21,9 @@ function PANEL:Init()
 	local Margins = 2
 	local Spacing = 0
 
-	self.BackButton = vgui.Create( "DImageButton", self )
+	self.BackButton = vgui.Create( "DIconButton", self )
+	self.BackButton:SetIcon( "mp-back" )
 	self.BackButton:SetSize( ButtonSize, ButtonSize )
-	self.BackButton:SetMaterial( "gui/HTML/back" )
 	self.BackButton:Dock( LEFT )
 	self.BackButton:DockMargin( Spacing*3, Margins, Spacing, Margins )
 	self.BackButton.DoClick = function()
@@ -33,9 +33,9 @@ function PANEL:Init()
 		self.Navigating = true
 	end
 
-	self.ForwardButton = vgui.Create( "DImageButton", self )
+	self.ForwardButton = vgui.Create( "DIconButton", self )
+	self.ForwardButton:SetIcon( "mp-forward" )
 	self.ForwardButton:SetSize( ButtonSize, ButtonSize )
-	self.ForwardButton:SetMaterial( "gui/HTML/forward" )
 	self.ForwardButton:Dock( LEFT )
 	self.ForwardButton:DockMargin( Spacing, Margins, Spacing, Margins )
 	self.ForwardButton.DoClick = function()
@@ -55,9 +55,9 @@ function PANEL:Init()
 		self.HTML:Refresh()
 	end
 
-	self.HomeButton = vgui.Create( "DImageButton", self )
+	self.HomeButton = vgui.Create( "DIconButton", self )
+	self.HomeButton:SetIcon( "mp-home" )
 	self.HomeButton:SetSize( ButtonSize, ButtonSize )
-	self.HomeButton:SetMaterial( "gui/HTML/home" )
 	self.HomeButton:Dock( LEFT )
 	self.HomeButton:DockMargin( Spacing, Margins, Spacing*3, Margins )
 	self.HomeButton.DoClick = function()
@@ -319,29 +319,45 @@ local RefreshButton = {}
 
 AccessorFunc( RefreshButton, "HTML", "HTML" )
 
-local LoadingTexture = surface.GetTextureID("gui/html/refresh")
-
 function RefreshButton:Init()
-	DButton.Init(self)
-
+	self.BaseClass.Init( self )
+	self:SetIcon( "mp-refresh" )
 	self:SetText( "" )
-	self.TextureColor = Color(255,255,255,255)
 end
 
-function RefreshButton:SetColor( color )
-	self.TextureColor = color
-end
+local Matrix = Matrix
+local vecTranslate = Vector()
+local angRotate = Angle()
 
 function RefreshButton:Paint( w, h )
-	local ang = 0
 
 	if ValidPanel(self.HTML) and self.HTML:IsLoading() then
-		ang = RealTime() * -512
+		local x, y = self:LocalToScreen(0,0)
+
+		vecTranslate.x = x + w / 2
+		vecTranslate.y = y + h / 2
+
+		angRotate.y = RealTime() * 512
+
+		local mat = Matrix()
+		mat:Translate( vecTranslate )
+		mat:Rotate( angRotate )
+		mat:Translate( -vecTranslate )
+		cam.PushModelMatrix( mat )
+		self._PushedMatrix = true
 	end
 
-	surface.SetDrawColor(self.TextureColor)
-	surface.SetTexture(LoadingTexture)
-	surface.DrawTexturedRectRotated( w/2, h/2, w, h, ang )
+	self.BaseClass.Paint( self, w, h )
+
 end
 
-derma.DefineControl( "MPRefreshButton", "", RefreshButton, "DButton" )
+function RefreshButton:PaintOver()
+
+	if self._PushedMatrix then
+		cam.PopModelMatrix()
+		self._PushedMatrix = nil
+	end
+
+end
+
+derma.DefineControl( "MPRefreshButton", "", RefreshButton, "DIconButton" )

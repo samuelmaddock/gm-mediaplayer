@@ -20,25 +20,14 @@ function PANEL:Init()
 	end
 	self:SetSize( w, h )
 
-	self.CloseButton = vgui.Create( "DButton", self )
+	self.CloseButton = vgui.Create( "DIconButton", self )
 	self.CloseButton:SetSize( 32, 32 )
+	self.CloseButton:SetIcon( "mp-close" )
+	self.CloseButton:SetColor( Color( 250, 250, 250, 200 ) )
 	self.CloseButton:SetZPos( 5 )
-	self.CloseButton:NoClipping( true )
 	self.CloseButton:SetText( "" )
 	self.CloseButton.DoClick = function ( button )
 		self:Close()
-	end
-	self.CloseButton.Paint = function( panel, w, h )
-		DisableClipping( true )
-
-		surface.SetDrawColor( 48, 55, 71 )
-		surface.DrawRect( 2, 2, w - 4, h - 4 )
-
-		surface.SetDrawColor( 26, 30, 38 )
-		surface.SetMaterial( CloseTexture )
-		surface.DrawTexturedRect( 0, 0, w, h )
-
-		DisableClipping( false )
 	end
 
 	self.BrowserContainer = vgui.Create( "DPanel", self )
@@ -140,11 +129,9 @@ function PANEL:CheckClose()
 
 end
 
-function PANEL:PerformLayout()
+function PANEL:PerformLayout( w, h )
 
-	local w, h = self:GetSize()
-
-	self.CloseButton:SetPos( w - 34, 2 )
+	self.CloseButton:SetPos( w - 36, 2 )
 
 end
 
