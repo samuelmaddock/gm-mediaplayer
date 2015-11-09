@@ -20,7 +20,7 @@ AddMediaPlayerModel(
 	"models/hunter/plates/plate5x8.mdl",
 	{
 		angle = Angle(0, 90, 0),
-		offset = Vector(-118.8, 189.8, 1.8),
+		offset = Vector(-118.8, 189.8, 2.5),
 		width = 380,
 		height = 238
 	}
