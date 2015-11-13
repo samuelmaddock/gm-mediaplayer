@@ -61,6 +61,10 @@ end
 -- @return boolean	Whether the media player is valid
 --
 function MEDIAPLAYER:IsValid()
+	if self._removed then
+		return false
+	end
+
 	return true
 end
 
@@ -437,6 +441,7 @@ end
 --
 function MEDIAPLAYER:Remove()
 	MediaPlayer.Destroy( self )
+	self._removed = true
 
 	if SERVER then
 

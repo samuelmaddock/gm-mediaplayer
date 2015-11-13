@@ -148,34 +148,34 @@ function SERVICE:SyncEntityPos()
 	end
 end
 
+
+
 function SERVICE:PreRequest( callback )
 
 	-- LocalPlayer():ChatPrint( "Prefetching data for '" .. self.url .. "'..." )
 
-	sound.PlayURL( self.url, "noplay", function( channel )
+	local function preload( callback )
+		MediaPlayerUtils.LoadStreamChannel( self.url, nil, callback )
+	end
 
-		if MediaPlayer.DEBUG then
-			print("AUDIOFILE.PreRequest", channel)
-		end
-
-		if IsValid(channel) then
+	-- Preloading audio can fail the first time, so let's retry a few times
+	-- before giving up.
+	MediaPlayerUtils.Retry(
+		preload,
+		function( channel )
 			-- Set metadata to later send to the server; IGModAudioChannel is
 			-- only accessible on the client.
-			self._metadata = {}
-			self._metadata.title = channel:GetFileName()
-			self._metadata.duration = channel:GetLength()
-
-			-- TODO: limit the duration in some way so a client doesn't try to
-			-- spoof this
-
-			callback()
+			self:SetMetadataValue( "title", channel:GetFileName() )
+			self:SetMetadataValue( "duration", channel:GetLength() )
 
 			channel:Stop()
-		else
-			callback("There was a problem prefetching audio metadata.")
-		end
-
-	end )
+			callback()
+		end,
+		function()
+			callback( "There was a problem receiving the audio stream, please try again." )
+		end,
+		MAX_LOAD_ATTEMPTS
+	)
 
 end
 
