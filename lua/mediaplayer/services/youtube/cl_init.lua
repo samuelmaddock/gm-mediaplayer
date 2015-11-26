@@ -74,7 +74,7 @@ end
 
 function SERVICE:Sync()
 	local seekTime = self:CurrentTime()
-	if seekTime > 0 then
+	if self:IsTimed() and seekTime > 0 then
 		YTSeek( self, seekTime )
 	end
 end
