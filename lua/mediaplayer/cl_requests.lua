@@ -65,6 +65,8 @@ function MediaPlayer.Request( obj, url )
 		print("MEDIAPLAYER.Request:", url, mpId)
 	end
 
+	local mp = MediaPlayer.GetById( mpId )
+
 	local allowWebpage = MediaPlayer.Cvars.AllowWebpages:GetBool()
 
 	-- Verify valid URL as to not waste time networking
@@ -79,6 +81,12 @@ function MediaPlayer.Request( obj, url )
 		if err then
 			-- TODO: don't use chatprint to notify the user
 			LocalPlayer():ChatPrint( "Request failed: " .. err )
+			return
+		end
+
+		if not IsValid( mp ) then
+			-- media player may have been removed before we could finish the
+			-- async prerequest action
 			return
 		end
 

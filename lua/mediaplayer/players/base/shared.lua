@@ -61,6 +61,10 @@ end
 -- @return boolean	Whether the media player is valid
 --
 function MEDIAPLAYER:IsValid()
+	if self._removed then
+		return false
+	end
+
 	return true
 end
 
@@ -343,9 +347,6 @@ function MEDIAPLAYER:AddMedia( media )
 	if not media then return end
 
 	if SERVER then
-		-- add an extra second for client buffering time
-		media:Duration( media:Duration() + 1 )
-
 		-- cache the time the media has been queued for sorting purposes
 		media:SetMetadataValue("queueTime", RealTime())
 	end
@@ -437,6 +438,7 @@ end
 --
 function MEDIAPLAYER:Remove()
 	MediaPlayer.Destroy( self )
+	self._removed = true
 
 	if SERVER then
 

@@ -10,6 +10,10 @@ local MEDIAPLAYER = MEDIAPLAYER
 MEDIAPLAYER.Name = "entity"
 
 function MEDIAPLAYER:IsValid()
+	if not BaseClass.IsValid(self) then
+		return false
+	end
+
 	local ent = self.Entity
 
 	if ent then

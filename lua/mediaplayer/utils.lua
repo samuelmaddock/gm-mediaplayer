@@ -96,6 +96,26 @@ function utils.Shuffle(list)
     return shuffled
 end
 
+function utils.Retry( func, success, error, maxAttempts )
+
+	maxAttempts = maxAttempts or 3
+	local attempts = 1
+
+	local function callback( value )
+		if value then
+			success( value )
+		elseif attempts < maxAttempts then
+			attempts = attempts + 1
+			func( callback )
+		else
+			error()
+		end
+	end
+
+	func( callback )
+
+end
+
 if CLIENT then
 
 	local CeilPower2 = utils.CeilPower2
@@ -144,6 +164,18 @@ if CLIENT then
 		end
 
 		return seconds
+	end
+
+	function utils.LoadStreamChannel( uri, options, callback )
+
+		sound.PlayURL( uri, options or "noplay", function( channel )
+			if IsValid( channel ) then
+				callback( channel )
+			else
+				callback( nil )
+			end
+		end )
+
 	end
 
 end
