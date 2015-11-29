@@ -2,6 +2,7 @@ if SERVER then AddCSLuaFile() end
 
 local file = file
 local math = math
+local urllib = url
 local ceil = math.ceil
 local floor = math.floor
 local Round = math.Round
@@ -166,16 +167,38 @@ if CLIENT then
 		return seconds
 	end
 
+	---
+	-- Attempts to play uri from stream or local file and returns channel in
+	-- callback.
+	--
 	function utils.LoadStreamChannel( uri, options, callback )
+		local isLocalFile = false
 
-		sound.PlayURL( uri, options or "noplay", function( channel )
+		-- Play uri from a local file if:
+		-- 1. Windows OS and path contains drive letter
+		-- 2. Linux or OS X and path starts with a single '/'
+		--
+		-- We can't check this using file.Exists since GMod only allows checking
+		-- within the GMod directory. However, sound.PlayFile will still load
+		-- a file from any directory.
+		if ( system.IsWindows() and uri:find("^%w:/") ) or
+			( not system.IsWindows() and uri:find("^/[^/]") ) then
+			isLocalFile = true
+
+			local success, decoded = pcall(urllib.unescape, uri)
+			if success then
+				uri = decoded
+			end
+		end
+
+		local playFunc = isLocalFile and sound.PlayFile or sound.PlayURL
+		playFunc( uri, options or "noplay", function( channel )
 			if IsValid( channel ) then
 				callback( channel )
 			else
 				callback( nil )
 			end
 		end )
-
 	end
 
 end

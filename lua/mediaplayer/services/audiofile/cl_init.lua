@@ -35,13 +35,6 @@ function SERVICE:Play()
 
 	BaseClass.Play( self )
 
-	if self.LoadAttempts and self.LoadAttempts >= MAX_LOAD_ATTEMPTS then
-		-- TODO: display failure message to player
-		MsgN( "Failed to load media after " .. MAX_LOAD_ATTEMPTS ..
-			" attempts: " .. tostring(self.url) )
-		return
-	end
-
 	if IsValid(self.Channel) then
 		self.Channel:Play()
 	else
@@ -55,8 +48,16 @@ function SERVICE:Play()
 
 		settings = table.concat(settings, " ")
 
-		sound.PlayURL( self.url, settings, function( channel )
-			if IsValid(channel) then
+		local function loadAudio( callback )
+			if not self:IsPlaying() or IsValid( self.Channel ) then return end
+			MediaPlayerUtils.LoadStreamChannel( self.url, settings, callback )
+		end
+
+		-- Loading audio can fail the first time, so let's retry a few times
+		-- before giving up.
+		MediaPlayerUtils.Retry(
+			loadAudio,
+			function( channel )
 				self.Channel = channel
 
 				-- The song may have been skipped before the channel was
@@ -69,20 +70,12 @@ function SERVICE:Play()
 				end
 
 				self:emit('channelReady', channel)
-				self.LoadAttempts = nil
-			else
-				self.LoadAttempts = (self.LoadAttempts or 0) + 1
-
-				MsgN( "Failed to load media, trying again... " .. tostring(self.url) )
-
-				-- Let's try again...
-				timer.Simple( 2 ^ self.LoadAttempts, function()
-					if self:IsPlaying() then
-						self:Play()
-					end
-				end )
-			end
-		end )
+			end,
+			function()
+				-- do nothing
+			end,
+			MAX_LOAD_ATTEMPTS
+		)
 	end
 
 end
