@@ -121,3 +121,13 @@ function MEDIAPLAYER:SetMedia( media )
 
 	BaseClass.SetMedia( self, media )
 end
+
+---
+-- Mouse click intersected with 3D2D screen.
+--
+function MEDIAPLAYER:OnMousePressed( x, y )
+	local media = self:GetMedia()
+	if media and media:IsMouseInputEnabled() then
+		media:OnMousePressed( x, y )
+	end
+end

@@ -31,3 +31,10 @@ end
 function SERVICE:NetWriteRequest()
 	-- Send any additional net data here
 end
+
+function SERVICE:OnMousePressed( x, y )
+end
+
+function SERVICE:IsMouseInputEnabled()
+	return false
+end

@@ -24,6 +24,7 @@ function PANEL:Init()
 
 	self.JS = {}
 	self.Callbacks = {}
+	self.MouseActions = {}
 
 	self.URL = "about:blank"
 
@@ -93,6 +94,8 @@ function PANEL:Think()
 		self:FetchPageURL()
 		self._nextUrlPoll = RealTime() + 1
 	end
+
+	self:HandleMouseActions()
 
 end
 
@@ -394,6 +397,57 @@ function PANEL:OpeningURL( url )
 end
 
 function PANEL:FinishedURL( url )
+end
+
+
+--[[---------------------------------------------------------
+	Simulated mouse clicks
+-----------------------------------------------------------]]
+
+function PANEL:InjectMouseClick( x, y )
+	if self._handlingMouseAction then
+		return
+	end
+
+	local w, h = self:GetSize()
+	table.insert( self.MouseActions, {
+		x = math.Round(x * w),
+		y = math.Round(y * h),
+		tick = 0
+	} )
+end
+
+function PANEL:HandleMouseActions()
+	if #self.MouseActions == 0 then
+		return
+	end
+
+	local action = self.MouseActions[1]
+	action.tick = action.tick + 1
+
+	if action.tick == 1 then
+		-- show cursor
+		self._handlingMouseAction = true
+		self:SetZPos( 32767 )
+		self:MakePopup()
+		gui.EnableScreenClicker( true )
+		RememberCursorPosition()
+		input.SetCursorPos( action.x, action.y )
+	-- elseif action.tick == 2 then
+	elseif action.tick == 3 then
+		-- simulate click; need to wait at least one frame
+		gui.InternalMousePressed( MOUSE_LEFT )
+		gui.InternalMouseReleased( MOUSE_LEFT )
+	elseif action.tick > 3 then
+		-- hide cursor
+		RestoreCursorPosition()
+		gui.EnableScreenClicker( false )
+		self:SetKeyboardInputEnabled( false )
+		self:SetMouseInputEnabled( false )
+		self:SetZPos( -32768 )
+		table.remove( self.MouseActions, 1 )
+		self._handlingMouseAction = nil
+	end
 end
 
 derma.DefineControl( "DMediaPlayerHTML", "", PANEL, "Awesomium" )

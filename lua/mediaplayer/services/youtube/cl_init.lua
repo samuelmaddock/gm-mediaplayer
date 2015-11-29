@@ -78,3 +78,12 @@ function SERVICE:Sync()
 		YTSeek( self, seekTime )
 	end
 end
+
+
+function SERVICE:OnMousePressed( x, y )
+	self.Browser:InjectMouseClick( x, y )
+end
+
+function SERVICE:IsMouseInputEnabled()
+	return IsValid( self.Browser )
+end
