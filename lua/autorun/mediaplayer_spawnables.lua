@@ -26,7 +26,7 @@ AddMediaPlayerModel(
 	}
 )
 
-if IsMounted( "cstrike" ) then
+if SERVER or IsMounted( "cstrike" ) then
 	AddMediaPlayerModel(
 		"../spawnicons/models/props/cs_office/tv_plasma",
 		"Small TV",
