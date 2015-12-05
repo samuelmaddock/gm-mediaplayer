@@ -47,8 +47,9 @@ local function mousePressed( mouseCode, aimVector )
 
 	checkScreenClick( aimVector )
 end
-hook.Add( "GUIMousePressed", "MediaPlayer.ScreenIntersect", mousePressed )
+hook.Add( "GUIMouseReleased", "MediaPlayer.ScreenIntersect", mousePressed )
 
+--[[
 local function bindPressed( ply, bind, pressed )
 	if not ( bind == "+attack" and pressed ) then
 		return
@@ -58,3 +59,4 @@ local function bindPressed( ply, bind, pressed )
 	checkScreenClick( aimVector )
 end
 hook.Add( "PlayerBindPress", "MediaPlayer.ScreenIntersect", bindPressed )
+]]
