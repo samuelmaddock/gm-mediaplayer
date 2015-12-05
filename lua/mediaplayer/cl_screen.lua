@@ -61,6 +61,33 @@ local function mousePressed( mouseCode, aimVector )
 end
 hook.Add( "GUIMouseReleased", "MediaPlayer.ScreenIntersect", mousePressed )
 
+local function isAimingAtScreen()
+	local aimVector = LocalPlayer():GetAimVector()
+	for name, mp in pairs( MediaPlayer.List ) do
+		local ent = mp.Entity
+		if IsValid( mp ) and not ent:IsDormant() then
+			local x, y = getScreenPos( ent, aimVector )
+			if x then
+				return true
+			end
+		end
+	end
+end
+
+local function preventWorldClicker()
+	local ply = LocalPlayer()
+
+	if not ply:IsWorldClicking() then return end
+
+	local ent = ply:GetEyeTrace().Entity
+	if not ( IsValid(ent) and ent.IsMediaPlayerEntity ) then return end
+
+	if isAimingAtScreen() then
+		return true
+	end
+end
+hook.Add( "PreventScreenClicks", "MediaPlayer.PreventWorldClicker", preventWorldClicker )
+
 --[[
 local function bindPressed( ply, bind, pressed )
 	if not ( bind == "+attack" and pressed ) then
