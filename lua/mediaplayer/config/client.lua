@@ -12,8 +12,7 @@ MediaPlayer.SetConfig({
 		-- Base URL where HTML content is located.
 		-- @type String
 		--
-		-- base_url = "http://pixeltailgames.github.io/gm-mediaplayer/"
-		base_url = "http://localhost/"
+		base_url = "http://pixeltailgames.github.io/gm-mediaplayer/"
 
 	},
 
