@@ -117,6 +117,68 @@ function utils.Retry( func, success, error, maxAttempts )
 
 end
 
+local function setTimeout( func, wait )
+	local timerID = tostring( func )
+	timer.Create( timerID, wait, 1, func )
+	timer.Start( timerID )
+	return timerID
+end
+
+local function clearTimeout( timerID )
+	if timer.Exists( timerID ) then
+		timer.Destroy( timerID )
+	end
+end
+
+-- based on underscore.js' _.throttle function
+function utils.Throttle( func, wait, options )
+	wait = wait or 1
+	options = options or {}
+
+	local timeout, args, result
+	local previous
+
+	local function later()
+		previous = (options.leading == false) and 0 or RealTime()
+		timeout = nil
+		result = func( unpack(args) )
+		if not timeout then
+			args = nil
+		end
+	end
+
+	local function throttled(...)
+		local now = RealTime()
+		if not previous then
+			previous = now
+		end
+
+		local remaining = wait - (now - previous)
+
+		args = {...}
+
+		if remaining <= 0 or remaining > wait then
+			if timeout then
+				clearTimeout(timeout)
+				timeout = nil
+			end
+
+			previous = now
+			result = func( unpack(args) )
+
+			if not timeout then
+				args = nil
+			end
+		elseif not timeout and options.trailing ~= false then
+			timeout = setTimeout(later, remaining)
+		end
+
+		return result
+	end
+
+	return throttled
+end
+
 if CLIENT then
 
 	local CeilPower2 = utils.CeilPower2
