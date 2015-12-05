@@ -1,12 +1,24 @@
+local MAX_SCREEN_DISTANCE = 1000
+
 local function getScreenPos( ent, aimVector )
 	local w, h, pos, ang = ent:GetMediaPlayerPosition()
 	local eyePos = LocalPlayer():EyePos()
+
+	if pos:Distance( eyePos ) > MAX_SCREEN_DISTANCE then
+		return
+	end
+
+	local screenNormal = ang:Up()
+
+	if screenNormal:Dot( aimVector ) > 0 then
+		return -- prevent clicks from behind the screen
+	end
 
 	local hitPos = util.IntersectRayWithPlane(
 		eyePos,
 		aimVector,
 		pos,
-		ang:Up()
+		screenNormal
 	)
 
 	if not hitPos then
@@ -14,8 +26,6 @@ local function getScreenPos( ent, aimVector )
 	end
 
 	-- debugoverlay.Cross( hitPos, 1, 60 )
-
-	-- TODO: disallow clicks from behind the screen
 
 	local localPos = WorldToLocal( pos, ang, hitPos, ang )
 	local x, y = -localPos.x, localPos.y
