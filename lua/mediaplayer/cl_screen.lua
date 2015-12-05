@@ -25,7 +25,9 @@ local function getScreenPos( ent, aimVector )
 		return
 	end
 
-	-- debugoverlay.Cross( hitPos, 1, 60 )
+	if MediaPlayer.DEBUG then
+		debugoverlay.Cross( hitPos, 1, 60 )
+	end
 
 	local localPos = WorldToLocal( pos, ang, hitPos, ang )
 	local x, y = -localPos.x, localPos.y
