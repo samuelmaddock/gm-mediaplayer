@@ -39,7 +39,7 @@ local function getScreenPos( ent, aimVector )
 	return x / w, y / h
 end
 
-local function checkScreenClick( aimVector )
+function MediaPlayer.CheckScreenClick( aimVector )
 	for name, mp in pairs( MediaPlayer.List ) do
 		local ent = mp.Entity
 		if IsValid( mp ) and not ent:IsDormant() then
@@ -57,7 +57,7 @@ local function mousePressed( mouseCode, aimVector )
 		return
 	end
 
-	checkScreenClick( aimVector )
+	MediaPlayer.CheckScreenClick( aimVector )
 end
 hook.Add( "GUIMouseReleased", "MediaPlayer.ScreenIntersect", mousePressed )
 
@@ -68,7 +68,7 @@ local function bindPressed( ply, bind, pressed )
 	end
 
 	local aimVector = ply:GetAimVector()
-	checkScreenClick( aimVector )
+	MediaPlayer.CheckScreenClick( aimVector )
 end
 hook.Add( "PlayerBindPress", "MediaPlayer.ScreenIntersect", bindPressed )
 ]]
