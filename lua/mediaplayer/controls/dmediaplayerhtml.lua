@@ -381,13 +381,18 @@ end
 
 
 --[[---------------------------------------------------------
-	Remove Scrollbars
+	Scrolling
 -----------------------------------------------------------]]
 
 local JS_RemoveScrollbars = "document.body.style.overflow = 'hidden';"
+local JS_ScrollBy = "window.scrollBy(0, %d);"
 
 function PANEL:RemoveScrollbars()
 	self:QueueJavascript(JS_RemoveScrollbars)
+end
+
+function PANEL:Scroll( amount )
+	self:QueueJavascript( JS_ScrollBy:format(amount) )
 end
 
 

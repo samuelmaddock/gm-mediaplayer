@@ -1,3 +1,7 @@
+--[[---------------------------------------------------------
+	Pass mouse clicks into media player browser
+-----------------------------------------------------------]]
+
 local MAX_SCREEN_DISTANCE = 1000
 
 local function getScreenPos( ent, aimVector )
@@ -39,27 +43,67 @@ local function getScreenPos( ent, aimVector )
 	return x / w, y / h
 end
 
-function MediaPlayer.CheckScreenClick( aimVector )
+function MediaPlayer.DispatchScreenTrace( func, aimVector )
+	if type(func) ~= "function" then return end
+	if not aimVector then
+		aimVector = LocalPlayer():GetAimVector()
+	end
+
 	for name, mp in pairs( MediaPlayer.List ) do
 		local ent = mp.Entity
 		if IsValid( mp ) and not ent:IsDormant() then
 			local x, y = getScreenPos( ent, aimVector )
-			if x then
-				mp:OnMousePressed( x, y )
+			if x and y then
+				func(mp, x, y)
 			end
 		end
 	end
 end
 
+local function mpMouseReleased( mp, x, y )
+	mp:OnMousePressed(x, y)
+end
 
 local function mousePressed( mouseCode, aimVector )
 	if mouseCode ~= MOUSE_LEFT then
 		return
 	end
 
-	MediaPlayer.CheckScreenClick( aimVector )
+	MediaPlayer.DispatchScreenTrace( mpMouseReleased, aimVector )
 end
 hook.Add( "GUIMouseReleased", "MediaPlayer.ScreenIntersect", mousePressed )
+
+
+--[[---------------------------------------------------------
+	Pass mouse scrolling into media player browser
+-----------------------------------------------------------]]
+
+local mouseScroll = MediaPlayerUtils.Throttle(function( dt )
+	MediaPlayer.DispatchScreenTrace(function(mp)
+		mp:OnMouseWheeled(dt)
+	end, aimVector)
+end, 0.01, { trailing = false })
+
+hook.Add( "ContextMenuCreated", "MediaPlayer.Scroll", function( contextMenu )
+	if contextMenu.OnMouseWheeled then return end
+	contextMenu.OnMouseWheeled = function(panel, scrollDelta)
+		mouseScroll(scrollDelta)
+	end
+end )
+
+--[[
+local function checkMouseScroll( ply, cmd )
+	local scrollDelta = cmd:GetMouseWheel()
+	if scrollDelta == 0 then return end
+	mouseScroll(scrollDelta)
+end
+hook.Add( "StartCommand", "MediaPlayer.Scroll", checkMouseScroll )
+]]
+
+--[[---------------------------------------------------------
+	Prevent weapons from firing while the context menu is
+	open and the cursor is aiming at a screen.
+-----------------------------------------------------------]]
 
 local function isAimingAtScreen()
 	local aimVector = LocalPlayer():GetAimVector()
@@ -87,15 +131,3 @@ local function preventWorldClicker()
 	end
 end
 hook.Add( "PreventScreenClicks", "MediaPlayer.PreventWorldClicker", preventWorldClicker )
-
---[[
-local function bindPressed( ply, bind, pressed )
-	if not ( bind == "+attack" and pressed ) then
-		return
-	end
-
-	local aimVector = ply:GetAimVector()
-	MediaPlayer.CheckScreenClick( aimVector )
-end
-hook.Add( "PlayerBindPress", "MediaPlayer.ScreenIntersect", bindPressed )
-]]

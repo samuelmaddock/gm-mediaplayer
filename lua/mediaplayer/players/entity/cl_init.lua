@@ -131,3 +131,10 @@ function MEDIAPLAYER:OnMousePressed( x, y )
 		media:OnMousePressed( x, y )
 	end
 end
+
+function MEDIAPLAYER:OnMouseWheeled( scrollDelta )
+	local media = self:GetMedia()
+	if media and media:IsMouseInputEnabled() then
+		media:OnMouseWheeled( scrollDelta )
+	end
+end

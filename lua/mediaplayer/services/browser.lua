@@ -135,6 +135,11 @@ if CLIENT then
 		self.Browser:InjectMouseClick( x, y )
 	end
 
+	local SCROLL_MULTIPLIER = -80
+	function SERVICE:OnMouseWheeled( scrollDelta )
+		self.Browser:Scroll( scrollDelta * SCROLL_MULTIPLIER )
+	end
+
 	--[[---------------------------------------------------------
 		Draw 3D2D
 	-----------------------------------------------------------]]
