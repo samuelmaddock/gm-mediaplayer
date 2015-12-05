@@ -90,9 +90,9 @@
 
             state = this.player.getPlayerState();
 
-            /*if (state < YT.PlayerState.ENDED) {
+            if (state == YT.PlayerState.PAUSED) {
                 this.player.playVideo();
-            }*/
+            }
 
             if (state === YT.PlayerState.BUFFERING) return;
 
