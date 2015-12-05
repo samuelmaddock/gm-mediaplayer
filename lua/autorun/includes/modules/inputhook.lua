@@ -3,6 +3,7 @@ local pairs = pairs
 local RealTime = RealTime
 local type = type
 local IsKeyDown = input.IsKeyDown
+local IsMouseDown = input.IsMouseDown
 local IsGameUIVisible = gui.IsGameUIVisible
 local IsConsoleVisible = gui.IsConsoleVisible
 
@@ -26,12 +27,13 @@ local function InputThink()
 
 	if IsGameUIVisible() or IsConsoleVisible() then return end
 
-	local dispatch, down, held
+	local dispatch, down, held, downFunc
 
 	for key, handles in pairs( KeyControls ) do
 		for name, tbl in pairs( handles ) do
 
 			dispatch = false
+			downFunc = tbl.Mouse and IsMouseDown or IsKeyDown
 
 			if tbl.Enabled then
 
@@ -45,7 +47,7 @@ local function InputThink()
 				end
 
 				-- Key release
-				if not IsKeyDown( key ) then
+				if not downFunc( key ) then
 					dispatch = true
 					down = false
 
@@ -55,7 +57,7 @@ local function InputThink()
 			else
 
 				-- Key press
-				if IsKeyDown( key ) then
+				if downFunc( key ) then
 					dispatch = true
 					down = true
 
@@ -69,12 +71,12 @@ local function InputThink()
 				-- Use same behavior as the hook system
 				if type(name) == 'table' then
 					if IsValid(name) then
-						tbl.Toggle( name, down, held )
+						tbl.Toggle( name, down, held, key )
 					else
 						handles[ name ] = nil
 					end
 				else
-					tbl.Toggle( down, held )
+					tbl.Toggle( down, held, key )
 				end
 			end
 
@@ -91,7 +93,7 @@ hook.Add( "Think", "InputManagerThink", InputThink )
 -- @param name		Unique identifier or a valid object.
 -- @param onToggle	Callback function.
 --
-function inputhook.Add( key, name, onToggle )
+function inputhook.Add( key, name, onToggle, isMouse )
 
 	if not (key and onToggle) then return end
 
@@ -102,7 +104,8 @@ function inputhook.Add( key, name, onToggle )
 	KeyControls[ key ][ name ] = {
 		Enabled = false,
 		LastPress = 0,
-		Toggle = onToggle
+		Toggle = onToggle,
+		Mouse = isMouse
 	}
 
 end
