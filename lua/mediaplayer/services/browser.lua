@@ -131,6 +131,10 @@ if CLIENT then
 		self.Browser:QueueJavascript( JS_InjectScript:format( uri ) )
 	end
 
+	function SERVICE:OnMousePressed( x, y )
+		self.Browser:InjectMouseClick( x, y )
+	end
+
 	--[[---------------------------------------------------------
 		Draw 3D2D
 	-----------------------------------------------------------]]
