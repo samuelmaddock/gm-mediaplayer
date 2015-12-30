@@ -72,7 +72,7 @@ function SERVICE:Play()
 				self:emit('channelReady', channel)
 			end,
 			function()
-				local msg = ("Failed to load media player audio '%s'"):format( self.uri )
+				local msg = ("Failed to load media player audio '%s'"):format( self.url )
 				LocalPlayer():ChatPrint( msg )
 			end,
 			MAX_LOAD_ATTEMPTS
