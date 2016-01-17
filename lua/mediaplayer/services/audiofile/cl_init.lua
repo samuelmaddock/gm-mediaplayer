@@ -146,8 +146,6 @@ end
 
 function SERVICE:PreRequest( callback )
 
-	-- LocalPlayer():ChatPrint( "Prefetching data for '" .. self.url .. "'..." )
-
 	local function preload( callback )
 		MediaPlayerUtils.LoadStreamChannel( self.url, nil, callback )
 	end
@@ -193,18 +191,9 @@ local VisualizerBarAlpha = 220
 
 local BANDS	= 28
 
-function DrawSpectrumAnalyzer( channel, w, h )
+local function DrawSpectrumAnalyzer( fft, w, h )
 
-	if channel:GetState() ~= GMOD_CHANNEL_PLAYING then
-		return
-	end
-
-	local fft = {}
-	channel:FFT( fft, FFT_2048 )
 	local b0 = 1
-
-	-- surface.SetDrawColor(VisualizerBarColor)
-
 	local x, y
 
 	for x = 0, BANDS do
@@ -234,11 +223,14 @@ function DrawSpectrumAnalyzer( channel, w, h )
 			y + 1
 		)
 	end
+
 end
 
 
 local HTMLMaterial = HTMLMaterial
 local color_white = color_white
+local FFT_2048 = FFT_2048
+local GMOD_CHANNEL_PLAYING = GMOD_CHANNEL_PLAYING
 
 local HTMLMAT_STYLE_ARTWORK = 'htmlmat.style.artwork'
 AddHTMLMaterialStyle( HTMLMAT_STYLE_ARTWORK, {
@@ -256,8 +248,21 @@ function SERVICE:Draw( w, h )
 		DrawHTMLMaterial( thumbnail, HTMLMAT_STYLE_ARTWORK, w, h )
 	end
 
-	if IsValid(self.Channel) then
-		DrawSpectrumAnalyzer( self.Channel, w, h )
+	local channel = self.Channel
+	if IsValid(channel) and channel:GetState() == GMOD_CHANNEL_PLAYING then
+		local fft = {}
+		channel:FFT( fft, FFT_2048 )
+		
+		-- exposed on the table in case anyone wants to use this
+		self.fft = fft
+		
+		DrawSpectrumAnalyzer( fft, w, h )
 	end
+	
+	self:PostDraw()
 
+end
+
+function SERVICE:PostDraw()
+	-- override this
 end
