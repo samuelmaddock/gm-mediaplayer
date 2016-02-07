@@ -13,6 +13,7 @@ include "controls/dmediaplayerrequest.lua"
 include "shared.lua"
 include "cl_requests.lua"
 include "cl_idlescreen.lua"
+include "cl_screen.lua"
 
 function MediaPlayer.Volume( volume )
 

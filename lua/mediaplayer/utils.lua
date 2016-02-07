@@ -2,6 +2,7 @@ if SERVER then AddCSLuaFile() end
 
 local file = file
 local math = math
+local urllib = url
 local ceil = math.ceil
 local floor = math.floor
 local Round = math.Round
@@ -116,6 +117,68 @@ function utils.Retry( func, success, error, maxAttempts )
 
 end
 
+local function setTimeout( func, wait )
+	local timerID = tostring( func )
+	timer.Create( timerID, wait, 1, func )
+	timer.Start( timerID )
+	return timerID
+end
+
+local function clearTimeout( timerID )
+	if timer.Exists( timerID ) then
+		timer.Destroy( timerID )
+	end
+end
+
+-- based on underscore.js' _.throttle function
+function utils.Throttle( func, wait, options )
+	wait = wait or 1
+	options = options or {}
+
+	local timeout, args, result
+	local previous
+
+	local function later()
+		previous = (options.leading == false) and 0 or RealTime()
+		timeout = nil
+		result = func( unpack(args) )
+		if not timeout then
+			args = nil
+		end
+	end
+
+	local function throttled(...)
+		local now = RealTime()
+		if not previous then
+			previous = now
+		end
+
+		local remaining = wait - (now - previous)
+
+		args = {...}
+
+		if remaining <= 0 or remaining > wait then
+			if timeout then
+				clearTimeout(timeout)
+				timeout = nil
+			end
+
+			previous = now
+			result = func( unpack(args) )
+
+			if not timeout then
+				args = nil
+			end
+		elseif not timeout and options.trailing ~= false then
+			timeout = setTimeout(later, remaining)
+		end
+
+		return result
+	end
+
+	return throttled
+end
+
 if CLIENT then
 
 	local CeilPower2 = utils.CeilPower2
@@ -166,16 +229,38 @@ if CLIENT then
 		return seconds
 	end
 
+	---
+	-- Attempts to play uri from stream or local file and returns channel in
+	-- callback.
+	--
 	function utils.LoadStreamChannel( uri, options, callback )
+		local isLocalFile = false
 
-		sound.PlayURL( uri, options or "noplay", function( channel )
+		-- Play uri from a local file if:
+		-- 1. Windows OS and path contains drive letter
+		-- 2. Linux or OS X and path starts with a single '/'
+		--
+		-- We can't check this using file.Exists since GMod only allows checking
+		-- within the GMod directory. However, sound.PlayFile will still load
+		-- a file from any directory.
+		if ( system.IsWindows() and uri:find("^%w:/") ) or
+			( not system.IsWindows() and uri:find("^/[^/]") ) then
+			isLocalFile = true
+
+			local success, decoded = pcall(urllib.unescape, uri)
+			if success then
+				uri = decoded
+			end
+		end
+
+		local playFunc = isLocalFile and sound.PlayFile or sound.PlayURL
+		playFunc( uri, options or "noplay", function( channel )
 			if IsValid( channel ) then
 				callback( channel )
 			else
 				callback( nil )
 			end
 		end )
-
 	end
 
 end

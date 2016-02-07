@@ -74,7 +74,11 @@ end
 
 function SERVICE:Sync()
 	local seekTime = self:CurrentTime()
-	if self:IsTimed() and seekTime > 0 then
+	if self:IsPlaying() and self:IsTimed() and seekTime > 0 then
 		YTSeek( self, seekTime )
 	end
+end
+
+function SERVICE:IsMouseInputEnabled()
+	return IsValid( self.Browser )
 end

@@ -24,6 +24,7 @@ function PANEL:Init()
 
 	self.JS = {}
 	self.Callbacks = {}
+	self.MouseActions = {}
 
 	self.URL = "about:blank"
 
@@ -40,6 +41,8 @@ function PANEL:Init()
 	self:AddFunction( "gmod", "getUrl", function( url )
 		self:SetURL( url )
 	end )
+
+	hook.Add( "HUDPaint", self, function() self:HUDPaint() end )
 
 end
 
@@ -116,7 +119,9 @@ function PANEL:SetURL( url )
 end
 
 function PANEL:OnURLChanged( new, old )
-
+	if FilterCVar:GetInt() > FILTER_ALL then
+		print( "URL Changed: " .. tostring(new) )
+	end
 end
 
 
@@ -376,13 +381,18 @@ end
 
 
 --[[---------------------------------------------------------
-	Remove Scrollbars
+	Scrolling
 -----------------------------------------------------------]]
 
 local JS_RemoveScrollbars = "document.body.style.overflow = 'hidden';"
+local JS_ScrollBy = "window.scrollBy(0, %d);"
 
 function PANEL:RemoveScrollbars()
 	self:QueueJavascript(JS_RemoveScrollbars)
+end
+
+function PANEL:Scroll( amount )
+	self:QueueJavascript( JS_ScrollBy:format(amount) )
 end
 
 
@@ -394,6 +404,70 @@ function PANEL:OpeningURL( url )
 end
 
 function PANEL:FinishedURL( url )
+end
+
+
+--[[---------------------------------------------------------
+	Simulated mouse clicks
+-----------------------------------------------------------]]
+
+function PANEL:HUDPaint()
+	self:HandleMouseActions()
+end
+
+function PANEL:InjectMouseClick( x, y )
+	if self._handlingMouseAction then
+		return
+	end
+
+	local w, h = self:GetSize()
+	table.insert( self.MouseActions, {
+		x = math.Round(x * w),
+		y = math.Round(y * h),
+		tick = 0
+	} )
+end
+
+function PANEL:HandleMouseActions()
+	if #self.MouseActions == 0 then
+		return
+	end
+
+	local action = self.MouseActions[1]
+	action.tick = action.tick + 1
+
+	if action.tick == 1 then
+		-- show cursor
+		self._handlingMouseAction = true
+		self:SetZPos( 32767 )
+		self:MoveToCursor( action.x, action.y )
+		self:MakePopup()
+		gui.EnableScreenClicker( true )
+		gui.InternalCursorMoved( 0, 0 )
+	elseif action.tick == 2 then
+		local cx, cy = input.GetCursorPos()
+		gui.InternalCursorMoved( cx, cy )
+	elseif action.tick == 3 then
+		-- simulate click; need to wait at least one frame
+		gui.InternalMousePressed( MOUSE_LEFT )
+		gui.InternalMouseReleased( MOUSE_LEFT )
+	elseif action.tick > 3 then
+		-- hide cursor
+		gui.EnableScreenClicker( false )
+		self:SetKeyboardInputEnabled( false )
+		self:SetMouseInputEnabled( false )
+		self:SetZPos( -32768 )
+		table.remove( self.MouseActions, 1 )
+		self._handlingMouseAction = nil
+	end
+end
+
+function PANEL:MoveToCursor( xoffset, yoffset )
+	xoffset = xoffset or 0
+	yoffset = yoffset or 0
+
+	local cx, cy = input.GetCursorPos()
+	self:SetPos( cx - xoffset, cy - yoffset )
 end
 
 derma.DefineControl( "DMediaPlayerHTML", "", PANEL, "Awesomium" )

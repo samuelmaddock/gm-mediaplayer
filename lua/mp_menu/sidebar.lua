@@ -20,6 +20,7 @@ function PANEL:Init()
 	self:SetPaintBackgroundEnabled( true )
 	self:SetPaintBorderEnabled( false )
 
+	self:SetZPos( -99 )
 	self:SetSize( 385, 580 )
 
 	self.Tabs = vgui.Create( "MP.SidebarTabs", self )
@@ -156,12 +157,9 @@ function SidebarPresenter:ShowSidebar( mp )
 
 	local sidebar = vgui.CreateFromTable( MP_SIDEBAR )
 	sidebar:MakePopup()
-	sidebar:ParentToHUD()
 
 	-- sidebar:SetKeyboardInputEnabled( false )
 	sidebar:SetMouseInputEnabled( true )
-
-	sidebar:SetZPos(-99)
 
 	hook.Run( MP.EVENTS.UI.MEDIA_PLAYER_CHANGED, mp )
 

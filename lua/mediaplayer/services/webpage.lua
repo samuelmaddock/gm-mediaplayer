@@ -12,6 +12,10 @@ if CLIENT then
 		browser:OpenURL( self.url )
 	end
 
+	function SERVICE:IsMouseInputEnabled()
+		return IsValid( self.Browser )
+	end
+
 else
 
 	function SERVICE:Match( url )
