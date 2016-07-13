@@ -1,3 +1,14 @@
+--
+-- DMediaPlayerHTML
+--
+-- Improves upon the Cinema HTML control by adding:
+-- Window object callbacks, HTML and JS console filtering, URL polling,
+-- simulated mouse clicks, and proper fullscreen resizing.
+--
+-- Cinema HTML control reference:
+-- https://github.com/pixeltailgames/cinema/blob/master/cinema/gamemode/modules/scoreboard/controls/cl_html.lua
+--
+
 local PANEL = {}
 
 DEFINE_BASECLASS( "Panel" )
