@@ -221,12 +221,15 @@ function MEDIAPLAYER:Think()
 		local volume
 
 		-- TODO: add a GAMEMODE hook to determine if sound should be muted
-		if not HasFocus() and MuteUnfocused:GetBool() then
+		local want_mute = not HasFocus() and MuteUnfocused:GetBool()
+		
+		if want_mute then
 			volume = 0
 		else
 			volume = MediaPlayer.Volume()
 		end
-
+		volume = hook.Run("MediaPlayer.OverrideVolume",volume,want_mute,self,media) or volume
+		
 		media:Volume( volume )
 	end
 
