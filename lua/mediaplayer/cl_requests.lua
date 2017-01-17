@@ -23,13 +23,17 @@ end
 --
 -- @param Entity|Table|String	Media player reference.
 --
-function MediaPlayer.RequestListen( obj )
+function MediaPlayer.RequestListen( obj, want_play )
 
 	local mpId = GetMediaPlayerId(obj)
 	if not mpId then return end
 
 	net.Start( "MEDIAPLAYER.RequestListen" )
 		net.WriteString( mpId )
+		net.WriteBool(want_play==nil)
+		if want_play~=nil then
+			net.WriteBool(want_play)
+		end
 	net.SendToServer()
 
 end
