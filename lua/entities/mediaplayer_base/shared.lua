@@ -3,7 +3,7 @@ ENT.Base = "base_anim"
 
 ENT.Spawnable = false
 
-ENT.Model = Model( "models/props/cs_office/tv_plasma.mdl" )
+ENT.Model = Model( "models/props_phx/rt_screen.mdl" )
 
 ENT.MediaPlayerType = "entity"
 ENT.IsMediaPlayerEntity = true
