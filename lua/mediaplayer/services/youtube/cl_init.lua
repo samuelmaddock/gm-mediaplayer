@@ -32,7 +32,7 @@ local function YTSeek( self, seekTime )
 end
 
 function SERVICE:SetVolume( volume )
-	local js = JS_SetVolume:format( MediaPlayer.Volume() * 100 )
+	local js = JS_SetVolume:format( (volume or MediaPlayer.Volume()) * 100 )
 	self.Browser:RunJavascript(js)
 end
 
