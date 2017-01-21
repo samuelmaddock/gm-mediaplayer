@@ -27,8 +27,23 @@ AddMediaPlayerModel(
 )
 
 if SERVER or IsMounted( "cstrike" ) then
+
 	AddMediaPlayerModel(
-		"../spawnicons/models/props/cs_office/tv_plasma",
+		"../spawnicons/models/props/cs_assault/billboard",
+		"Billboard",
+		"models/props/cs_assault/billboard.mdl",
+		{
+			angle = Angle(-90, 90, 0),
+			offset = Vector(1, 110.5, 57.5),
+			width = 221,
+			height = 115
+		}
+	)
+	
+end
+
+AddMediaPlayerModel(
+		"../spawnicons/models/props_phx/rt_screen",
 		"Small TV",
 		"models/props_phx/rt_screen.mdl",
 		{
@@ -38,7 +53,6 @@ if SERVER or IsMounted( "cstrike" ) then
 			height = 33
 		}
 	)
-end
 
 if SERVER then
 
@@ -51,3 +65,63 @@ if SERVER then
 	end )
 
 end
+
+
+AddMediaPlayerModel(
+	"../spawnicons/models/props_lab/citizenradio",
+	"Billboard",
+	"models/props_lab/citizenradio.mdl",
+	{
+		angle = Angle(0, 90, 0),
+		offset = Vector(-7,12,17.3),
+		width = 27.2*0.85,
+		height = 15.3*0.85
+	}
+)
+
+AddMediaPlayerModel(
+	"../spawnicons/models/props_lab/citizenradio",
+	"Billboard",
+	"models/props_lab/citizenradio.mdl",
+	{
+		angle = Angle(0, 90, 0),
+		offset = Vector(-7,12,17.3),
+		width = 27.2*0.85,
+		height = 15.3*0.85
+	}
+)
+AddMediaPlayerModel(
+	"../spawnicons/models/props_lab/huladoll",
+	"Big",
+	"models/props_lab/huladoll.mdl",
+	{
+		angle = Angle(0, 0, 90),
+		offset = Vector(-1366*.5,5,768),
+		width = 1366,
+		height = 768
+	}
+)
+
+AddMediaPlayerModel(
+	"../spawnicons/models/props_lab/huladoll",
+	"Big",
+	"models/props_lab/huladoll.mdl",
+	{
+		angle = Angle(0, 0, 90),
+		offset = Vector(-1366*.5,5,768),
+		width = 1366,
+		height = 768
+	}
+)
+
+AddMediaPlayerModel(
+	"../spawnicons/models/props_junk/popcan01a",
+	"Smallish",
+	"models/props_junk/popcan01a.mdl",
+	{
+		angle = Angle(0, 0, 90),
+		offset = Vector(-227.56*.5,5,128),
+		width = 227.56,
+		height = 128
+	}
+)
