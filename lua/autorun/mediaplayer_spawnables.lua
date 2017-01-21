@@ -81,7 +81,7 @@ AddMediaPlayerModel(
 
 AddMediaPlayerModel(
 	"../spawnicons/models/props_lab/citizenradio",
-	"Billboard",
+	"Radio",
 	"models/props_lab/citizenradio.mdl",
 	{
 		angle = Angle(0, 90, 0),
