@@ -99,6 +99,11 @@ local function setupPanel( panel )
 
 	-- Set default URL
 	panel:OpenURL( defaultUrl )
+	
+	-- Fix for "about:blank" being broken
+	if defaultUrl == "about:blank" then
+		panel:SetHTML( "<html></html>" )
+	end
 
 	-- Remove any added function callbacks
 	for obj, tbl in pairs(panel.Callbacks) do
