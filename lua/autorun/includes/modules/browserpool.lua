@@ -97,13 +97,13 @@ local function setupPanel( panel )
 	-- Browser panels are usually manually drawn, use a regular panel if not
 	panel:SetPaintedManually(true)
 
-	-- Set default URL
-	panel:OpenURL( defaultUrl )
-	
 	-- Fix for "about:blank" being broken
 	if defaultUrl == "about:blank" then
 		panel:SetHTML( "<html></html>" )
 	end
+
+	-- Set default URL
+	panel:OpenURL( defaultUrl )
 
 	-- Remove any added function callbacks
 	for obj, tbl in pairs(panel.Callbacks) do
