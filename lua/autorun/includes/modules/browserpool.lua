@@ -97,6 +97,11 @@ local function setupPanel( panel )
 	-- Browser panels are usually manually drawn, use a regular panel if not
 	panel:SetPaintedManually(true)
 
+	-- Fix for "about:blank" being broken
+	if defaultUrl == "about:blank" then
+		panel:SetHTML( "<html></html>" )
+	end
+
 	-- Set default URL
 	panel:OpenURL( defaultUrl )
 
