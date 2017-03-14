@@ -26,19 +26,17 @@ AddMediaPlayerModel(
 	}
 )
 
-if SERVER or IsMounted( "cstrike" ) then
-	AddMediaPlayerModel(
-		"../spawnicons/models/props/cs_office/tv_plasma",
-		"Small TV",
-		"models/props_phx/rt_screen.mdl",
-		{
-			angle = Angle(-90, 90, 0),
-			offset = Vector(6.5, 27.9, 35.3),
-			width = 56,
-			height = 33
-		}
-	)
-end
+AddMediaPlayerModel(
+	"../spawnicons/models/props_phx/rt_screen",
+	"Small TV",
+	"models/props_phx/rt_screen.mdl",
+	{
+		angle = Angle(-90, 90, 0),
+		offset = Vector(6.5, 27.9, 35.3),
+		width = 56,
+		height = 33
+	}
+)
 
 if SERVER then
 
