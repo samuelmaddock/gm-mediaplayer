@@ -185,6 +185,7 @@ if CLIENT then
 	local SetDrawColor = surface.SetDrawColor
 	local SetMaterial = surface.SetMaterial
 	local DrawTexturedRect = surface.DrawTexturedRect
+	local DrawRect = surface.DrawRect
 
 	local color_white = color_white
 
@@ -204,8 +205,15 @@ if CLIENT then
 		ph = CeilPower2(ph)
 
 		SetDrawColor( color_white )
-		SetMaterial( panel:GetHTMLMaterial() )
-		DrawTexturedRect( 0, 0, w * pw, h * ph )
+
+		local mat = panel:GetHTMLMaterial()
+
+		if mat then
+			SetMaterial( mat )
+			DrawTexturedRect( 0, 0, w * pw, h * ph )
+		else
+			DrawRect( 0, 0, w * pw, h * ph )
+		end
 	end
 
 	function utils.ParseHHMMSS( time )
