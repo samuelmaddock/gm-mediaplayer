@@ -23,6 +23,16 @@ MediaPlayer.SetConfig({
 	--------------------------------------------------------------------------]]
 	soundcloud = {
 		["client_id"] = "2e0e541854cbabd873d647c1d45f79e8"
+	},
+
+	--[[------------------------------------------------------------------------
+		Twitch Developer Application
+
+		To register your own application, see the following webpage:
+		https://dev.twitch.tv/docs/v5/guides/using-the-twitch-api
+	--------------------------------------------------------------------------]]
+	twitch = {
+		client_id = "cg1n8y5akizthcctygugthfq94tsg3"
 	}
 
 })

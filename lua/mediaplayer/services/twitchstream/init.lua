@@ -3,7 +3,8 @@ include "shared.lua"
 
 local urllib = url
 
-local MetadataUrl = "https://api.twitch.tv/kraken/streams/%s"
+local APIKey = MediaPlayer.GetConfigValue('twitch.client_id')
+local MetadataUrl = "https://api.twitch.tv/kraken/streams/%s?client_id=%s"
 
 local function OnReceiveMetadata( self, callback, body )
 
@@ -42,7 +43,7 @@ function SERVICE:GetMetadata( callback )
 	end
 
 	local channel = self:GetTwitchChannel()
-	local apiurl = MetadataUrl:format( channel )
+	local apiurl = MetadataUrl:format( channel, APIKey )
 
 	self:Fetch( apiurl,
 		function( body, length, headers, code )
