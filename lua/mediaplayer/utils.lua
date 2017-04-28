@@ -192,7 +192,10 @@ if CLIENT then
 		if not (IsValid( panel ) and w and h) then return end
 
 		panel:UpdateHTMLTexture()
-
+		local mat = panel:GetHTMLMaterial()
+		
+		if not mat or mat:IsError() then return end
+		
 		local pw, ph = panel:GetSize()
 
 		-- Convert to scalar
@@ -204,7 +207,7 @@ if CLIENT then
 		ph = CeilPower2(ph)
 
 		SetDrawColor( color_white )
-		SetMaterial( panel:GetHTMLMaterial() )
+		SetMaterial( mat )
 		DrawTexturedRect( 0, 0, w * pw, h * ph )
 	end
 
