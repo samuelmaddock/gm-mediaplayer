@@ -37,7 +37,7 @@ function PANEL:Init()
 	self.Callbacks = {}
 	self.MouseActions = {}
 
-	self.URL = "about:blank"
+	self.URL = "data:text/html,"
 
 	--
 	-- Implement a console - because awesomium doesn't provide it for us anymore

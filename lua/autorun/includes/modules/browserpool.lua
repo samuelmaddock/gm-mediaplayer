@@ -63,7 +63,7 @@ local numRequests = 0
 -- Default URL to set browsers on setup/teardown.
 -- @type String
 --
-local defaultUrl = "about:blank"
+local defaultUrl = "data:text/html,"
 
 ---
 -- JavaScript code to remove an object's property.
@@ -96,6 +96,9 @@ local function setupPanel( panel )
 
 	-- Browser panels are usually manually drawn, use a regular panel if not
 	panel:SetPaintedManually(true)
+
+	-- Fix for panel not getting cleared after 3/2017 update
+	panel:SetHTML( "" )
 
 	-- Set default URL
 	panel:OpenURL( defaultUrl )
