@@ -41,7 +41,7 @@ function SERVICE:Play()
 		local settings = table.Copy(self.StreamOptions)
 
 		-- .ogg files can't seem to use 3d?
-		if Audio3DCvar:GetBool() and IsValid(self.Entity) and
+		if Audio3DCvar:GetBool() and IsValid(self.Entity) and not self.Entity.Disable3DAudio and
 				not self.url:match(".ogg") then
 			table.insert(settings, "3d")
 		end
