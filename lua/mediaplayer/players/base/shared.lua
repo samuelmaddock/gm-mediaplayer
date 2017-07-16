@@ -117,7 +117,7 @@ function MEDIAPLAYER:OnPlayerStateChanged( old, new )
 	local validMedia = IsValid(media)
 
 	if MediaPlayer.DEBUG then
-		print( "MEDIAPLAYER.OnPlayerStateChanged", old .. ' => ' .. new )
+		print( "MEDIAPLAYER.OnPlayerStateChanged", old .. " => " .. new )
 	end
 
 	if new == MP_STATE_PLAYING then
@@ -176,8 +176,11 @@ end
 -- etc.). Override this for custom behavior.
 --
 function MEDIAPLAYER:IsPlayerPrivileged( ply )
-	return ply == self:GetOwner() or ply:IsAdmin() or
-		hook.Run( "MediaPlayerIsPlayerPrivileged", self, ply )
+	if ply == self:GetOwner() or ply:IsAdmin() then
+		return true
+	end
+
+	return hook.Run("MediaPlayerIsPlayerPrivileged", ply, self) or false
 end
 
 ---
@@ -389,7 +392,7 @@ function MEDIAPLAYER:OnMediaStarted( media )
 			self:SetPlayerState( MP_STATE_PLAYING )
 		end
 
-		self:emit('mediaStarted', media)
+		self:emit("mediaStarted", media)
 
 	elseif SERVER then
 		self:SetPlayerState( MP_STATE_ENDED )
@@ -421,7 +424,7 @@ function MEDIAPLAYER:OnMediaFinished( media )
 		media:Stop()
 	end
 
-	self:emit('mediaFinished', media)
+	self:emit("mediaFinished", media)
 
 	if SERVER then
 		if media and self:GetQueueRepeat() then
