@@ -89,6 +89,10 @@ net.Receive( "MEDIAPLAYER.RequestMedia", RequestWrapper(function(mp, ply)
 		return
 	end
 
+	if hook.Call("PreMediaPlayerRequestMedia", nil, mp, ply, url) then
+		return
+	end
+
 	-- Build the media object for the URL
 	local media = MediaPlayer.GetMediaForUrl( url, allowWebpage )
 	media:NetReadRequest()

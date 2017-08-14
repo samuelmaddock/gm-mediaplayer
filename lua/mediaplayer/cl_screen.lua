@@ -51,7 +51,7 @@ function MediaPlayer.DispatchScreenTrace( func, aimVector )
 
 	for name, mp in pairs( MediaPlayer.List ) do
 		local ent = mp.Entity
-		if IsValid( mp ) and not ent:IsDormant() then
+		if IsValid( mp ) and IsEntity(mp) and not ent:IsDormant() then
 			local x, y = getScreenPos( ent, aimVector )
 			if x and y then
 				func(mp, x, y)
