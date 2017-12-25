@@ -99,7 +99,7 @@ end
 
 function SERVICE:Sync()
 	if self:IsPlaying() and IsValid(self.Channel) then
-		if self:IsTimed() then
+		if self:IsTimed() and (not self._metadata or self._metadata ~= false)  then
 			self:SyncTime()
 		end
 
