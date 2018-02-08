@@ -583,5 +583,7 @@ function MEDIAPLAYER:NotifyListeners( msg )
 end
 
 function MEDIAPLAYER:NotifyPlayer( ply, msg )
-	ply:ChatPrint( msg )
+	if not hook.Run( "MediaPlayerNotifyPlayer", self, ply, msg ) then
+		ply:ChatPrint( msg )
+	end
 end
