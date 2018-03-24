@@ -1,10 +1,10 @@
 "AddonInfo"
 {
 	"name"				"Media Player"
-	"version"			"0.0.1"
+	"version"			"1.0.0"
 	"author_name"		"Samuel Maddock"
-	"author_email"		"contact@pixeltailgames.com"
-	"author_url"		"http://github.com/pixeltailgames"
-	"info"				"http://github.com/pixeltailgames/gm-mediaplayer"
+	"author_email"		"sam@samuelmaddock.com"
+	"author_url"		"http://samuelmaddock.com"
+	"info"				"http://github.com/samuelmaddock/gm-mediaplayer"
 	"override"			"0"
 }
