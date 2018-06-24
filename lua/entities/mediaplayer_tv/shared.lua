@@ -12,13 +12,13 @@ ENT.Base = "mediaplayer_base"
 
 ENT.Spawnable = true
 
-ENT.Model = Model( "models/hunter/plates/plate5x8.mdl" )
+ENT.Model = Model( "models/gmod_tower/suitetv_large.mdl" )
 
-list.Set( "MediaPlayerModelConfigs", ENT.Model, 	{
-		angle = Angle(0, 90, 0),
-		offset = Vector(-118.8, 189.8, 1.8),
-		width = 380,
-		height = 238
+list.Set( "MediaPlayerModelConfigs", ENT.Model, {
+	angle = Angle(-90, 90, 0),
+	offset = Vector(6, 59.49, 103.65),
+	width = 119,
+	height = 69
 } )
 
 function ENT:SetupDataTables()
