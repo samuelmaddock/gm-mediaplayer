@@ -75,9 +75,14 @@ function ENT:AcceptInput( name, activator, caller, data )
 		if ply and mp:HasListener(ply) then
 			mp:RemoveListener(ply)
 		end
+	elseif name == "RemoveAllPlayers" then
+		mp:SetListeners({})
 	elseif name == "PlayPauseMedia" then
 		mp:PlayPause()
 	elseif name == "SkipMedia" then
+		mp:OnMediaFinished()
+	elseif name == "ClearMedia" then
+		mp:ClearMediaQueue()
 		mp:OnMediaFinished()
 	else
 		return false
