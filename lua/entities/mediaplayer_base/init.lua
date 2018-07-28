@@ -60,3 +60,28 @@ function ENT:KeyValue( key, value )
 		self.Model = value
 	end
 end
+
+function ENT:AcceptInput( name, activator, caller, data )
+	local mp = self:GetMediaPlayer()
+	if not IsValid(mp) then return false end
+
+	local ply = IsValid(activator) and activator:IsPlayer() and activator
+
+	if name == "AddPlayer" then
+		if ply and not mp:HasListener(ply) then
+			mp:AddListener(ply)
+		end
+	elseif name == "RemovePlayer" then
+		if ply and mp:HasListener(ply) then
+			mp:RemoveListener(ply)
+		end
+	elseif name == "PlayPauseMedia" then
+		mp:PlayPause()
+	elseif name == "SkipMedia" then
+		mp:OnMediaFinished()
+	else
+		return false
+	end
+
+	return true
+end
