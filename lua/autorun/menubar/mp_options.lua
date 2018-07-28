@@ -4,4 +4,12 @@ hook.Add( "PopulateMenuBar", "MediaPlayerOptions_MenuBar", function( menubar )
 
 	m:AddCVar( "Fullscreen", "mediaplayer_fullscreen", "1", "0" )
 
+	m:AddSpacer()
+
+	m:AddOption( "Turn Off All", function()
+		for _, mp in ipairs(MediaPlayer.GetAll()) do
+			MediaPlayer.RequestListen( mp )
+		end
+	end )
+
 end )
