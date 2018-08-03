@@ -10,6 +10,8 @@ hook.Add( "PopulateMenuBar", "MediaPlayerOptions_MenuBar", function( menubar )
 		for _, mp in ipairs(MediaPlayer.GetAll()) do
 			MediaPlayer.RequestListen( mp )
 		end
+
+		MediaPlayer.HideSidebar()
 	end )
 
 end )
