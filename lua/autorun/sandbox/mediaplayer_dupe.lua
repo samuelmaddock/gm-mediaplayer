@@ -322,7 +322,7 @@ local function RenderMediaPlayerDupe( Dupe )
 	--
 	cam.Start2D()
 		DrawOutlinedText( "MEDIA PLAYER", "DupeMediaText", 512/2, 512 - 34,
-			color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+			color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 	cam.End2D()
 
 	local jpegdata = render.Capture{

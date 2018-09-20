@@ -16,6 +16,22 @@ util.AddNetworkString( "MEDIAPLAYER.Remove" )
 util.AddNetworkString( "MEDIAPLAYER.Pause" )
 util.AddNetworkString( "MEDIAPLAYER.Seek" )
 
+function MEDIAPLAYER:PlayPause()
+	local playerState = self:GetPlayerState()
+
+	if playerState == MP_STATE_ENDED then
+		return
+	elseif playerState == MP_STATE_PLAYING then
+		self:SetPlayerState( MP_STATE_PAUSED )
+	else
+		self:SetPlayerState( MP_STATE_PLAYING )
+	end
+
+	net.Start( "MEDIAPLAYER.Pause" )
+		net.WriteString( self:GetId() )
+		self.net.WritePlayerState( self:GetPlayerState() )
+	net.Send( self._Listeners )
+end
 
 --[[---------------------------------------------------------
 	Listeners
@@ -353,17 +369,7 @@ function MEDIAPLAYER:RequestPause( ply )
 		print( "MEDIAPLAYER.RequestPause", ply )
 	end
 
-	-- Toggle player state
-	if self:GetPlayerState() == MP_STATE_PLAYING then
-		self:SetPlayerState( MP_STATE_PAUSED )
-	else
-		self:SetPlayerState( MP_STATE_PLAYING )
-	end
-
-	net.Start( "MEDIAPLAYER.Pause" )
-		net.WriteString( self:GetId() )
-		self.net.WritePlayerState( self:GetPlayerState() )
-	net.Send( self._Listeners )
+	self:PlayPause()
 
 end
 

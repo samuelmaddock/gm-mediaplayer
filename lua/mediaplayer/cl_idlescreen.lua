@@ -49,13 +49,44 @@ local DefaultIdlescreen = [[
 		-moz-box-flex: 1;
 		box-flex: 1;
 	}
+
+	.metastream {
+		display: block;
+		max-width: 80%%;
+		font-size: 18pt;
+		font-weight: bold;
+		margin: 20px auto 0 auto;
+		padding: 16px 24px;
+		text-align: center;
+		text-decoration: none;
+		color: white;
+		line-height: 28pt;
+		letter-spacing: 0.5px;
+		text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+		border-radius: 4px;
+		background: -webkit-linear-gradient(
+			-20deg,
+			#20202f 0%%,
+			#273550 40%%,
+			#416081 100%%
+		);
+	}
+	.metastream-link {
+		color: #f98673;
+		text-decoration: underline;
+	}
 	</style>
 </head>
 <body>
 	<img src="asset://mapimage/gm_construct" class="background">
 	<div class="content">
-	  <h1>No media playing</h1>
-	  <p>Hold %s while looking at the media player to reveal the queue menu.</p>
+		<h1>No media playing</h1>
+		<p>Hold %s while looking at the media player to reveal the queue menu.</p>
+
+		<div class="metastream">
+			Hey Media Player fans! The creator of this mod is making something new.
+			Check out <span class="metastream-link">getmetastream.com</span>!
+		</div>
 	</div>
 </body>
 </html>

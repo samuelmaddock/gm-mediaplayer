@@ -185,6 +185,7 @@ if CLIENT then
 	local SetDrawColor = surface.SetDrawColor
 	local SetMaterial = surface.SetMaterial
 	local DrawTexturedRect = surface.DrawTexturedRect
+	local DrawRect = surface.DrawRect
 
 	local color_white = color_white
 
@@ -192,10 +193,7 @@ if CLIENT then
 		if not (IsValid( panel ) and w and h) then return end
 
 		panel:UpdateHTMLTexture()
-		local mat = panel:GetHTMLMaterial()
-		
-		if not mat or mat:IsError() then return end
-		
+
 		local pw, ph = panel:GetSize()
 
 		-- Convert to scalar
@@ -207,8 +205,15 @@ if CLIENT then
 		ph = CeilPower2(ph)
 
 		SetDrawColor( color_white )
-		SetMaterial( mat )
-		DrawTexturedRect( 0, 0, w * pw, h * ph )
+
+		local mat = panel:GetHTMLMaterial()
+
+		if mat then
+			SetMaterial( mat )
+			DrawTexturedRect( 0, 0, w * pw, h * ph )
+		else
+			DrawRect( 0, 0, w * pw, h * ph )
+		end
 	end
 
 	function utils.ParseHHMMSS( time )
