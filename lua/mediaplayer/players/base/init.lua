@@ -128,7 +128,7 @@ function MEDIAPLAYER:AddListener( ply )
 		self:SendMedia( self:CurrentMedia(), ply )
 	end
 
-	hook.Call( "MediaPlayerAddListener", self, ply )
+	hook.Run( "MediaPlayerAddListener", self, ply )
 
 end
 
@@ -152,7 +152,7 @@ function MEDIAPLAYER:RemoveListener( ply )
 		net.WriteString( self:GetId() )
 	net.Send( ply )
 
-	hook.Call( "MediaPlayerRemoveListener", self, ply )
+	hook.Run( "MediaPlayerRemoveListener", self, ply )
 
 end
 
