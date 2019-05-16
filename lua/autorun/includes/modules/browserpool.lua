@@ -1,9 +1,9 @@
-if browserpool then return end -- ignore Lua refresh
+--if browserpool then return end -- ignore Lua refresh
 
 local table = table
 local vgui = vgui
 
-_G.browserpool = {}
+_G.browserpool = _G.browserpool or {}
 
 ---
 -- Debug variable which will allow outputting messages if enabled.
