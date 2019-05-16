@@ -15,19 +15,21 @@ local DEBUG = true
 -- Array of available, pooled browsers
 -- @type table
 --
-local available = {}
-
+local available = browserpool.available or {}
+browserpool.available = available
 ---
 -- Array of active, pooled browsers.
 -- @type table
 --
-local active = {}
+local active = browserpool.active or {}
+browserpool.active = active
 
 ---
 -- Array of pending requests for a browser.
 -- @type table
 --
-local pending = {}
+local pending = browserpool.pending or {}
+browserpool.pending = pending
 
 ---
 -- Minimum number of active browsers to be pooled.
@@ -39,7 +41,12 @@ local numMin = 2
 -- Maximum number of active browsers to be pooled.
 -- @type Number
 --
-local numMax = 4
+local numMax = 8
+
+function browserpool.setLimits(min,max)
+	numMin = 2
+	numMax = max
+end
 
 ---
 -- Number of currently active browsers.
@@ -300,3 +307,24 @@ function browserpool.release( panel, destroy )
 	return true
 
 end
+concommand.Add("browserpool_dump", function()
+	print"Active: "
+	PrintTable(browserpool.active)
+	print"Pending: "
+	PrintTable(browserpool.pending)
+	print"Available: "
+	PrintTable(browserpool.available)
+end)
+
+concommand.Add("browserpool_kill", function()
+	for k, v in next, browserpool.active do
+		browserpool.active[k] = nil
+		v:Remove()
+	end
+
+	numActive = 0
+	numPending = 0
+	numRequests = 0
+	table.Empty(browserpool.pending)
+	table.Empty(browserpool.available)
+end)
