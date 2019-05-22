@@ -15,6 +15,18 @@ local function AddMediaPlayerModel( spawnName, name, model, playerConfig )
 end
 
 AddMediaPlayerModel(
+	"../spawnicons/models/hunter/plates/plate2x3",
+	"Billboard",
+	"models/hunter/plates/plate2x3.mdl",
+	{
+		angle = Angle(0, 90, 0),
+		offset = Vector(-238*0.4*.5, 380*0.375*.5, 2.5),
+		width = 380*0.375,
+		height = 238*0.4
+	}
+)
+
+AddMediaPlayerModel(
 	"../spawnicons/models/hunter/plates/plate5x8",
 	"Huge Billboard",
 	"models/hunter/plates/plate5x8.mdl",
