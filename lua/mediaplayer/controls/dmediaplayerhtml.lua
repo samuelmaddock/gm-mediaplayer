@@ -67,6 +67,9 @@ function PANEL:FixAutoplayThink()
 	self.autoplayfix = self.autoplayfix + 1
 	if self.autoplayfix == 1 then
 		self:MouseCapture(true)
+		
+		self.apMouseEnabled = self:IsMouseInputEnabled()
+	
 		self:SetMouseInputEnabled(true)
 		gui.EnableScreenClicker(true)
 		gui.InternalCursorMoved(0, 0)
@@ -74,8 +77,7 @@ function PANEL:FixAutoplayThink()
 		gui.InternalMouseReleased(MOUSE_LEFT)
 	elseif self.autoplayfix == 2 then
 		gui.EnableScreenClicker(false)
-		self:SetKeyboardInputEnabled(false)
-		self:SetMouseInputEnabled(false)
+		self:SetMouseInputEnabled(self.apMouseEnabled)
 		self:MouseCapture(false)
 		self.autoplayfix = false
 	end
