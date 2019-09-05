@@ -59,6 +59,7 @@ end
 
 
 function PANEL:FixAutoplay()
+	do return end -- GMod now has autoplay-policy=no-user-gesture-required 
 	self.autoplayfix = 0
 end
 
