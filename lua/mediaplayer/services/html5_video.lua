@@ -1,4 +1,4 @@
-SERVICE = {}
+--SERVICE = {}
 SERVICE.Name = "HTML5 Video"
 SERVICE.Id = "h5v"
 SERVICE.Base = "res"
@@ -117,4 +117,4 @@ function SERVICE:Sync()
 	end
 end
 
-MediaPlayer.RegisterService(SERVICE)
+--MediaPlayer.RegisterService(SERVICE)
