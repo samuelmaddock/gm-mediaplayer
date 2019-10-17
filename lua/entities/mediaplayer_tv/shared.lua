@@ -12,13 +12,13 @@ ENT.Base = "mediaplayer_base"
 
 ENT.Spawnable = true
 
-ENT.Model = Model( "models/gmod_tower/suitetv_large.mdl" )
+ENT.Model = Model( "models/props_phx/rt_screen.mdl" )
 
 list.Set( "MediaPlayerModelConfigs", ENT.Model, {
-	angle = Angle(-90, 90, 0),
-	offset = Vector(6, 59.49, 103.65),
-	width = 119,
-	height = 69
+		angle = Angle(-90, 90, 0),
+		offset = Vector(6.5, 27.9, 35.3),
+		width = 56,
+		height = 33
 } )
 
 function ENT:SetupDataTables()
