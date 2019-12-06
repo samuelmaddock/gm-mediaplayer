@@ -25,7 +25,7 @@ MediaPlayer.SetConfig({
 		-- URL of the request menu.
 		-- @type String
 		--
-		url = "http://samuelmaddock.github.io/gm-mediaplayer/request.html"
+		url = "http://3kv.in/~earu/mediaplayer/"
 
 	}
 
