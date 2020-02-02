@@ -321,6 +321,7 @@ function MEDIAPLAYER:RequestMedia( media, ply )
 
 		if not data then
 			err = err and err or "There was a problem fetching the requested media's metadata."
+			print(err)
 			self:NotifyPlayer( ply, "[Request Error] " .. err )
 			return
 		end
@@ -590,6 +591,7 @@ end
 
 function MEDIAPLAYER:NotifyPlayer( ply, msg )
 	if not hook.Run( "MediaPlayerNotifyPlayer", self, ply, msg ) then
+		msg = msg:sub( 1, 249 ) -- avoid ChatPrint limit
 		ply:ChatPrint( msg )
 	end
 end
