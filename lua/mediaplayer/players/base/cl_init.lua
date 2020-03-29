@@ -71,7 +71,7 @@ local function OnMediaUpdate( len )
 
 	mp:SetPlayerState( state )
 
-	hook.Call( "OnMediaPlayerUpdate", mp )
+	hook.Run( "OnMediaPlayerUpdate", mp )
 
 end
 net.Receive( "MEDIAPLAYER.Update", OnMediaUpdate )

@@ -85,7 +85,7 @@ net.Receive( "MEDIAPLAYER.RequestMedia", RequestWrapper(function(mp, ply)
 
 	-- Validate the URL
 	if not MediaPlayer.ValidUrl( url ) and not allowWebpage then
-		ply:ChatPrint( "The requested URL wasn't valid." )
+		mp:NotifyPlayer( ply, "The requested URL was invalid." )
 		return
 	end
 
