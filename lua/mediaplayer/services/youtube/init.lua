@@ -121,6 +121,7 @@ function SERVICE:GetMetadata( callback )
 	if cache then
 
 		local metadata = {}
+
 		metadata.title = cache.title
 		metadata.duration = tonumber(cache.duration)
 		metadata.thumbnail = cache.thumbnail
@@ -134,18 +135,53 @@ function SERVICE:GetMetadata( callback )
 		callback(self._metadata)
 
 	else
-
 		local videoId = self:GetYouTubeVideoId()
-		local apiurl = MetadataUrl:format( videoId, APIKey )
+		local videoUrl = "https://www.youtube.com/watch?v="..videoId
 
-		self:Fetch( apiurl,
+		self:Fetch( videoUrl,
 			function( body, length, headers, code )
-				OnReceiveMetadata( self, callback, body )
+				local metadata = self:ParseYTMetaDataFromHTML(body, videoId)
+
+				self:SetMetadata(metadata, true)
+
+				if self:IsTimed() then
+					MediaPlayer.Metadata:Save(self)
+				end
+			
+				callback(self._metadata)
 			end,
 			function( code )
 				callback(false, "Failed to load YouTube ["..tostring(code).."]")
 			end
 		)
-
 	end
+end
+
+---
+-- Function to parse video metadata straight from the html instead of using the API
+--
+function SERVICE:ParseYTMetaDataFromHTML( html, videoId )
+	--Lua search patterns to find Title and Duration from the html mess
+	local titlepat = "\\\"title\\\":\\\".-\\\""
+	local durationpat = "\\\"lengthSeconds\\\":\\\".-\\\""
+
+	--MetaData table to return when we're done
+	local metadata = {}
+
+	--Find Title & Duration from the html and parse them, then insert to the table
+	for parseTitle in string.gmatch(html, titlepat) do
+		metadata.title = string.sub(parseTitle, 13, -3)
+		break
+	end
+
+	for parseDuration in string.gmatch(html, durationpat) do
+		metadata.duration = tonumber(string.sub(parseDuration, 21, -3))
+		break
+	end
+
+	--Thumbnail can simply be retrieved with an URL, no need for parsing
+	parsedThumb = "https://i.ytimg.com/vi/"..videoId.."/maxresdefault.jpg"
+	metadata.thumbnail = parsedThumb
+
+	return metadata
 end
