@@ -141,6 +141,12 @@ function SERVICE:GetMetadata( callback )
 		self:Fetch( videoUrl,
 			function( body, length, headers, code )
 				local metadata = self:ParseYTMetaDataFromHTML(body, videoId)
+				
+				--html couldn't be parsed
+				if (!metadata.title || !metadata.duration) then
+					callback(false, "Failed to parse HTML Page for metadata")
+					return
+				end
 
 				self:SetMetadata(metadata, true)
 
