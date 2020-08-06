@@ -139,9 +139,10 @@ function SERVICE:GetMetadata( callback )
 		local videoUrl = "https://www.youtube.com/watch?v="..videoId
 
 		self:Fetch( videoUrl,
+			--On Success
 			function( body, length, headers, code )
 				local metadata = self:ParseYTMetaDataFromHTML(body, videoId)
-				
+
 				--html couldn't be parsed
 				if (!metadata.title || !metadata.duration) then
 					callback(false, "Failed to parse HTML Page for metadata")
@@ -156,9 +157,14 @@ function SERVICE:GetMetadata( callback )
 			
 				callback(self._metadata)
 			end,
+			-- On failure
 			function( code )
 				callback(false, "Failed to load YouTube ["..tostring(code).."]")
-			end
+			end,
+			--Headers
+			{
+				["User-Agent"] = "Googlebot"
+			}
 		)
 	end
 end
@@ -167,27 +173,58 @@ end
 -- Function to parse video metadata straight from the html instead of using the API
 --
 function SERVICE:ParseYTMetaDataFromHTML( html, videoId )
-	--Lua search patterns to find Title and Duration from the html mess
-	local titlepat = "\\\"title\\\":\\\".-\\\""
-	local durationpat = "\\\"lengthSeconds\\\":\\\".-\\\""
 
+    -- Get the value for an attribute from a html element
+    local function ParseElementAttribute( element, attribute )
+        if !element then return end
+        -- Find the desired attribute
+        local output = string.match( element, attribute.."%s-=%s-%b\"\"" )
+        if !output then return end
+        -- Remove the 'attribute=' part
+        output = string.gsub( output, attribute.."%s-=%s-", "" )
+        -- Trim the quotes around the value string
+        return string.sub( output, 2, -2 )
+    end
+    -- Get the contents of a html element by removing tags
+    -- Used as fallback for when title cannot be found
+    local function ParseElementContent( element )
+        if !element then return end
+        -- Trim start
+        local output = string.gsub( element, "^%s-<%w->%s-", "" )
+        -- Trim end
+        return string.gsub( output, "%s-</%w->%s-$", "" )
+	end
+	
 	--MetaData table to return when we're done
 	local metadata = {}
+    
+    -- Lua search patterns to find metadata from the html
+    local patterns = {
+        ["title"] = "<meta%sproperty=\"og:title\"%s-content=%b\"\">",
+        ["titlepat_fallback"] = "<title>.-</title>",
+        ["thumb"] = "<meta%sproperty=\"og:image\"%s-content=%b\"\">",
+        ["thumb_fallback"] = "<link%sitemprop=\"thumbnailUrl\"%s-href=%b\"\">",
+        ["duration"] = "<meta%sitemprop%s-=%s-\"duration\"%s-content%s-=%s-%b\"\">",
+        ["live"] = "<meta%sitemprop%s-=%s-\"isLiveBroadcast\"%s-content%s-=%s-%b\"\">"
+    }
 
-	--Find Title & Duration from the html and parse them, then insert to the table
-	for parseTitle in string.gmatch(html, titlepat) do
-		metadata.title = string.sub(parseTitle, 13, -3)
-		break
-	end
+	-- Fetch title and thumbnail, with fallbacks if needed
+	metadata.title = ParseElementAttribute(string.match(html, patterns["title"]), "content") 
+		or ParseElementContent(string.match(body, patterns["title_fallback"]))
 
-	for parseDuration in string.gmatch(html, durationpat) do
-		metadata.duration = tonumber(string.sub(parseDuration, 21, -3))
-		break
-	end
+	metadata.thumbnail = ParseElementAttribute(string.match(html, patterns["thumb"]), "content") 
+		or ParseElementAttribute(string.match(body, patterns["thumb_fallback"]), "href")
 
-	--Thumbnail can simply be retrieved with an URL, no need for parsing
-	parsedThumb = "https://i.ytimg.com/vi/"..videoId.."/maxresdefault.jpg"
-	metadata.thumbnail = parsedThumb
+    -- See if the video is a live broadcast
+    -- Set duration to 0 if it is, otherwise use the actual duration
+    local isLiveBroadcast = tobool(ParseElementAttribute(string.match(html, patterns["live"]), "content"))
+	if (isLiveBroadcast) then 
+		-- Mark as live video
+        metadata.duration = 0
+    else 
+        local durationISO8601 = ParseElementAttribute(string.match(html, patterns["duration"]), "content")
+        metadata.duration = math.max(1, convertISO8601Time(durationISO8601))
+    end
 
 	return metadata
 end
