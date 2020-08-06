@@ -201,7 +201,7 @@ function SERVICE:ParseYTMetaDataFromHTML( html, videoId )
     -- Lua search patterns to find metadata from the html
     local patterns = {
         ["title"] = "<meta%sproperty=\"og:title\"%s-content=%b\"\">",
-        ["titlepat_fallback"] = "<title>.-</title>",
+        ["title_fallback"] = "<title>.-</title>",
         ["thumb"] = "<meta%sproperty=\"og:image\"%s-content=%b\"\">",
         ["thumb_fallback"] = "<link%sitemprop=\"thumbnailUrl\"%s-href=%b\"\">",
         ["duration"] = "<meta%sitemprop%s-=%s-\"duration\"%s-content%s-=%s-%b\"\">",
