@@ -52,59 +52,6 @@ local function convertISO8601Time( duration )
 	return duration
 end
 
-local function OnReceiveMetadata( self, callback, body )
-
-	local metadata = {}
-
-	-- Check for valid JSON response
-	local resp = util.JSONToTable( body )
-	if not resp then
-		return callback(false)
-	end
-
-	-- If 'error' key is present, the query failed.
-	if resp.error then
-		return callback(false, TableLookup(resp, 'error.message'))
-	end
-
-	-- We need at least one result
-	local results = TableLookup(resp, 'pageInfo.totalResults')
-	if not ( results and results > 0 ) then
-		return callback(false, "Requested video wasn't found")
-	end
-
-	local item = resp.items[1]
-
-	-- Video must be embeddable
-	if not TableLookup(item, 'status.embeddable') then
-		return callback( false, "Requested video was embed disabled" )
-	end
-
-	metadata.title = TableLookup(item, 'snippet.title')
-
-	-- Check for live broadcast
-	local liveBroadcast = TableLookup(item, 'snippet.liveBroadcastContent')
-	if liveBroadcast == 'none' then
-		-- Duration is an ISO 8601 string
-		local durationStr = TableLookup(item, 'contentDetails.duration')
-		metadata.duration = math.max(1, convertISO8601Time(durationStr))
-	else
-		metadata.duration = 0 -- mark as live video
-	end
-
-	-- 'medium' size thumbnail doesn't have letterboxing
-	metadata.thumbnail = TableLookup(item, 'snippet.thumbnails.medium.url')
-
-	self:SetMetadata(metadata, true)
-
-	if self:IsTimed() then
-		MediaPlayer.Metadata:Save(self)
-	end
-
-	callback(self._metadata)
-
-end
-
 function SERVICE:GetMetadata( callback )
 	if self._metadata then
 		callback( self._metadata )
@@ -139,12 +86,12 @@ function SERVICE:GetMetadata( callback )
 		local videoUrl = "https://www.youtube.com/watch?v="..videoId
 
 		self:Fetch( videoUrl,
-			--On Success
+			-- On Success
 			function( body, length, headers, code )
 				local metadata = self:ParseYTMetaDataFromHTML(body, videoId)
 
-				--html couldn't be parsed
-				if (!metadata.title || !metadata.duration) then
+				-- html couldn't be parsed
+				if not metadata.title or not isnumber(metadata.duration) then
 					callback(false, "Failed to parse HTML Page for metadata")
 					return
 				end
@@ -161,7 +108,7 @@ function SERVICE:GetMetadata( callback )
 			function( code )
 				callback(false, "Failed to load YouTube ["..tostring(code).."]")
 			end,
-			--Headers
+			-- Headers
 			{
 				["User-Agent"] = "Googlebot"
 			}
@@ -170,61 +117,92 @@ function SERVICE:GetMetadata( callback )
 end
 
 ---
+-- Get the value for an attribute from a html element
+-- 
+local function ParseElementAttribute( element, attribute )
+	if not element then return end
+	-- Find the desired attribute
+	local output = string.match( element, attribute.."%s-=%s-%b\"\"" )
+	if not output then return end
+	-- Remove the 'attribute=' part
+	output = string.gsub( output, attribute.."%s-=%s-", "" )
+	-- Trim the quotes around the value string
+	return string.sub( output, 2, -2 )
+end
+
+---
+-- Get the contents of a html element by removing tags
+-- Used as fallback for when title cannot be found
+--
+local function ParseElementContent( element )
+	if not element then return end
+	-- Trim start
+	local output = string.gsub( element, "^%s-<%w->%s-", "" )
+	-- Trim end
+	return string.gsub( output, "%s-</%w->%s-$", "" )
+end
+
+--  List of HTML entities to find in title and convert to their corresponding symbols
+local htmlEnts = {
+	["&quot;"] = "\"",
+	["&lt;"] = "<",
+	["&gt;"] = ">",
+	["&amp;"] = "&"
+}
+
+---
+-- Turn HTML entities into symbols
+--
+local function ParseTitleSymbols( string )
+	if not string then return end
+	local output = string
+	for entity, symbol in pairs( htmlEnts ) do
+		output = string.gsub( output, entity, symbol )
+	end
+	return output
+end
+
+-- Lua search patterns to find metadata from the html
+local patterns = {
+	["title"] = "<meta%sproperty=\"og:title\"%s-content=%b\"\">",
+	["title_fallback"] = "<title>.-</title>",
+	["thumb"] = "<meta%sproperty=\"og:image\"%s-content=%b\"\">",
+	["thumb_fallback"] = "<link%sitemprop=\"thumbnailUrl\"%s-href=%b\"\">",
+	["duration"] = "<meta%sitemprop%s-=%s-\"duration\"%s-content%s-=%s-%b\"\">",
+	["live"] = "<meta%sitemprop%s-=%s-\"isLiveBroadcast\"%s-content%s-=%s-%b\"\">",
+	["live_enddate"] = "<meta%sitemprop%s-=%s-\"endDate\"%s-content%s-=%s-%b\"\">"
+}
+
+---
 -- Function to parse video metadata straight from the html instead of using the API
 --
-function SERVICE:ParseYTMetaDataFromHTML( html, videoId )
-
-    -- Get the value for an attribute from a html element
-    local function ParseElementAttribute( element, attribute )
-        if !element then return end
-        -- Find the desired attribute
-        local output = string.match( element, attribute.."%s-=%s-%b\"\"" )
-        if !output then return end
-        -- Remove the 'attribute=' part
-        output = string.gsub( output, attribute.."%s-=%s-", "" )
-        -- Trim the quotes around the value string
-        return string.sub( output, 2, -2 )
-    end
-    -- Get the contents of a html element by removing tags
-    -- Used as fallback for when title cannot be found
-    local function ParseElementContent( element )
-        if !element then return end
-        -- Trim start
-        local output = string.gsub( element, "^%s-<%w->%s-", "" )
-        -- Trim end
-        return string.gsub( output, "%s-</%w->%s-$", "" )
-	end
-	
+function SERVICE:ParseYTMetaDataFromHTML( html, videoId )	
 	--MetaData table to return when we're done
 	local metadata = {}
-    
-    -- Lua search patterns to find metadata from the html
-    local patterns = {
-        ["title"] = "<meta%sproperty=\"og:title\"%s-content=%b\"\">",
-        ["title_fallback"] = "<title>.-</title>",
-        ["thumb"] = "<meta%sproperty=\"og:image\"%s-content=%b\"\">",
-        ["thumb_fallback"] = "<link%sitemprop=\"thumbnailUrl\"%s-href=%b\"\">",
-        ["duration"] = "<meta%sitemprop%s-=%s-\"duration\"%s-content%s-=%s-%b\"\">",
-        ["live"] = "<meta%sitemprop%s-=%s-\"isLiveBroadcast\"%s-content%s-=%s-%b\"\">"
-    }
 
 	-- Fetch title and thumbnail, with fallbacks if needed
 	metadata.title = ParseElementAttribute(string.match(html, patterns["title"]), "content") 
-		or ParseElementContent(string.match(body, patterns["title_fallback"]))
+		or ParseElementContent(string.match(html, patterns["title_fallback"]))
+
+	-- Parse HTML entities in the title into symbols
+	metadata.title = ParseTitleSymbols(metadata.title)
 
 	metadata.thumbnail = ParseElementAttribute(string.match(html, patterns["thumb"]), "content") 
-		or ParseElementAttribute(string.match(body, patterns["thumb_fallback"]), "href")
+		or ParseElementAttribute(string.match(html, patterns["thumb_fallback"]), "href")
 
-    -- See if the video is a live broadcast
-    -- Set duration to 0 if it is, otherwise use the actual duration
-    local isLiveBroadcast = tobool(ParseElementAttribute(string.match(html, patterns["live"]), "content"))
-	if (isLiveBroadcast) then 
+	-- See if the video is an ongoing live broadcast
+	-- Set duration to 0 if it is, otherwise use the actual duration
+	local isLiveBroadcast = tobool(ParseElementAttribute(string.match(html, patterns["live"]), "content"))
+	local broadcastEndDate = string.match(html, patterns["live_enddate"])
+	if isLiveBroadcast and not broadcastEndDate then 
 		-- Mark as live video
-        metadata.duration = 0
-    else 
-        local durationISO8601 = ParseElementAttribute(string.match(html, patterns["duration"]), "content")
-        metadata.duration = math.max(1, convertISO8601Time(durationISO8601))
-    end
+		metadata.duration = 0
+	else 
+		local durationISO8601 = ParseElementAttribute(string.match(html, patterns["duration"]), "content")
+		if isstring(durationISO8601) then 
+			metadata.duration = math.max(1, convertISO8601Time(durationISO8601))
+		end
+	end
 
 	return metadata
 end
