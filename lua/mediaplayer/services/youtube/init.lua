@@ -88,11 +88,16 @@ function SERVICE:GetMetadata( callback )
 		self:Fetch( videoUrl,
 			-- On Success
 			function( body, length, headers, code )
-				local metadata = self:ParseYTMetaDataFromHTML(body, videoId)
+				local status, metadata = pcall(self.ParseYTMetaDataFromHTML, self, body)
 
 				-- html couldn't be parsed
-				if not metadata.title or not isnumber(metadata.duration) then
-					callback(false, "Failed to parse HTML Page for metadata")
+				if not status or not metadata.title or not isnumber(metadata.duration) then
+					-- Title is nil or Duration is nan
+					if istable(metadata) then
+						metadata = "title = "..type(metadata.title)..", duration = "..type(metadata.duration)
+					end
+					-- Misc error
+					callback(false, "Failed to parse HTML Page for metadata: "..metadata)
 					return
 				end
 
@@ -142,26 +147,6 @@ local function ParseElementContent( element )
 	return string.gsub( output, "%s-</%w->%s-$", "" )
 end
 
---  List of HTML entities to find in title and convert to their corresponding symbols
-local htmlEnts = {
-	["&quot;"] = "\"",
-	["&lt;"] = "<",
-	["&gt;"] = ">",
-	["&amp;"] = "&"
-}
-
----
--- Turn HTML entities into symbols
---
-local function ParseTitleSymbols( string )
-	if not string then return end
-	local output = string
-	for entity, symbol in pairs( htmlEnts ) do
-		output = string.gsub( output, entity, symbol )
-	end
-	return output
-end
-
 -- Lua search patterns to find metadata from the html
 local patterns = {
 	["title"] = "<meta%sproperty=\"og:title\"%s-content=%b\"\">",
@@ -176,16 +161,16 @@ local patterns = {
 ---
 -- Function to parse video metadata straight from the html instead of using the API
 --
-function SERVICE:ParseYTMetaDataFromHTML( html, videoId )	
+function SERVICE:ParseYTMetaDataFromHTML( html )
 	--MetaData table to return when we're done
 	local metadata = {}
 
 	-- Fetch title and thumbnail, with fallbacks if needed
-	metadata.title = ParseElementAttribute(string.match(html, patterns["title"]), "content") 
+	metadata.title = ParseElementAttribute(string.match(html, patterns["title"]), "content")
 		or ParseElementContent(string.match(html, patterns["title_fallback"]))
 
 	-- Parse HTML entities in the title into symbols
-	metadata.title = ParseTitleSymbols(metadata.title)
+	metadata.title = url.htmlentities_decode(metadata.title)
 
 	metadata.thumbnail = ParseElementAttribute(string.match(html, patterns["thumb"]), "content") 
 		or ParseElementAttribute(string.match(html, patterns["thumb_fallback"]), "href")
