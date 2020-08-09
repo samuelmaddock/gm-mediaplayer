@@ -54,10 +54,6 @@ function selectService(elem) {
 }
 
 (function(gmod) {
-    if (!localStorage.getItem('tos')) {
-        location.href = './tos.html'
-    }
-
     if (gmod === undefined) { return; }
 
     window.setServices = function (serviceIds) {
