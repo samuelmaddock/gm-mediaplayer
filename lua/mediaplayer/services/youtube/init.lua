@@ -3,10 +3,6 @@ include "shared.lua"
 
 local TableLookup = MediaPlayerUtils.TableLookup
 
--- https://developers.google.com/youtube/v3/
-local APIKey = MediaPlayer.GetConfigValue('google.api_key')
-local MetadataUrl = "https://www.googleapis.com/youtube/v3/videos?id=%s&key=%s&type=video&part=contentDetails,snippet,status&videoEmbeddable=true&videoSyndicated=true"
-
 ---
 -- Helper function for converting ISO 8601 time strings; this is the formatting
 -- used for duration specified in the YouTube v3 API.
@@ -106,7 +102,7 @@ function SERVICE:GetMetadata( callback )
 				if self:IsTimed() then
 					MediaPlayer.Metadata:Save(self)
 				end
-			
+
 				callback(self._metadata)
 			end,
 			-- On failure
@@ -123,7 +119,7 @@ end
 
 ---
 -- Get the value for an attribute from a html element
--- 
+--
 local function ParseElementAttribute( element, attribute )
 	if not element then return end
 	-- Find the desired attribute
@@ -172,19 +168,19 @@ function SERVICE:ParseYTMetaDataFromHTML( html )
 	-- Parse HTML entities in the title into symbols
 	metadata.title = url.htmlentities_decode(metadata.title)
 
-	metadata.thumbnail = ParseElementAttribute(string.match(html, patterns["thumb"]), "content") 
+	metadata.thumbnail = ParseElementAttribute(string.match(html, patterns["thumb"]), "content")
 		or ParseElementAttribute(string.match(html, patterns["thumb_fallback"]), "href")
 
 	-- See if the video is an ongoing live broadcast
 	-- Set duration to 0 if it is, otherwise use the actual duration
 	local isLiveBroadcast = tobool(ParseElementAttribute(string.match(html, patterns["live"]), "content"))
 	local broadcastEndDate = string.match(html, patterns["live_enddate"])
-	if isLiveBroadcast and not broadcastEndDate then 
+	if isLiveBroadcast and not broadcastEndDate then
 		-- Mark as live video
 		metadata.duration = 0
-	else 
+	else
 		local durationISO8601 = ParseElementAttribute(string.match(html, patterns["duration"]), "content")
-		if isstring(durationISO8601) then 
+		if isstring(durationISO8601) then
 			metadata.duration = math.max(1, convertISO8601Time(durationISO8601))
 		end
 	end
