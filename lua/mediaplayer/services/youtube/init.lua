@@ -7,7 +7,7 @@ local TableLookup = MediaPlayerUtils.TableLookup
 -- Helper function for converting ISO 8601 time strings; this is the formatting
 -- used for duration specified in the YouTube v3 API.
 --
--- http://stackoverflow.com/a/22149575/1490006
+-- https://stackoverflow.com/a/22149575/1490006
 --
 local function convertISO8601Time( duration )
 	local a = {}

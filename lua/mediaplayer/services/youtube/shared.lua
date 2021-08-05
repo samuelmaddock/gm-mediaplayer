@@ -50,19 +50,19 @@ function SERVICE:GetYouTubeVideoId()
 
 		local url = self.urlinfo
 
-		-- http://www.youtube.com/watch?v=(videoId)
+		-- https://www.youtube.com/watch?v=(videoId)
 		if url.query and url.query.v then
 			videoId = url.query.v
 
-		-- http://www.youtube.com/v/(videoId)
+		-- https://www.youtube.com/v/(videoId)
 		elseif url.path and string.match(url.path, "^/v/([%a%d-_]+)") then
 			videoId = string.match(url.path, "^/v/([%a%d-_]+)")
 
-		-- http://youtube.googleapis.com/v/(videoId)
+		-- https://youtube.googleapis.com/v/(videoId)
 		elseif url.path and string.match(url.path, "^/v/([%a%d-_]+)") then
 			videoId = string.match(url.path, "^/v/([%a%d-_]+)")
 
-		-- http://youtu.be/(videoId)
+		-- https://youtu.be/(videoId)
 		elseif string.match(url.host, "youtu.be") and
 			url.path and string.match(url.path, "^/([%a%d-_]+)$") and
 			( (not url.query) or #url.query == 0 ) then -- short url

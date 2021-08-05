@@ -26,7 +26,7 @@ function SERVICE:GetVimeoVideoId()
 
 		local url = self.urlinfo
 
-		-- http://www.vimeo.com/(videoId)
+		-- https://www.vimeo.com/(videoId)
 		videoId = string.match(url.path, "^/(%d+)")
 
 		self.videoId = videoId

@@ -1,7 +1,7 @@
 AddCSLuaFile "shared.lua"
 include "shared.lua"
 
-local MetadataUrl = "http://vimeo.com/api/v2/video/%s.json"
+local MetadataUrl = "https://vimeo.com/api/v2/video/%s.json"
 
 local function OnReceiveMetadata( self, callback, body )
 

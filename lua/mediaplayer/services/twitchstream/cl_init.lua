@@ -4,7 +4,7 @@ local htmlBaseUrl = MediaPlayer.GetConfigValue('html.base_url')
 
 DEFINE_BASECLASS( "mp_service_browser" )
 
-local TwitchUrl = "http://www.twitch.tv/%s/popout"
+local TwitchUrl = "https://www.twitch.tv/%s/popout"
 
 local JS_Play = "if(window.MediaPlayer) MediaPlayer.play();"
 local JS_Pause = "if(window.MediaPlayer) MediaPlayer.pause();"

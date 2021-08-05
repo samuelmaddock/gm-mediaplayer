@@ -4,7 +4,7 @@
 	"version"			"1.0.0"
 	"author_name"		"Samuel Maddock"
 	"author_email"		"sam@samuelmaddock.com"
-	"author_url"		"http://samuelmaddock.com"
-	"info"				"http://github.com/samuelmaddock/gm-mediaplayer"
+	"author_url"		"https://samuelmaddock.com"
+	"info"				"https://github.com/samuelmaddock/gm-mediaplayer"
 	"override"			"0"
 }
