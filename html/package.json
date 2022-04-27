@@ -7,7 +7,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "grunt": "~0.4.1",
+    "grunt": "~1.5.2",
     "grunt-autoprefixer": "~0.7.2",
     "grunt-bower-install": "~1.4.0",
     "grunt-build-control": "^0.1.3",
