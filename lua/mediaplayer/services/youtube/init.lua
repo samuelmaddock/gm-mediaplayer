@@ -107,8 +107,8 @@ function SERVICE:GetMetadata( callback )
 				callback(self._metadata)
 			end,
 			-- On failure
-			function( code )
-				callback(false, "Failed to load YouTube ["..tostring(code).."]")
+			function( reason )
+				callback(false, "Failed to fetch YouTube HTTP metadata [reason="..tostring(reason).."]")
 			end,
 			-- Headers
 			{
