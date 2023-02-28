@@ -2,6 +2,7 @@ AddCSLuaFile "shared.lua"
 include "shared.lua"
 
 local TableLookup = MediaPlayerUtils.TableLookup
+local htmlentities_decode = url.htmlentities_decode
 
 ---
 -- Helper function for converting ISO 8601 time strings; this is the formatting
@@ -166,7 +167,7 @@ function SERVICE:ParseYTMetaDataFromHTML( html )
 		or ParseElementContent(string.match(html, patterns["title_fallback"]))
 
 	-- Parse HTML entities in the title into symbols
-	metadata.title = url.htmlentities_decode(metadata.title)
+	metadata.title = htmlentities_decode(metadata.title)
 
 	metadata.thumbnail = ParseElementAttribute(string.match(html, patterns["thumb"]), "content")
 		or ParseElementAttribute(string.match(html, patterns["thumb_fallback"]), "href")
