@@ -146,7 +146,7 @@ function MediaPlayer.Metadata:Save( media )
 			string.format( "%s,", sql.SQLStr( media:Title() ) ) ..
 			string.format( "%s,", media:Duration() ) ..
 			string.format( "%s,", sql.SQLStr( media:Thumbnail() ) ) ..
-			string.format( "%s,", sql.SQLStr( util.TableToJSON(media._metadata.extra) ) ) ..
+			string.format( "%s,", sql.SQLStr( util.TableToJSON(media._metadata.extra or {}) ) ) ..
 			string.format( "%d,", os.time() ) ..
 			string.format( "%d)", os.time() )
 
