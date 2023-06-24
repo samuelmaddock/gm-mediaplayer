@@ -1,3 +1,5 @@
+resource.AddWorkshop( "546392647" ) -- Media Player workshop
+
 local basepath = "mediaplayer/"
 
 local function IncludeMP( filepath )
