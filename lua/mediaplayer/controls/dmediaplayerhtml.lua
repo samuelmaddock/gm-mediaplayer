@@ -111,8 +111,11 @@ function PANEL:Think()
 end
 
 function PANEL:FetchPageURL()
-	local js = "gmod.getUrl(window.location.href);"
-	self:RunJavascript(js)
+	self:AddFunction( "gmod", "getUrl", function( geturl )
+		self:SetURL( geturl )
+	end )
+
+	self:RunJavascript( [[gmod.getUrl(window.location.href);]] )
 end
 
 function PANEL:GetURL()
@@ -479,6 +482,22 @@ function PANEL:MoveToCursor( xoffset, yoffset )
 
 	local cx, cy = input.GetCursorPos()
 	self:SetPos( cx - xoffset, cy - yoffset )
+end
+
+-- Youtube specific fix
+function PANEL:OnDocumentReady( url )
+	if url ~= "https://www.youtube.com/" then return end
+	self:AddFunction( "gmod", "getUrl", function( geturl )
+		self:SetURL( geturl )
+	end )
+
+	self:QueueJavascript( [[
+		function run(){
+			if (typeof gmod == "undefined") { return };
+			gmod.getUrl(window.location.href);
+		};
+		window.addEventListener( 'yt-navigate-start', run, true )
+	]] )
 end
 
 derma.DefineControl( "DMediaPlayerHTML", "", PANEL, "Awesomium" )
