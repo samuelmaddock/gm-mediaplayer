@@ -146,7 +146,11 @@ function MediaPlayer.Metadata:Save( media )
 			string.format( "%s,", sql.SQLStr( media:Title() ) ) ..
 			string.format( "%s,", media:Duration() ) ..
 			string.format( "%s,", sql.SQLStr( media:Thumbnail() ) ) ..
-			string.format( "%s,", sql.SQLStr( util.TableToJSON(media._metadata.extra) ) ) ..
+			-- -- The following line historically has returned "nil" for most mediaplayer requests.
+			-- -- However it now causes critical error when loading youtube content - 6/26/2023. 
+			-- -- May only be populated for soundcloud content? -phys
+			-- string.format( "%s,", sql.SQLStr( util.TableToJSON(media._metadata.extra) ) ) .. 
+			string.format( "%s,", sql.SQLStr( "" ) ) .. -- Setting it to blank for database parity and to return youtube functionality.
 			string.format( "%d,", os.time() ) ..
 			string.format( "%d)", os.time() )
 
