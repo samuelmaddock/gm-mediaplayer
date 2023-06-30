@@ -42,16 +42,6 @@ function PANEL:Init()
 	--
 	-- Implement a console - because awesomium doesn't provide it for us anymore
 	--
-	local console_funcs = {'log','error','debug','warn','info'}
-	for _, func in pairs(console_funcs) do
-		self:AddFunction( "console", func, function(param)
-			self:ConsoleMessage( param, func )
-		end )
-	end
-
-	self:AddFunction( "gmod", "getUrl", function( url )
-		self:SetURL( url )
-	end )
 
 	hook.Add( "HUDPaint", self, function() self:HUDPaint() end )
 
@@ -111,10 +101,6 @@ function PANEL:Think()
 end
 
 function PANEL:FetchPageURL()
-	self:AddFunction( "gmod", "getUrl", function( geturl )
-		self:SetURL( geturl )
-	end )
-
 	self:RunJavascript( [[gmod.getUrl(window.location.href);]] )
 end
 
@@ -484,20 +470,33 @@ function PANEL:MoveToCursor( xoffset, yoffset )
 	self:SetPos( cx - xoffset, cy - yoffset )
 end
 
--- Youtube specific fix
 function PANEL:OnDocumentReady( url )
-	if url ~= "https://www.youtube.com/" then return end
-	self:AddFunction( "gmod", "getUrl", function( geturl )
-		self:SetURL( geturl )
+	local console_funcs = {'log','error','debug','warn','info'}
+	for _, func in pairs(console_funcs) do
+		self:AddFunction( "console", func, function(param)
+			self:ConsoleMessage( param, func )
+		end )
+	end
+
+	self:AddFunction( "gmod", "getUrl", function( url )
+		self:SetURL( url )
 	end )
 
-	self:QueueJavascript( [[
-		function run(){
-			if (typeof gmod == "undefined") { return };
-			gmod.getUrl(window.location.href);
-		};
-		window.addEventListener( 'yt-navigate-start', run, true )
-	]] )
+
+	-- Youtube specific fix because youtube uses clientside routing which doesn't trigger OnDocumentReady and such events
+	if url == "https://www.youtube.com/" then
+		self:AddFunction( "gmod", "getUrl", function( geturl )
+			self:SetURL( geturl )
+		end )
+
+		self:QueueJavascript( [[
+			function run(){
+				if (typeof gmod == "undefined") { return };
+				gmod.getUrl(window.location.href);
+			};
+			window.addEventListener( 'yt-navigate-start', run, true )
+		]] )
+	end
 end
 
 derma.DefineControl( "DMediaPlayerHTML", "", PANEL, "Awesomium" )
