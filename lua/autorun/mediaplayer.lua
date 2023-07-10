@@ -53,6 +53,9 @@ local function LoadMediaPlayer()
 	IncludeCS "includes/modules/EventEmitter.lua"
 
 	if SERVER then
+		-- Add mediaplayer models
+		resource.AddWorkshop( "546392647" )
+
 		-- download clientside includes
 		AddCSLuaFile "includes/modules/browserpool.lua"
 		AddCSLuaFile "includes/modules/inputhook.lua"

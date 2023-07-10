@@ -107,6 +107,8 @@ function MediaPlayer.Metadata:Save( media )
 	local query = ("SELECT expired FROM `%s` WHERE id='%s'"):format(TableName, id)
 	local results = sql.Query(query)
 
+	media._metadata.extra = media._metadata.extra or {}
+
 	if istable(results) then -- update
 
 		if MediaPlayer.DEBUG then

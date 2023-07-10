@@ -26,7 +26,7 @@ end
 
 local HttpHeaders = {
 	["Cache-Control"] = "no-cache",
-	["Connection"] = "keep-alive",
+	--["Connection"] = "keep-alive",
 
 	-- Required for Google API requests; uses browser API key.
 	["Referer"] = MediaPlayer.GetConfigValue('google.referrer'),
