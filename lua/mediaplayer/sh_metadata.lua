@@ -107,8 +107,6 @@ function MediaPlayer.Metadata:Save( media )
 	local query = ("SELECT expired FROM `%s` WHERE id='%s'"):format(TableName, id)
 	local results = sql.Query(query)
 
-	media._metadata.extra = media._metadata.extra or {}
-
 	if istable(results) then -- update
 
 		if MediaPlayer.DEBUG then
@@ -128,7 +126,7 @@ function MediaPlayer.Metadata:Save( media )
 						sql.SQLStr( media:Title() ),
 						media:Duration(),
 						sql.SQLStr( media:Thumbnail() ),
-						sql.SQLStr( util.TableToJSON(media._metadata.extra) ),
+						sql.SQLStr( util.TableToJSON(media._metadata.extra or {}) ),
 						os.time(),
 						os.time(),
 						id )
@@ -148,7 +146,7 @@ function MediaPlayer.Metadata:Save( media )
 			string.format( "%s,", sql.SQLStr( media:Title() ) ) ..
 			string.format( "%s,", media:Duration() ) ..
 			string.format( "%s,", sql.SQLStr( media:Thumbnail() ) ) ..
-			string.format( "%s,", sql.SQLStr( util.TableToJSON(media._metadata.extra) ) ) ..
+			string.format( "%s,", sql.SQLStr( util.TableToJSON(media._metadata.extra or {}) ) ) ..
 			string.format( "%d,", os.time() ) ..
 			string.format( "%d)", os.time() )
 

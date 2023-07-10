@@ -26,7 +26,9 @@ end
 
 local HttpHeaders = {
 	["Cache-Control"] = "no-cache",
-	--["Connection"] = "keep-alive",
+
+	-- Keep Alive causes problems on dedicated servers apparently.
+	-- ["Connection"] = "keep-alive",
 
 	-- Required for Google API requests; uses browser API key.
 	["Referer"] = MediaPlayer.GetConfigValue('google.referrer'),
