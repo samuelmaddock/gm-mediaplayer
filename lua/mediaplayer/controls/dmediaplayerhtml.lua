@@ -116,7 +116,11 @@ function PANEL:Think()
 end
 
 function PANEL:FetchPageURL()
-	local js = "gmod.getUrl(window.location.href);"
+	local js = [[
+		if (typeof gmod === 'object' && typeof gmod.getUrl === 'function') {
+			gmod.getUrl(window.location.href);
+		}
+	]]
 	self:RunJavascript(js)
 end
 
