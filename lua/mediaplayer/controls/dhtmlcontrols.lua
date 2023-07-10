@@ -96,7 +96,7 @@ function PANEL:Init()
 	self:SetButtonColor( Color( 250, 250, 250, 200 ) )
 	self.BorderSize = 4
 	self.BackgroundColor = Color( 33, 33, 33, 255 )
-	self:SetHomeURL( "http://www.google.com" )
+	self:SetHomeURL( "https://www.google.com" )
 
 end
 

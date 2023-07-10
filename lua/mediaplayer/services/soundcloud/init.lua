@@ -5,9 +5,9 @@ local urllib = url
 
 local ClientId = MediaPlayer.GetConfigValue('soundcloud.client_id')
 
--- http://developers.soundcloud.com/docs/api/reference
+-- https://developers.soundcloud.com/docs/api/reference
 local MetadataUrl = {
-	resolve = "http://api.soundcloud.com/resolve.json?url=%s&client_id=" .. ClientId,
+	resolve = "https://api.soundcloud.com/resolve.json?url=%s&client_id=" .. ClientId,
 	tracks = ""
 }
 
@@ -36,7 +36,7 @@ local function OnReceiveMetadata( self, callback, body )
 		thumbnail = string.Replace( thumbnail, 'large', 't500x500' )
 	end
 
-	-- http://developers.soundcloud.com/docs/api/reference#tracks
+	-- https://developers.soundcloud.com/docs/api/reference#tracks
 	local metadata = {}
 	metadata.title		= (resp.title or "[Unknown title]") .. " - " .. artist
 	metadata.duration	= math.ceil(tonumber(resp.duration) / 1000) -- responds in ms

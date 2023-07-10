@@ -132,7 +132,7 @@ function SERVICE:SyncEntityPos()
 			self.Channel:SetPos( self.Entity:GetPos() )
 		else
 			-- TODO: Fake 3D volume
-			-- http://facepunch.com/showthread.php?t=1302124&p=41975238&viewfull=1#post41975238
+			-- https://facepunch.com/showthread.php?t=1302124&p=41975238&viewfull=1#post41975238
 
 			-- local volume = BaseClass.Volume( self, volume )
 			-- local vol = volume > 1 and volume/100 or volume

@@ -1,7 +1,7 @@
 Media Player
 ============
 
-![Preview](http://images.akamai.steamusercontent.com/ugc/403430334757512796/4EFCE2D358BCAF42389E36B62CB11E9849842E07/)
+![Preview](https://images.akamai.steamusercontent.com/ugc/403430334757512796/4EFCE2D358BCAF42389E36B62CB11E9849842E07/)
 
 Media Player is an addon for Garry's Mod which features several media streaming services able to be played synchronously in multiplayer.
 
@@ -11,4 +11,4 @@ Place the contents of this GitHub repository into a new addon folder within your
 
 If you'd only like to use the addon and not modify the source code, you can subscribe to the item on Steam Workshop:
 
-[![Steam Workshop](http://www.pixeltailgames.com/elevator/images/workshop_button.png)](http://steamcommunity.com/sharedfiles/filedetails/?id=546392647)
+[![Steam Workshop](https://www.pixeltailgames.com/elevator/images/workshop_button.png)](https://steamcommunity.com/sharedfiles/filedetails/?id=546392647)

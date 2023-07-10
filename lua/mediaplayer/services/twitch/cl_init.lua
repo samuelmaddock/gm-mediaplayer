@@ -2,7 +2,7 @@ include "shared.lua"
 
 DEFINE_BASECLASS( "mp_service_browser" )
 
-local TwitchUrl = "http://www.twitch.tv/%s/%s/%s/popout"
+local TwitchUrl = "https://www.twitch.tv/%s/%s/%s/popout"
 
 ---
 -- Approximate amount of time it takes for the Twitch video player to load upon
