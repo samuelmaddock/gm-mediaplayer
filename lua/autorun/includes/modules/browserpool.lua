@@ -1,9 +1,9 @@
-if browserpool then return end -- ignore Lua refresh
+--if browserpool then return end -- ignore Lua refresh
 
 local table = table
 local vgui = vgui
 
-_G.browserpool = {}
+_G.browserpool = _G.browserpool or {}
 
 ---
 -- Debug variable which will allow outputting messages if enabled.
@@ -15,49 +15,56 @@ local DEBUG = true
 -- Array of available, pooled browsers
 -- @type table
 --
-local available = {}
-
+local available = browserpool.available or {}
+browserpool.available = available
 ---
 -- Array of active, pooled browsers.
 -- @type table
 --
-local active = {}
+local active = browserpool.active or {}
+browserpool.active = active
 
 ---
 -- Array of pending requests for a browser.
 -- @type table
 --
-local pending = {}
+local pending = browserpool.pending or {}
+browserpool.pending = pending
 
 ---
 -- Minimum number of active browsers to be pooled.
 -- @type Number
 --
-local numMin = 2
+local numMin = 0
 
 ---
 -- Maximum number of active browsers to be pooled.
 -- @type Number
 --
-local numMax = 4
+local numMax = 8
+
+function browserpool.setLimits(min,max)
+	numMin = min
+	numMax = max
+end
 
 ---
 -- Number of currently active browsers.
 -- @type Number
 --
-local numActive = 0
+local numActive = table.Count(browserpool.active)
 
 ---
 -- Number of currently pending browser requests.
 -- @type Number
 --
-local numPending = 0
+local numPending = table.Count(browserpool.pending)
 
 ---
 -- Number of total browser requests.
 -- @type Number
 --
-local numRequests = 0
+local numRequests = table.Count(browserpool.pending)
 
 ---
 -- Default URL to set browsers on setup/teardown.
@@ -81,7 +88,7 @@ local function setupPanel( panel )
 
 	-- Create a new panel if it wasn't passed in
 	if panel then
-		panel:Stop()
+		panel:StopLoading()
 	else
 		panel = vgui.Create("DMediaPlayerHTML")
 	end
@@ -98,7 +105,7 @@ local function setupPanel( panel )
 	panel:SetPaintedManually(true)
 
 	-- Fix for panel not getting cleared after 3/2017 update
-	panel:SetHTML( "" )
+	panel:SetHTML( "<b>browserpool: should not see this</b>" )
 
 	-- Set default URL
 	panel:OpenURL( defaultUrl )
@@ -300,3 +307,27 @@ function browserpool.release( panel, destroy )
 	return true
 
 end
+concommand.Add("browserpool_dump", function()
+	print"Active: "
+	PrintTable(browserpool.active)
+	print"Pending: "
+	PrintTable(browserpool.pending)
+	print"Available: "
+	PrintTable(browserpool.available)
+end)
+
+concommand.Add("browserpool_kill", function()
+	for k, v in next, browserpool.active do
+		browserpool.active[k] = nil
+		v:StopLoading()
+		v:SetHTML"<b>no</b>"
+		v:OpenURL(defaultUrl)
+		v:Remove()
+	end
+
+	numActive = 0
+	numPending = 0
+	numRequests = 0
+	table.Empty(browserpool.pending)
+	table.Empty(browserpool.available)
+end)
