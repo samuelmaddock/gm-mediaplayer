@@ -87,7 +87,7 @@ function MediaPlayer.Metadata:Query( media )
 			return results
 		end
 	elseif results == false then
-		ErrorNoHalt("MediaPlayer.Metadata.Query: There was an error executing the SQL query\\n")
+		ErrorNoHalt("MediaPlayer.Metadata.Query: There was an error executing the SQL query\n")
 		print(query)
 	end
 
@@ -158,7 +158,7 @@ function MediaPlayer.Metadata:Save( media )
 	end
 
 	if results == false then
-		ErrorNoHalt("MediaPlayer.Metadata.Save: There was an error executing the SQL query\\n")
+		ErrorNoHalt("MediaPlayer.Metadata.Save: There was an error executing the SQL query\n")
 		print(query)
 	end
 
@@ -167,6 +167,6 @@ end
 
 -- Create the SQLite table if it doesn't exist
 if not sql.TableExists(TableName) then
-	Msg("MediaPlayer.Metadata: Creating `" .. TableName .. "` table...\\n")
+	Msg("MediaPlayer.Metadata: Creating `" .. TableName .. "` table...\n")
 	sql.QueryTyped(TableStruct)
 end
