@@ -93,6 +93,6 @@ end
 
 -- Create the SQLite table if it doesn't exist
 if not sql.TableExists(TableName) then
-	Msg("MediaPlayer.History: Creating `" .. TableName .. "` table...\\n")
+	Msg("MediaPlayer.History: Creating `" .. TableName .. "` table...\n")
 	print(sql.QueryTyped(TableStruct))
 end
