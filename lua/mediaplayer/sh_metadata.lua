@@ -48,16 +48,17 @@ function MediaPlayer.Metadata:Query( media )
 	local id = media:UniqueID()
 	if not id then return end
 
-	local query = ("SELECT * FROM `%s` WHERE id='%s'"):format(TableName, id)
+	local query = ("SELECT * FROM `%s` WHERE id=?"):format(TableName)
 
 	if MediaPlayer.DEBUG then
 		print("MediaPlayer.Metadata.Query")
 		print(query)
 	end
 
-	local results = sql.QueryRow(query)
+	local results = sql.QueryTyped(query, id)
 
-	if results then
+	if istable(results) and results[1] then
+		results = results[1]
 		local expired = ( tonumber(results.expired) == 1 )
 
 		-- Media metadata has been marked as out-of-date
@@ -71,15 +72,14 @@ function MediaPlayer.Metadata:Query( media )
 		if timediff > MaxCacheAge then
 
 			-- Set metadata entry as expired
-			query = "UPDATE `%s` SET expired=1 WHERE id='%s'"
-			query = query:format( TableName, id )
+			query = ("UPDATE `%s` SET expired=1 WHERE id=?"):format(TableName)
 
 			if MediaPlayer.DEBUG then
 				print("MediaPlayer.Metadata.Query: Setting entry as expired")
 				print(query)
 			end
 
-			sql.Query( query )
+			sql.QueryTyped(query, id)
 
 			return nil
 
@@ -104,10 +104,10 @@ function MediaPlayer.Metadata:Save( media )
 	local id = media:UniqueID()
 	if not id then return end
 
-	local query = ("SELECT expired FROM `%s` WHERE id='%s'"):format(TableName, id)
-	local results = sql.Query(query)
+	local query = ("SELECT expired FROM `%s` WHERE id=?"):format(TableName)
+	local results = sql.QueryTyped(query, id)
 
-	if istable(results) then -- update
+	if istable(results) and results[1] then -- update
 
 		if MediaPlayer.DEBUG then
 			print("MediaPlayer.Metadata.Save Results:")
@@ -121,34 +121,34 @@ function MediaPlayer.Metadata:Save( media )
 		if expired then
 
 			-- Update possible new metadata
-			query = "UPDATE `%s` SET request_count=request_count+1, title=%s, duration=%s, thumbnail=%s, extra=%s, last_request=%s, last_updated=%s, expired=0 WHERE id='%s'"
-			query = query:format( TableName,
-						sql.SQLStr( media:Title() ),
-						media:Duration(),
-						sql.SQLStr( media:Thumbnail() ),
-						sql.SQLStr( util.TableToJSON(media._metadata.extra or {}) ),
-						os.time(),
-						os.time(),
-						id )
+			query = ("UPDATE `%s` SET request_count=request_count+1, title=?, duration=?, thumbnail=?, extra=?, last_request=?, last_updated=?, expired=0 WHERE id=?"):format(TableName)
+			results = sql.QueryTyped(query,
+				media:Title(),
+				media:Duration(),
+				media:Thumbnail(),
+				util.TableToJSON(media._metadata.extra or {}),
+				os.time(),
+				os.time(),
+				id)
 
 		else
 
-			query = "UPDATE `%s` SET request_count=request_count+1, last_request=%s WHERE id='%s'"
-			query = query:format( TableName, os.time(), id )
+			query = ("UPDATE `%s` SET request_count=request_count+1, last_request=? WHERE id=?"):format(TableName)
+			results = sql.QueryTyped(query, os.time(), id)
 
 		end
 
 	else -- insert
 
-		query = string.format( "INSERT INTO `%s` ", TableName ) ..
-			"(id,title,duration,thumbnail,extra,last_request,last_updated) VALUES (" ..
-			string.format( "'%s',", id ) ..
-			string.format( "%s,", sql.SQLStr( media:Title() ) ) ..
-			string.format( "%s,", media:Duration() ) ..
-			string.format( "%s,", sql.SQLStr( media:Thumbnail() ) ) ..
-			string.format( "%s,", sql.SQLStr( util.TableToJSON(media._metadata.extra or {}) ) ) ..
-			string.format( "%d,", os.time() ) ..
-			string.format( "%d)", os.time() )
+		query = ("INSERT INTO `%s` (id,title,duration,thumbnail,extra,last_request,last_updated) VALUES (?,?,?,?,?,?,?)"):format(TableName)
+		results = sql.QueryTyped(query,
+			id,
+			media:Title(),
+			media:Duration(),
+			media:Thumbnail(),
+			util.TableToJSON(media._metadata.extra or {}),
+			os.time(),
+			os.time())
 
 	end
 
@@ -156,8 +156,6 @@ function MediaPlayer.Metadata:Save( media )
 		print("MediaPlayer.Metadata.Save")
 		print(query)
 	end
-
-	results = sql.Query(query)
 
 	if results == false then
 		ErrorNoHalt("MediaPlayer.Metadata.Save: There was an error executing the SQL query\n")
@@ -170,5 +168,5 @@ end
 -- Create the SQLite table if it doesn't exist
 if not sql.TableExists(TableName) then
 	Msg("MediaPlayer.Metadata: Creating `" .. TableName .. "` table...\n")
-	sql.Query(TableStruct)
+	sql.QueryTyped(TableStruct)
 end
