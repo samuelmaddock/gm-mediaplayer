@@ -43,16 +43,12 @@ function MediaPlayer.History:LogRequest( media )
 	local ply = media:GetOwner()
 	if not IsValid(ply) then return end
 
-	local query = string.format( "INSERT INTO `%s` " ..
-			"(mediaid,url,player_name,steamid) " ..
-			"VALUES (%s,%s,%s,'%s')",
-			TableName,
-			sql.SQLStr( media:UniqueID() ),
-			sql.SQLStr( media:Url() ),
-			sql.SQLStr( ply:Nick() ),
-			ply:SteamID64() or -1 )
-
-	local result = sql.Query(query)
+	local query = ("INSERT INTO `%s` (mediaid,url,player_name,steamid) VALUES (?,?,?,?)"):format(TableName)
+	local result = sql.QueryTyped(query,
+		id,
+		media:Url(),
+		ply:Nick(),
+		ply:SteamID64() or -1)
 
 	if MediaPlayer.DEBUG then
 		print("MediaPlayer.History.LogRequest")
@@ -72,18 +68,15 @@ function MediaPlayer.History:GetRequestsByPlayer( ply, limit )
 		limit = DefaultResultLimit
 	end
 
-	local query = string.format( [[
+	local query = ([[
 SELECT H.*, M.title, M.thumbnail, M.duration
 FROM %s AS H
 JOIN mediaplayer_metadata AS M
 	ON (M.id = H.mediaid)
-WHERE steamid='%s'
-LIMIT %d]],
-			TableName,
-			ply:SteamID64() or -1,
-			limit )
+WHERE steamid=?
+LIMIT ?]]):format(TableName)
 
-	local result = sql.Query(query)
+	local result = sql.QueryTyped(query, ply:SteamID64() or -1, limit)
 
 	if MediaPlayer.DEBUG then
 		print("MediaPlayer.History.GetRequestsByPlayer", ply, limit)
@@ -100,6 +93,6 @@ end
 
 -- Create the SQLite table if it doesn't exist
 if not sql.TableExists(TableName) then
-	Msg("MediaPlayer.History: Creating `" .. TableName .. "` table...\n")
-	print(sql.Query(TableStruct))
+	Msg("MediaPlayer.History: Creating `" .. TableName .. "` table...\\n")
+	print(sql.QueryTyped(TableStruct))
 end
