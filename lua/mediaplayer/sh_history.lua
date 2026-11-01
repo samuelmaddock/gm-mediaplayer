@@ -45,9 +45,9 @@ function MediaPlayer.History:LogRequest( media )
 
 	local query = string.format( "INSERT INTO `%s` " ..
 			"(mediaid,url,player_name,steamid) " ..
-			"VALUES ('%s',%s,%s,'%s')",
+			"VALUES (%s,%s,%s,'%s')",
 			TableName,
-			media:UniqueID(),
+			sql.SQLStr( media:UniqueID() ),
 			sql.SQLStr( media:Url() ),
 			sql.SQLStr( ply:Nick() ),
 			ply:SteamID64() or -1 )
